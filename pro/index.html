@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta name="theme-color" content="#0a0b08"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <title>Health Fundamentals — Full Access</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Lato:wght@400;700&display=swap" rel="stylesheet"/>
+
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#0a0b08;--s1:#131410;--s2:#1b1d16;--border:#272920;--accent:#c8f135;--adim:rgba(200,241,53,0.1);--aborder:rgba(200,241,53,0.25);--text:#e9ead6;--muted:#656857;--red:#ff6b6b;--rdim:rgba(255,107,107,0.1);--rborder:rgba(255,107,107,0.25);}
+    html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Lato',sans-serif;-webkit-font-smoothing:antialiased;}
+
+    /* ── Gate screen ── */
+    #gate{
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      min-height:100vh;padding:32px 24px;max-width:400px;margin:0 auto;
+    }
+    .gate-logo{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;margin-bottom:40px;letter-spacing:-0.01em;}
+    .gate-logo em{color:var(--accent);font-style:normal;}
+    .gate-icon{font-size:2.8rem;margin-bottom:16px;}
+    .gate-title{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;text-align:center;line-height:1.1;margin-bottom:8px;}
+    .gate-sub{font-size:0.82rem;color:var(--muted);text-align:center;line-height:1.55;margin-bottom:32px;}
+    .gate-label{font-size:0.62rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;align-self:flex-start;width:100%;}
+    .gate-input{
+      width:100%;background:var(--s2);border:1px solid var(--border);
+      border-radius:10px;padding:14px 16px;font-family:'Lato',sans-serif;
+      font-size:1rem;color:var(--text);outline:none;letter-spacing:0.08em;
+      text-align:center;transition:border-color 0.15s;margin-bottom:12px;
+    }
+    .gate-input:focus{border-color:var(--aborder);}
+    .gate-input.error{border-color:var(--rborder);background:var(--rdim);}
+    .gate-btn{
+      width:100%;background:var(--accent);color:#0a0b08;border:none;
+      border-radius:10px;padding:14px;font-family:'Lato',sans-serif;
+      font-size:0.88rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;
+      cursor:pointer;transition:opacity 0.15s;margin-bottom:8px;
+    }
+    .gate-btn:active{opacity:0.8;}
+    .gate-error{font-size:0.75rem;color:var(--red);text-align:center;min-height:20px;margin-bottom:8px;}
+    .gate-note{font-size:0.72rem;color:var(--muted);text-align:center;line-height:1.5;}
+    .gate-note a{color:var(--accent);text-decoration:none;}
+
+    /* ── App container (hidden until unlocked) ── */
+    #app-root{display:none;min-height:100vh;}
+    #app-root.visible{display:block;}
+
+    /* ── Loading state ── */
+    #loading{
+      display:none;flex-direction:column;align-items:center;justify-content:center;
+      min-height:100vh;gap:16px;
+    }
+    #loading.visible{display:flex;}
+    .spinner{width:32px;height:32px;border:3px solid var(--s2);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .loading-text{font-size:0.78rem;color:var(--muted);letter-spacing:0.08em;}
+  </style>
+</head>
+<body>
+
+  <!-- ── Access Gate ── -->
+  <div id="gate">
+    <div class="gate-logo">Health<em>Fund</em></div>
+    <div class="gate-icon">⚡</div>
+    <h1 class="gate-title">Full Access</h1>
+    <p class="gate-sub">Enter the access code from your purchase confirmation email to unlock your program.</p>
+    <div class="gate-label">Access Code</div>
+    <input id="code-input" class="gate-input" type="text" placeholder="e.g. HF-2024" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false"/>
+    <div id="error-msg" class="gate-error"></div>
+    <button class="gate-btn" onclick="checkCode()">Unlock My Program →</button>
+    <p class="gate-note">
+      Don't have a code? <a href="https://rochesterian3.gumroad.com/l/xoizj" target="_blank">Get access for $29 →</a><br/>
+      <span style="margin-top:4px;display:inline-block">Check your Gumroad confirmation email.</span>
+    </p>
+  </div>
+
+  <!-- ── Loading ── -->
+  <div id="loading">
+    <div class="spinner"></div>
+    <div class="loading-text">Loading your program…</div>
+  </div>
+
+  <!-- ── App Mount Point ── -->
+  <div id="app-root"></div>
+
+  <!-- ── React + Babel (UMD, no build step needed) ── -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script>
+    // ── Access code config ──────────────────────────────────────────────────
+    // Change this whenever you want to rotate codes (e.g. every few months)
+    // You can also have multiple valid codes: const VALID_CODES = ["HF-2024","HF-GIFT","HF-BETA"];
+    const VALID_CODES = ["HF-2024", "HF2024", "HEALTHFUND24"];
+    const STORAGE_KEY = "hf_pro_access_v1";
+
+    function checkCode() {
+      const input = document.getElementById("code-input");
+      const errorEl = document.getElementById("error-msg");
+      const entered = input.value.trim().toUpperCase().replace(/\s+/g, "");
+
+      if (!entered) {
+        errorEl.textContent = "Please enter your access code.";
+        input.classList.add("error");
+        return;
+      }
+
+      const normalizedCodes = VALID_CODES.map(c => c.toUpperCase().replace(/\s+/g,""));
+      if (normalizedCodes.includes(entered)) {
+        errorEl.textContent = "";
+        localStorage.setItem(STORAGE_KEY, entered);
+        unlockApp();
+      } else {
+        errorEl.textContent = "Incorrect code. Check your confirmation email.";
+        input.classList.add("error");
+        input.addEventListener("input", () => input.classList.remove("error"), { once: true });
+      }
+    }
+
+    // Allow Enter key
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("code-input").addEventListener("keydown", e => {
+        if (e.key === "Enter") checkCode();
+      });
+
+      // Check if already unlocked
+      const stored = localStorage.getItem(STORAGE_KEY);
+      const normalizedCodes = VALID_CODES.map(c => c.toUpperCase().replace(/\s+/g,""));
+      if (stored && normalizedCodes.includes(stored.toUpperCase())) {
+        unlockApp();
+      }
+    });
+
+    function unlockApp() {
+      document.getElementById("gate").style.display = "none";
+      document.getElementById("loading").classList.add("visible");
+
+      // Small delay so loading spinner shows before React hydrates
+      setTimeout(() => {
+        loadApp();
+      }, 300);
+    }
+
+    function loadApp() {
+      // Dynamically load the app script via Babel transform
+      const script = document.createElement("script");
+      script.type = "text/babel";
+      script.setAttribute("data-type", "module");
+      script.src = "./app.jsx?" + Date.now(); // cache bust
+      script.onload = () => {
+        // Mount React app after Babel processes it
+        setTimeout(() => {
+          try {
+            const root = ReactDOM.createRoot(document.getElementById("app-root"));
+            root.render(React.createElement(App));
+            document.getElementById("loading").classList.remove("visible");
+            document.getElementById("app-root").classList.add("visible");
+          } catch(e) {
+            console.error("App mount error:", e);
+            document.getElementById("loading").innerHTML = '<div style="text-align:center;padding:40px;color:#ff6b6b">Failed to load app. Please refresh.</div>';
+          }
+        }, 500);
+      };
+      document.head.appendChild(script);
+      Babel.transformScriptTags();
+    }
+  </script>
+
+</body>
+</html>
