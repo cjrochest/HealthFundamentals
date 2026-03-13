@@ -14,20 +14,25 @@
     :root{--bg:#0a0b08;--s1:#131410;--s2:#1b1d16;--border:#272920;--accent:#c8f135;--adim:rgba(200,241,53,0.1);--aborder:rgba(200,241,53,0.25);--text:#e9ead6;--muted:#656857;--red:#ff6b6b;--rdim:rgba(255,107,107,0.1);--rborder:rgba(255,107,107,0.25);}
     html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Lato',sans-serif;-webkit-font-smoothing:antialiased;}
     #gate{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:32px 24px;max-width:400px;margin:0 auto;}
-    .gate-logo{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;margin-bottom:40px;}
-    .gate-logo em{color:var(--accent);font-style:normal;}
+    .gate-logo{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;margin-bottom:40px;letter-spacing:-0.01em;}
+    .gate-logo em{color:#c8f135;font-style:normal;}
     .gate-icon{font-size:2.8rem;margin-bottom:16px;}
     .gate-title{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;text-align:center;line-height:1.1;margin-bottom:8px;}
     .gate-sub{font-size:0.82rem;color:var(--muted);text-align:center;line-height:1.55;margin-bottom:32px;}
     .gate-label{font-size:0.62rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;align-self:flex-start;width:100%;}
     .gate-input{width:100%;background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;font-family:'Lato',sans-serif;font-size:1rem;color:var(--text);outline:none;letter-spacing:0.08em;text-align:center;transition:border-color 0.15s;margin-bottom:12px;}
-    .gate-input:focus{border-color:var(--aborder);}
-    .gate-input.error{border-color:var(--rborder);background:var(--rdim);}
-    .gate-btn{width:100%;background:var(--accent);color:#0a0b08;border:none;border-radius:10px;padding:14px;font-family:'Lato',sans-serif;font-size:0.88rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:opacity 0.15s;margin-bottom:16px;}
+    .gate-input:focus{border-color:rgba(200,241,53,0.25);}
+    .gate-input.error{border-color:rgba(255,107,107,0.5);background:rgba(255,107,107,0.05);}
+    .gate-btn{width:100%;background:#c8f135;color:#0a0b08;border:none;border-radius:10px;padding:14px;font-family:'Lato',sans-serif;font-size:0.88rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:opacity 0.15s;margin-bottom:8px;}
     .gate-btn:active{opacity:0.8;}
-    .gate-error{font-size:0.75rem;color:var(--red);text-align:center;min-height:18px;margin-bottom:10px;}
-    .gate-note{font-size:0.72rem;color:var(--muted);text-align:center;line-height:1.6;}
-    .gate-note a{color:var(--accent);text-decoration:none;}
+    .gate-error{font-size:0.75rem;color:#ff6b6b;text-align:center;min-height:20px;margin-bottom:8px;}
+    .gate-note{font-size:0.72rem;color:var(--muted);text-align:center;line-height:1.5;}
+    .gate-note a{color:#c8f135;text-decoration:none;}
+    #loading{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:16px;}
+    #loading.visible{display:flex;}
+    .spinner{width:32px;height:32px;border:3px solid #1b1d16;border-top-color:#c8f135;border-radius:50%;animation:spin 0.7s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .loading-text{font-size:0.78rem;color:var(--muted);letter-spacing:0.08em;}
     #app-root{display:none;}
     #app-root.visible{display:block;}
   </style>
@@ -38,15 +43,20 @@
   <div class="gate-logo">Health<em>Fund</em></div>
   <div class="gate-icon">⚡</div>
   <h1 class="gate-title">Full Access</h1>
-  <p class="gate-sub">Enter the access code from your purchase confirmation email.</p>
+  <p class="gate-sub">Enter the access code from your purchase confirmation email to unlock your program.</p>
   <div class="gate-label">Access Code</div>
-  <input id="code-input" class="gate-input" type="text" placeholder="Enter code from your email" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false"/>
+  <input id="code-input" class="gate-input" type="text" placeholder="Enter your code" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false"/>
   <div id="error-msg" class="gate-error"></div>
   <button class="gate-btn" onclick="checkCode()">Unlock My Program →</button>
   <p class="gate-note">
     Don't have a code? <a href="https://rochesterian3.gumroad.com/l/xoizj" target="_blank">Get access for $29 →</a><br/>
-    <span style="display:inline-block;margin-top:4px">Code is in your Gumroad confirmation email.</span>
+    <span style="margin-top:4px;display:inline-block">Check your Gumroad confirmation email.</span>
   </p>
+</div>
+
+<div id="loading">
+  <div class="spinner"></div>
+  <div class="loading-text">Loading your program…</div>
 </div>
 
 <div id="app-root"></div>
@@ -56,44 +66,65 @@
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
 <script>
-  const VALID_CODES = ["HF-2024","HF2024","HEALTHFUND24"];
+  // Codes stored as SHA-256 hashes — actual values never appear in source
+  const CODE_HASHES = [
+    "2355a5ac039f6c9c7700ae34798dc18535b0c7104225d7bdd64533e1c5303ba1",
+    "d70a097fc2ed326edde69999d16d2b1cd6fb188085d44a3c450f0e8065fbc475",
+    "1a80a74e7f1d5bf039237a326bedcba7fee9022cdc05d8f1e20c34e7e4e557ae",
+  ];
   const STORAGE_KEY = "hf_pro_access_v1";
 
-  function normalize(s){ return s.trim().toUpperCase().replace(/\s+/g,""); }
+  async function hashCode(str) {
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
+  }
 
-  function checkCode() {
-    const input = document.getElementById("code-input");
+  async function checkCode() {
+    const input   = document.getElementById("code-input");
     const errorEl = document.getElementById("error-msg");
-    const entered = normalize(input.value);
-    if (!entered) { errorEl.textContent = "Please enter your access code."; input.classList.add("error"); return; }
-    if (VALID_CODES.map(normalize).includes(entered)) {
+    const entered = input.value.trim().toUpperCase().replace(/\s+/g,"");
+    if (!entered) {
+      errorEl.textContent = "Please enter your access code.";
+      input.classList.add("error"); return;
+    }
+    const h = await hashCode(entered);
+    if (CODE_HASHES.includes(h)) {
       errorEl.textContent = "";
-      localStorage.setItem(STORAGE_KEY, entered);
+      localStorage.setItem(STORAGE_KEY, h); // store hash, never the raw code
       unlockApp();
     } else {
       errorEl.textContent = "Incorrect code — check your confirmation email.";
       input.classList.add("error");
-      input.addEventListener("input", () => input.classList.remove("error"), { once: true });
+      input.addEventListener("input", () => input.classList.remove("error"), {once:true});
     }
   }
 
+  document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("code-input").addEventListener("keydown", e => {
+      if (e.key === "Enter") checkCode();
+    });
+    // Check if already unlocked (stored hash)
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored && CODE_HASHES.includes(stored)) unlockApp();
+  });
+
   function unlockApp() {
     document.getElementById("gate").style.display = "none";
+    document.getElementById("loading").classList.add("visible");
+    setTimeout(mountApp, 200);
+  }
+
+  function mountApp() {
+    document.getElementById("loading").classList.remove("visible");
     document.getElementById("app-root").classList.add("visible");
     const root = ReactDOM.createRoot(document.getElementById("app-root"));
     root.render(React.createElement(App));
   }
-
-  document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("code-input").addEventListener("keydown", e => { if(e.key==="Enter") checkCode(); });
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored && VALID_CODES.map(normalize).includes(normalize(stored))) unlockApp();
-  });
 </script>
 
-<!-- ═══════════════════════════════════════════════ APP ═══════════════════════════════════════════════ -->
+<!-- ── App — inlined so GitHub Pages MIME type is never an issue ── -->
 <script type="text/babel">
-const { useState, useMemo } = React;
+import { useState, useMemo } from "react";
 
 const STYLE = `
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Lato:ital,wght@0,300;0,400;0,700;1,300&family=DM+Mono:wght@400;500&display=swap');
@@ -707,9 +738,115 @@ function mealToText(m) {
   let t=`🍽 ${m.name.toUpperCase()}\n${m.time}\nMacros: ${m.protein}g P · ${m.carbs}g C · ${m.fat}g F · ${m.calories} cal\n\nINGREDIENTS:\n`;
   m.ingredients.forEach(i=>{t+=`• ${i}\n`;}); t+=`\nPREP: ${m.prep}\n— Health Fundamentals`; return t;
 }
-function groceryToText(goal) {
-  const data=GROCERY_DATA[goal]; let t=`🛒 GROCERY LIST — ${goal.toUpperCase()} GOAL\n\n`;
-  Object.entries(data).forEach(([cat,items])=>{t+=`${cat}\n`;items.forEach(i=>{t+=`□ ${i.name} — ${i.qty}\n`;});t+=`\n`;});
+function buildGroceryFromMeals(activeMeals, days = 7) {
+  // ── Quantity parser ──────────────────────────────────────────────────────────
+  const FRACS = {"½":0.5,"¼":0.25,"¾":0.75,"⅓":0.333,"⅔":0.667,"⅛":0.125};
+
+  function parseQty(raw) {
+    let s = raw.trim();
+    for (const [f, v] of Object.entries(FRACS)) s = s.replaceAll(f, String(v));
+    // "1.5 cups spinach", "6oz chicken", "2 tbsp salsa", "3 eggs"
+    const m = s.match(/^([\d.]+)\s*(oz|cup|cups|tbsp|tsp|scoop|scoops|slice|slices|g|kg|lb|lbs|)[\s]+(.*)/i);
+    if (m) return { qty: parseFloat(m[1]), unit: m[2].toLowerCase().replace("cups","cup").replace("scoops","scoop").replace("slices","slice").replace("lbs","lb"), name: m[3].trim() };
+    // "6oz" with no space
+    const m2 = s.match(/^([\d.]+)(oz|g|kg|lb|lbs)(.*)/i);
+    if (m2) return { qty: parseFloat(m2[1]), unit: m2[2].toLowerCase(), name: m2[3].trim() };
+    return null;
+  }
+
+  function fmtQty(qty, unit) {
+    // Round to nearest sensible fraction
+    const rounded = Math.round(qty * 4) / 4;
+    const whole   = Math.floor(rounded);
+    const frac    = rounded - whole;
+    const fracStr = frac === 0.5 ? "½" : frac === 0.25 ? "¼" : frac === 0.75 ? "¾" : frac === 0.333 ? "⅓" : "";
+    const numStr  = whole > 0 ? (fracStr ? `${whole} ${fracStr}` : String(whole)) : (fracStr || String(rounded));
+    return unit ? `${numStr} ${unit}` : numStr;
+  }
+
+  // ── Category keywords ────────────────────────────────────────────────────────
+  const CATS = [
+    ["🥩 Proteins",        ["chicken","turkey","beef","salmon","tuna","steak","sirloin","egg","protein powder","cottage cheese","greek yogurt","ground turkey","ground beef","meatball","sausage","shrimp"]],
+    ["🥦 Produce",         ["spinach","tomato","bell pepper","broccoli","asparagus","avocado","banana","sweet potato","zucchini","cucumber","lettuce","romaine","carrot","berry","berries","strawberr","blueberr","pineapple","apple","basil","cilantro","green bean","scallion","dill","lemon","lime","onion","garlic","kale"]],
+    ["🧀 Dairy",           ["milk","cheese","parmesan","cheddar","yogurt","butter","cream","sour cream","tzatziki"]],
+    ["🌾 Grains & Pantry", ["rice","oat","pasta","quinoa","bread","wrap","tortilla","cracker","granola","farro","penne","rigatoni","spaghetti","flour","rice cake","bean","black bean","lentil"]],
+    ["🫙 Sauces & Staples",["oil","sauce","soy","salsa","hummus","mayo","honey","cinnamon","seasoning","sriracha","mustard","hot sauce","dressing","caesar","marinara","pico","guac","spice","pepper","salt","cumin","chili","paprika","rosemary","sesame","chia","almond butter","peanut butter","vinegar"]],
+  ];
+  const CAT_ORDER = CATS.map(c => c[0]);
+
+  function categorize(name) {
+    const low = name.toLowerCase();
+    for (const [cat, keys] of CATS) {
+      if (keys.some(k => low.includes(k))) return cat;
+    }
+    return "🛒 Other";
+  }
+
+  // ── Aggregate ingredients across all meals × 7 days ─────────────────────────
+  // Key = normalized ingredient name (for dedup/summing)
+  const agg = {}; // key → { displayName, qty, unit, cat, hasQty }
+
+  activeMeals.forEach(meal => {
+    if (!meal?.ingredients) return;
+    meal.ingredients.forEach(raw => {
+      // Skip pure seasoning/staple lines with no real quantity
+      if (/^(salt|pepper|herbs|spices|to taste|as needed)/i.test(raw.trim())) {
+        const cat = "🫙 Sauces & Staples";
+        const key = raw.toLowerCase().replace(/[^a-z]/g,"").slice(0,20);
+        if (!agg[key]) agg[key] = { displayName: raw.trim(), qty: null, unit: "", cat, hasQty: false };
+        return;
+      }
+
+      const parsed = parseQty(raw);
+      if (parsed) {
+        const { qty, unit, name } = parsed;
+        // Normalize name for grouping (strip cooking adjectives)
+        const normName = name.toLowerCase()
+          .replace(/\b(grilled|baked|cooked|roasted|sliced|mashed|diced|chopped|frozen|lean|whole|low-fat|non-fat|low-sodium|boneless|skinless|canned|drained|fresh)\b/g,"")
+          .replace(/\s+/g," ").trim();
+        const key = normName.replace(/[^a-z0-9 ]/g,"").slice(0,28);
+        const scaled = qty * days;
+        if (agg[key]) {
+          // Only sum if same unit
+          if (agg[key].unit === unit) {
+            agg[key].qty += scaled;
+          }
+          // If unit mismatch, keep the first entry (edge case)
+        } else {
+          agg[key] = { displayName: name, qty: scaled, unit, cat: categorize(name), hasQty: true };
+        }
+      } else {
+        // No parseable quantity — staple/misc item, show once
+        const key = raw.toLowerCase().replace(/[^a-z]/g,"").slice(0,20);
+        if (!agg[key]) agg[key] = { displayName: raw.trim(), qty: null, unit: "", cat: categorize(raw), hasQty: false };
+      }
+    });
+  });
+
+  // ── Group by category ────────────────────────────────────────────────────────
+  const categorized = {};
+  Object.values(agg).forEach(({ displayName, qty, unit, cat, hasQty }) => {
+    if (!categorized[cat]) categorized[cat] = [];
+    const label = hasQty ? `${fmtQty(qty, unit)} ${displayName}` : displayName;
+    categorized[cat].push(label);
+  });
+
+  // Sort categories in logical shopping order
+  const sorted = {};
+  CAT_ORDER.forEach(cat => { if (categorized[cat]) sorted[cat] = categorized[cat]; });
+  if (categorized["🛒 Other"]) sorted["🛒 Other"] = categorized["🛒 Other"];
+
+  return sorted;
+}
+
+function groceryToText(categorized) {
+  let t = `🛒 GROCERY LIST\n\n`;
+  Object.entries(categorized).forEach(([cat, items]) => {
+    t += `${cat}\n`;
+    items.forEach(i => { t += `• ${i}\n`; });
+    t += `\n`;
+  });
+  t += `— Health Fundamentals`;
   return t;
 }
 function calculateTDEE(w,ft,inch,a,sex,act) {
@@ -1280,16 +1417,19 @@ function pickMealForWeek(goal, slot, avoidTags, weekNum, pinnedId) {
 }
 
 // ─── MEALS TAB ────────────────────────────────────────────────────────────────
-function MealsTab({ prefs }) {
+function MealsTab({ prefs, mealState, setMealState }) {
   const [goal,       setGoal]       = useState(prefs.goal || "maintain");
   const [week,       setWeek]       = useState(prefs.week || 1);
-  const [mealCount,  setMealCount]  = useState(4);
   const [openId,     setOpenId]     = useState(null);
   const [saved,      setSaved]      = useState({});
-  const [pinned,     setPinned]     = useState({});
-  const [avoidTags,  setAvoidTags]  = useState([]);
   const [configOpen, setConfigOpen] = useState(false);
   const [toast,      setToast]      = useState({ show:false, msg:"" });
+
+  // Shared state — synced with GroceryTab
+  const { mealCount, pinned, avoidTags } = mealState || { mealCount:4, pinned:{}, avoidTags:[] };
+  const setMealCount = (v)  => setMealState(s => ({...s, mealCount: v}));
+  const setPinned    = (fn) => setMealState(s => ({...s, pinned: typeof fn==="function" ? fn(s.pinned) : fn}));
+  const setAvoidTags = (fn) => setMealState(s => ({...s, avoidTags: typeof fn==="function" ? fn(s.avoidTags) : fn}));
 
   const activeSlots = SLOT_CONFIGS[mealCount];
 
@@ -1601,69 +1741,139 @@ function MealsTab({ prefs }) {
 }
 
 // ─── GROCERY TAB ──────────────────────────────────────────────────────────────
-function GroceryTab({ prefs }) {
-  const [goal, setGoal] = useState(prefs.goal||"maintain");
-  const [generated, setGenerated] = useState(false);
-  const [checked, setChecked] = useState({});
-  const [copied, setCopied] = useState(false);
-  const [toast, setToast] = useState({show:false,msg:""});
+function GroceryTab({ prefs, mealState }) {
+  const [generated, setGenerated]   = useState(false);
+  const [checked,   setChecked]     = useState({});
+  const [copied,    setCopied]      = useState(false);
+  const [toast,     setToast]       = useState({show:false,msg:""});
 
-  const data = GROCERY_DATA[goal];
-  const allKeys = Object.entries(data).flatMap(([cat,items])=>items.map(i=>`${cat}::${i.name}`));
+  // ── Derive active meals using the same shared state as MealsTab ─────────────
+  const activeMeals = useMemo(() => {
+    const goal   = prefs.goal || "maintain";
+    const week   = prefs.week || 1;
+    const mCount = (mealState && mealState.mealCount) || 4;
+    const pins   = (mealState && mealState.pinned)    || {};
+    const blocked= (mealState && mealState.avoidTags) || [];
+
+    const SLOT_CONFIGS = {
+      3: ["breakfast","lunch","dinner"],
+      4: ["breakfast","lunch","snack","dinner"],
+      5: ["breakfast","lunch","snack","preworkout","dinner"],
+    };
+    const slots = SLOT_CONFIGS[mCount] || SLOT_CONFIGS[4];
+    const pool  = MEAL_POOL[goal] || MEAL_POOL["maintain"];
+
+    return slots.map(slot => {
+      const options = (pool[slot] || []).filter(m =>
+        !blocked.some(b => m.tags && m.tags.includes(b))
+      );
+      if (!options.length) return null;
+      const pinnedId = pins[slot];
+      if (pinnedId) {
+        const p = options.find(m => m.id === pinnedId);
+        if (p) return p;
+      }
+      const idx = (week - 1) % options.length;
+      return options[idx];
+    }).filter(Boolean);
+  }, [prefs, mealState]);
+
+  const DAYS = 7;
+  const categorized = useMemo(() => buildGroceryFromMeals(activeMeals, DAYS), [activeMeals]);
+
+  const allKeys = Object.entries(categorized).flatMap(([cat,items]) =>
+    items.map(i => `${cat}::${i}`)
+  );
   const checkedCount = Object.values(checked).filter(Boolean).length;
-  const progress = allKeys.length>0?checkedCount/allKeys.length:0;
+  const progress     = allKeys.length > 0 ? checkedCount / allKeys.length : 0;
+  const mealNames    = activeMeals.map(m => m.name);
 
-  function handleCopy(){
-    copyText(groceryToText(goal));setCopied(true);
-    setToast({show:true,msg:"List copied — paste into Notes!"});
-    setTimeout(()=>{setCopied(false);setToast({show:false,msg:""});},2400);
+  function handleCopy() {
+    copyText(groceryToText(categorized));
+    setCopied(true);
+    setToast({show:true, msg:"List copied — paste into Notes!"});
+    setTimeout(() => { setCopied(false); setToast({show:false,msg:""}); }, 2400);
+  }
+
+  function handleReset() {
+    setChecked({});
+    setGenerated(false);
   }
 
   return (
     <div>
-      <div className="section-head"><span className="section-title">Grocery List</span>{generated&&<span className="section-sub">{checkedCount}/{allKeys.length}</span>}</div>
+      <div className="section-head">
+        <span className="section-title">Grocery List</span>
+        <span className="section-sub">{generated ? `${checkedCount}/${allKeys.length}` : "7-day"}</span>
+      </div>
+
       <div style={{padding:"0 16px"}}>
-        <div className="goal-pills" style={{marginBottom:14}}>
-          {[["cut","Cut 🔥"],["maintain","Maintain ⚖️"],["build","Build 💪"]].map(([g,l])=>(
-            <button key={g} className={`goal-pill${goal===g?" active":""}`} onClick={()=>{setGoal(g);setGenerated(false);setChecked({});setCopied(false);}}>{l}</button>
-          ))}
-        </div>
-        {!generated?(
-          <button className="grocery-gen-btn" onClick={()=>setGenerated(true)}>
+
+        {/* Active meals preview */}
+        {activeMeals.length > 0 && (
+          <div style={{background:"var(--s1)",border:"1px solid var(--border)",borderRadius:"var(--r)",padding:"12px 14px",marginBottom:14}}>
+            <div style={{fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:"var(--orange)",marginBottom:8}}>
+              Week {prefs.week||1} · 7-day quantities
+            </div>
+            {mealNames.map((n,i) => (
+              <div key={i} style={{fontSize:"0.78rem",color:"var(--muted)",padding:"3px 0",borderBottom:i<mealNames.length-1?"1px solid rgba(39,41,32,0.4)":"none",display:"flex",gap:8,alignItems:"center"}}>
+                <span style={{color:"var(--accent)"}}>·</span>{n}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {!generated ? (
+          <button className="grocery-gen-btn" onClick={() => setGenerated(true)}>
             <span style={{fontSize:"2rem"}}>🛒</span>
-            <div><div className="ggb-title">Generate This Week's List</div><div className="ggb-sub">Based on your {goal} meal plan</div></div>
+            <div>
+              <div className="ggb-title">Build This Week's List</div>
+              <div className="ggb-sub">Full 7-day list · {allKeys.length} items</div>
+            </div>
           </button>
-        ):(
+        ) : (
           <>
+            {/* Progress bar */}
             <div style={{marginBottom:14}}>
               <div style={{display:"flex",justifyContent:"space-between",fontSize:"0.7rem",color:"var(--muted)",marginBottom:5}}>
-                <span>Shopping progress</span><span style={{color:"var(--accent)"}}>{Math.round(progress*100)}%</span>
+                <span>Shopping progress</span>
+                <span style={{color:"var(--accent)"}}>{Math.round(progress*100)}%</span>
               </div>
               <div className="prog-wrap"><div className="prog-fill" style={{width:`${progress*100}%`}}/></div>
             </div>
+
+            {/* Grocery items */}
             <div className="grocery-container">
-              {Object.entries(data).map(([cat,items])=>(
+              {Object.entries(categorized).map(([cat, items]) => (
                 <div key={cat} className="grocery-cat">
                   <div className="grocery-cat-head">{cat}</div>
-                  {items.map(item=>{
-                    const key=`${cat}::${item.name}`;const isC=!!checked[key];
+                  {items.map(item => {
+                    const key = `${cat}::${item}`;
+                    const isC = !!checked[key];
                     return (
-                      <div key={key} className={`grocery-item${isC?" checked":""}`} onClick={()=>setChecked(c=>({...c,[key]:!c[key]}))}>
+                      <div key={key} className={`grocery-item${isC?" checked":""}`}
+                           onClick={() => setChecked(c => ({...c, [key]: !c[key]}))}>
                         <div className="g-check">{isC?"✓":""}</div>
-                        <span className="g-name">{item.name}</span>
-                        <span className="g-qty">{item.qty}</span>
+                        <span className="g-name">{item}</span>
                       </div>
                     );
                   })}
                 </div>
               ))}
             </div>
-            <button className={`action-btn btn-secondary${copied?" btn-saved":""}`} style={{marginTop:14}} onClick={handleCopy}>
-              {copied?"✓ Copied!":"📋 Copy Full List to Notes"}
-            </button>
+
+            <div style={{display:"flex",gap:8,marginTop:14}}>
+              <button className={`action-btn btn-secondary${copied?" btn-saved":""}`}
+                      style={{flex:1}} onClick={handleCopy}>
+                {copied ? "✓ Copied!" : "📋 Copy List"}
+              </button>
+              <button className="action-btn btn-secondary" style={{flex:"0 0 auto",padding:"0 16px"}}
+                      onClick={handleReset}>↺</button>
+            </div>
           </>
         )}
       </div>
+
       <Toast msg={toast.msg} show={toast.show}/>
     </div>
   );
@@ -1773,9 +1983,12 @@ function HomeTab({ prefs, setTab }) {
 }
 
 // ─── ROOT ─────────────────────────────────────────────────────────────────────
-function App() {
+export default function App() {
   const [tab, setTab] = useState("home");
   const [prefs, setPrefs] = useState(null); // null = not yet built
+
+  // Shared meal state — lifted so GroceryTab can read what MealsTab has selected
+  const [mealState, setMealState] = useState({ mealCount:4, pinned:{}, avoidTags:[] });
 
   const NAV = [
     {id:"home",    icon:"🏠", label:"Home"},
@@ -1820,8 +2033,8 @@ function App() {
         {tab==="home"    && <HomeTab prefs={prefs} setTab={setTab}/>}
         {tab==="workout" && <WorkoutTab prefs={prefs} setPrefs={setPrefs} onRebuild={()=>setPrefs(null)}/>}
         {tab==="macros"  && <MacroTab prefs={prefs}/>}
-        {tab==="meals"   && <MealsTab prefs={prefs}/>}
-        {tab==="grocery" && <GroceryTab prefs={prefs}/>}
+        {tab==="meals"   && <MealsTab prefs={prefs} mealState={mealState} setMealState={setMealState}/>}
+        {tab==="grocery" && <GroceryTab prefs={prefs} mealState={mealState}/>}
         {tab==="learn"   && <LearnTab/>}
       </div>
 
