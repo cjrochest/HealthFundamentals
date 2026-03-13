@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0a0b08"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-  <title>Health Fundamentals — Full Access</title>
+  <title>Health Fundamentals — Pro App</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Lato:wght@400;700&display=swap" rel="stylesheet"/>
   <style>
@@ -124,7 +124,7 @@
 
 <!-- ── App — inlined so GitHub Pages MIME type is never an issue ── -->
 <script type="text/babel">
-import { useState, useMemo } from "react";
+const { useState, useMemo, useRef, useCallback } = React;
 
 const STYLE = `
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Lato:ital,wght@0,300;0,400;0,700;1,300&family=DM+Mono:wght@400;500&display=swap');
@@ -1939,6 +1939,369 @@ function LearnTab() {
 }
 
 // ─── HOME TAB ─────────────────────────────────────────────────────────────────
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PROGRESS TAB
+// ─────────────────────────────────────────────────────────────────────────────
+const PROGRESS_KEY = "hf_progress_v1";
+
+function loadProgress() {
+  try {
+    const raw = localStorage.getItem(PROGRESS_KEY);
+    return raw ? JSON.parse(raw) : { entries: [], streaks: { checkin: 0, lastCheckin: null } };
+  } catch { return { entries: [], streaks: { checkin: 0, lastCheckin: null } }; }
+}
+
+function saveProgress(data) {
+  try { localStorage.setItem(PROGRESS_KEY, JSON.stringify(data)); } catch {}
+}
+
+function formatDate(d) {
+  return d.toISOString().split("T")[0]; // YYYY-MM-DD
+}
+
+function parseDate(s) {
+  const [y,m,d] = s.split("-").map(Number);
+  return new Date(y, m-1, d);
+}
+
+function ProgressTab({ prefs }) {
+  const startWeight = prefs?.weight || 0;
+  const [data, setData]         = useState(loadProgress);
+  const [inputVal, setInputVal] = useState("");
+  const [view, setView]         = useState("month"); // week | month | year
+  const [showShare, setShowShare] = useState(false);
+  const [toast, setToast]       = useState({ show: false, msg: "" });
+  const shareRef                = useRef(null);
+
+  const today = formatDate(new Date());
+
+  // ── Derived ────────────────────────────────────────────────────────────────
+  const entries   = data.entries || [];
+  const todayEntry= entries.find(e => e.date === today);
+  const checkinStreak = data.streaks?.checkin || 0;
+
+  const filtered = useMemo(() => {
+    const now = new Date();
+    const cutoff = new Date();
+    if (view === "week")  cutoff.setDate(now.getDate() - 6);
+    if (view === "month") cutoff.setDate(now.getDate() - 29);
+    if (view === "year")  cutoff.setFullYear(now.getFullYear() - 1);
+    return entries
+      .filter(e => parseDate(e.date) >= cutoff)
+      .sort((a,b) => a.date.localeCompare(b.date));
+  }, [entries, view]);
+
+  const minW  = filtered.length ? Math.min(...filtered.map(e=>e.weight)) : startWeight - 5;
+  const maxW  = filtered.length ? Math.max(...filtered.map(e=>e.weight)) : startWeight + 5;
+  const range = maxW - minW || 1;
+
+  // Stats
+  const firstW  = filtered.length ? filtered[0].weight         : null;
+  const lastW   = filtered.length ? filtered[filtered.length-1].weight : null;
+  const totalChange = (firstW != null && lastW != null) ? (lastW - firstW) : null;
+  const avgW    = filtered.length ? (filtered.reduce((s,e)=>s+e.weight,0)/filtered.length).toFixed(1) : null;
+
+  // ── Log weight ─────────────────────────────────────────────────────────────
+  function logWeight() {
+    const val = parseFloat(inputVal);
+    if (isNaN(val) || val < 50 || val > 600) {
+      showToast("Enter a valid weight (50–600 lbs)"); return;
+    }
+    const newEntry = { date: today, weight: val };
+    const existing = entries.filter(e => e.date !== today);
+    const newEntries = [...existing, newEntry].sort((a,b)=>a.date.localeCompare(b.date));
+
+    // Streak logic
+    const yesterday = formatDate(new Date(Date.now() - 86400000));
+    const lastCheckin = data.streaks?.lastCheckin;
+    let streak = data.streaks?.checkin || 0;
+    if (lastCheckin === yesterday || lastCheckin === today) {
+      streak = lastCheckin === today ? streak : streak + 1;
+    } else {
+      streak = 1;
+    }
+
+    const newData = {
+      entries: newEntries,
+      streaks: { checkin: streak, lastCheckin: today }
+    };
+    setData(newData);
+    saveProgress(newData);
+    setInputVal("");
+    showToast(todayEntry ? "Weight updated!" : "Logged! Keep it up 💪");
+  }
+
+  function deleteEntry(date) {
+    const newEntries = entries.filter(e => e.date !== date);
+    const newData = { ...data, entries: newEntries };
+    setData(newData);
+    saveProgress(newData);
+  }
+
+  function showToast(msg) {
+    setToast({ show: true, msg });
+    setTimeout(() => setToast({ show: false, msg: "" }), 2500);
+  }
+
+  // ── SVG Sparkline ──────────────────────────────────────────────────────────
+  function Sparkline({ points, width = 320, height = 100 }) {
+    if (!points.length) return null;
+    const pad = 8;
+    const W = width - pad * 2;
+    const H = height - pad * 2;
+    const xs = points.map((_,i) => pad + (points.length < 2 ? W/2 : (i / (points.length-1)) * W));
+    const ys = points.map(p => pad + H - ((p - minW) / range) * H);
+    const d  = xs.map((x,i) => `${i===0?"M":"L"}${x},${ys[i]}`).join(" ");
+    const fill = xs.map((x,i) => `${i===0?"M":"L"}${x},${ys[i]}`).join(" ")
+                + ` L${xs[xs.length-1]},${pad+H} L${xs[0]},${pad+H} Z`;
+    return (
+      <svg width="100%" viewBox={`0 0 ${width} ${height}`} style={{overflow:"visible"}}>
+        {/* Trend fill */}
+        <path d={fill} fill="var(--accent)" fillOpacity="0.08"/>
+        {/* Line */}
+        <path d={d} fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        {/* Goal weight line */}
+        {startWeight > 0 && (() => {
+          const gy = pad + H - ((startWeight - minW) / range) * H;
+          return <line x1={pad} y1={gy} x2={pad+W} y2={gy}
+            stroke="var(--muted)" strokeWidth="1" strokeDasharray="4 3" opacity="0.5"/>;
+        })()}
+        {/* Dots for last point */}
+        {xs.length > 0 && (
+          <circle cx={xs[xs.length-1]} cy={ys[ys.length-1]} r="4"
+            fill="var(--accent)" stroke="var(--bg)" strokeWidth="2"/>
+        )}
+      </svg>
+    );
+  }
+
+  // ── Share Card ─────────────────────────────────────────────────────────────
+  function ShareCard() {
+    const daysLogged = entries.length;
+    const change     = totalChange != null ? totalChange.toFixed(1) : "—";
+    const sign       = totalChange != null && totalChange <= 0 ? "" : "+";
+    const changeStr  = totalChange != null ? `${sign}${change} lbs` : "—";
+    const emoji      = totalChange != null && totalChange < 0 ? "📉" : totalChange != null && totalChange > 0 ? "📈" : "⚖️";
+    return (
+      <div ref={shareRef} style={{
+        background:"linear-gradient(135deg,#0d1a05 0%,#0a0b08 60%)",
+        border:"1px solid var(--aborder)",
+        borderRadius:"16px",
+        padding:"28px 24px",
+        maxWidth:"340px",
+        margin:"0 auto",
+        fontFamily:"var(--ff-display)",
+      }}>
+        <div style={{fontSize:"0.65rem",fontWeight:700,letterSpacing:"0.15em",color:"var(--muted)",marginBottom:6,textTransform:"uppercase"}}>
+          Health Fundamentals
+        </div>
+        <div style={{fontSize:"1.6rem",fontWeight:800,color:"var(--accent)",lineHeight:1.1,marginBottom:4}}>
+          My Progress
+        </div>
+        <div style={{fontSize:"0.8rem",color:"var(--muted)",marginBottom:20}}>{today}</div>
+
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:20}}>
+          {[
+            {label:"Current weight", value: lastW ? `${lastW} lbs` : "—"},
+            {label:"Change",         value: changeStr, icon: emoji},
+            {label:"Days logged",    value: daysLogged},
+            {label:"Check-in streak",value: `${checkinStreak} days 🔥`},
+          ].map(item => (
+            <div key={item.label} style={{background:"rgba(200,241,53,0.06)",borderRadius:10,padding:"12px 10px"}}>
+              <div style={{fontSize:"0.6rem",color:"var(--muted)",fontWeight:700,letterSpacing:"0.08em",textTransform:"uppercase",marginBottom:4}}>{item.label}</div>
+              <div style={{fontSize:"1.1rem",fontWeight:800,color:"var(--fg)"}}>{item.icon||""} {item.value}</div>
+            </div>
+          ))}
+        </div>
+
+        <div style={{fontSize:"0.7rem",color:"var(--muted)",textAlign:"center",opacity:0.6}}>
+          cjrochest.github.io/HealthFundamentals/pro
+        </div>
+      </div>
+    );
+  }
+
+  // ── Render ─────────────────────────────────────────────────────────────────
+  return (
+    <div className="tab-content">
+      {/* Toast */}
+      {toast.show && (
+        <div style={{position:"fixed",top:70,left:"50%",transform:"translateX(-50%)",
+          background:"var(--accent)",color:"#0a0b08",borderRadius:99,padding:"8px 20px",
+          fontSize:"0.8rem",fontWeight:700,zIndex:999,whiteSpace:"nowrap"}}>
+          {toast.msg}
+        </div>
+      )}
+
+      {/* ── Header stats ── */}
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:16}}>
+        {[
+          {label:"Current",   value: lastW ? `${lastW} lbs` : "—"},
+          {label:"Change",    value: totalChange != null ? `${totalChange>0?"+":""}${totalChange.toFixed(1)} lbs` : "—",
+           color: totalChange != null ? (totalChange < 0 ? "var(--accent)" : "var(--orange)") : "var(--fg)"},
+          {label:"Streak 🔥", value: `${checkinStreak}d`},
+        ].map(s => (
+          <div key={s.label} style={{background:"var(--s1)",border:"1px solid var(--border)",
+            borderRadius:"var(--r)",padding:"12px 8px",textAlign:"center"}}>
+            <div style={{fontSize:"0.6rem",color:"var(--muted)",fontWeight:700,letterSpacing:"0.08em",
+              textTransform:"uppercase",marginBottom:4}}>{s.label}</div>
+            <div style={{fontSize:"1.2rem",fontWeight:800,color:s.color||"var(--fg)"}}>{s.value}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Log today ── */}
+      <div style={{background:"var(--s1)",border:"1px solid var(--border)",borderRadius:"var(--r)",
+        padding:"16px",marginBottom:16}}>
+        <div style={{fontSize:"0.7rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",
+          color:"var(--accent)",marginBottom:10}}>
+          {todayEntry ? `Today · ${todayEntry.weight} lbs — update?` : "Log today's weight"}
+        </div>
+        <div style={{display:"flex",gap:8,alignItems:"center"}}>
+          <input
+            type="number"
+            placeholder={todayEntry ? String(todayEntry.weight) : "lbs"}
+            value={inputVal}
+            onChange={e=>setInputVal(e.target.value)}
+            onKeyDown={e=>e.key==="Enter"&&logWeight()}
+            style={{flex:1,background:"var(--bg)",border:"1px solid var(--border)",borderRadius:8,
+              padding:"10px 12px",color:"var(--fg)",fontSize:"1rem",fontFamily:"var(--ff-mono)",
+              fontWeight:700,outline:"none",WebkitAppearance:"none"}}
+          />
+          <button onClick={logWeight}
+            style={{background:"var(--accent)",color:"#0a0b08",border:"none",borderRadius:8,
+              padding:"10px 18px",fontWeight:800,fontSize:"0.85rem",cursor:"pointer",
+              fontFamily:"var(--ff-display)",whiteSpace:"nowrap"}}>
+            Log
+          </button>
+        </div>
+        <div style={{fontSize:"0.65rem",color:"var(--muted)",marginTop:6}}>
+          Tip: weigh yourself first thing in the morning, after using the bathroom.
+        </div>
+      </div>
+
+      {/* ── Chart ── */}
+      {filtered.length > 1 ? (
+        <div style={{background:"var(--s1)",border:"1px solid var(--border)",borderRadius:"var(--r)",
+          padding:"16px",marginBottom:16}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
+            <div style={{fontSize:"0.7rem",fontWeight:700,letterSpacing:"0.1em",
+              textTransform:"uppercase",color:"var(--accent)"}}>Weight trend</div>
+            <div style={{display:"flex",gap:6}}>
+              {["week","month","year"].map(v=>(
+                <button key={v} onClick={()=>setView(v)}
+                  style={{background:view===v?"var(--adim)":"transparent",
+                    border:`1px solid ${view===v?"var(--aborder)":"var(--border)"}`,
+                    borderRadius:99,padding:"3px 10px",fontSize:"0.65rem",fontWeight:700,
+                    color:view===v?"var(--accent)":"var(--muted)",cursor:"pointer"}}>
+                  {v.charAt(0).toUpperCase()+v.slice(1)}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Y axis labels */}
+          <div style={{display:"flex",gap:8,alignItems:"flex-end"}}>
+            <div style={{display:"flex",flexDirection:"column",justifyContent:"space-between",
+              height:100,minWidth:36,textAlign:"right"}}>
+              <div style={{fontSize:"0.6rem",color:"var(--muted)",fontFamily:"var(--ff-mono)"}}>{maxW.toFixed(0)}</div>
+              <div style={{fontSize:"0.6rem",color:"var(--muted)",fontFamily:"var(--ff-mono)"}}>{((maxW+minW)/2).toFixed(0)}</div>
+              <div style={{fontSize:"0.6rem",color:"var(--muted)",fontFamily:"var(--ff-mono)"}}>{minW.toFixed(0)}</div>
+            </div>
+            <div style={{flex:1}}>
+              <Sparkline points={filtered.map(e=>e.weight)} height={100}/>
+            </div>
+          </div>
+
+          {/* X axis */}
+          <div style={{display:"flex",justifyContent:"space-between",paddingLeft:44,
+            marginTop:4,fontSize:"0.6rem",color:"var(--muted)"}}>
+            {filtered.length > 0 && [
+              filtered[0].date.slice(5),
+              filtered[Math.floor(filtered.length/2)]?.date.slice(5),
+              filtered[filtered.length-1].date.slice(5),
+            ].map((d,i)=>d&&<span key={i}>{d}</span>)}
+          </div>
+
+          {/* Stats row */}
+          <div style={{display:"flex",gap:16,marginTop:12,paddingTop:12,
+            borderTop:"1px solid var(--border)"}}>
+            {[
+              {label:"Avg", value: avgW ? `${avgW} lbs` : "—"},
+              {label:"Low",  value: filtered.length ? `${minW.toFixed(1)} lbs` : "—"},
+              {label:"High", value: filtered.length ? `${maxW.toFixed(1)} lbs` : "—"},
+              {label:"Entries", value: filtered.length},
+            ].map(s=>(
+              <div key={s.label} style={{flex:1,textAlign:"center"}}>
+                <div style={{fontSize:"0.55rem",color:"var(--muted)",fontWeight:700,
+                  letterSpacing:"0.08em",textTransform:"uppercase"}}>{s.label}</div>
+                <div style={{fontSize:"0.85rem",fontWeight:700,color:"var(--fg)",
+                  fontFamily:"var(--ff-mono)"}}>{s.value}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div style={{background:"var(--s1)",border:"1px solid var(--border)",borderRadius:"var(--r)",
+          padding:"20px",textAlign:"center",marginBottom:16,color:"var(--muted)",fontSize:"0.85rem"}}>
+          Log at least 2 entries to see your trend chart.
+        </div>
+      )}
+
+      {/* ── Share card ── */}
+      <div style={{marginBottom:16}}>
+        <button onClick={()=>setShowShare(v=>!v)}
+          style={{width:"100%",background:"var(--s1)",border:"1px solid var(--aborder)",
+            borderRadius:"var(--r)",padding:"12px",fontWeight:700,fontSize:"0.85rem",
+            color:"var(--accent)",cursor:"pointer",fontFamily:"var(--ff-display)"}}>
+          {showShare ? "Hide share card ↑" : "📸 Generate share card"}
+        </button>
+        {showShare && (
+          <div style={{marginTop:12}}>
+            <ShareCard/>
+            <div style={{fontSize:"0.7rem",color:"var(--muted)",textAlign:"center",
+              marginTop:10,padding:"0 16px"}}>
+              Take a screenshot of this card to share your progress with friends.
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* ── Log history ── */}
+      {entries.length > 0 && (
+        <div style={{background:"var(--s1)",border:"1px solid var(--border)",
+          borderRadius:"var(--r)",padding:"16px"}}>
+          <div style={{fontSize:"0.7rem",fontWeight:700,letterSpacing:"0.1em",
+            textTransform:"uppercase",color:"var(--accent)",marginBottom:10}}>
+            History ({entries.length} entries)
+          </div>
+          <div style={{maxHeight:200,overflowY:"auto"}}>
+            {[...entries].reverse().map(e => (
+              <div key={e.date} style={{display:"flex",justifyContent:"space-between",
+                alignItems:"center",padding:"8px 0",
+                borderBottom:"1px solid var(--border)"}}>
+                <span style={{fontSize:"0.8rem",color:"var(--muted)",fontFamily:"var(--ff-mono)"}}>
+                  {e.date}
+                </span>
+                <span style={{fontSize:"0.95rem",fontWeight:700,
+                  fontFamily:"var(--ff-mono)",color:"var(--fg)"}}>
+                  {e.weight} lbs
+                </span>
+                <button onClick={()=>deleteEntry(e.date)}
+                  style={{background:"none",border:"none",color:"var(--muted)",
+                    cursor:"pointer",fontSize:"0.75rem",padding:"2px 6px"}}>
+                  ✕
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function HomeTab({ prefs, setTab }) {
   const weekInfo = WEEK_PROGRESSIONS[prefs.week-1];
   const ct = CARDIO_TYPES.find(c=>c.id===prefs.cardioType);
@@ -1991,12 +2354,13 @@ export default function App() {
   const [mealState, setMealState] = useState({ mealCount:4, pinned:{}, avoidTags:[] });
 
   const NAV = [
-    {id:"home",    icon:"🏠", label:"Home"},
-    {id:"workout", icon:"🏋️", label:"Train"},
-    {id:"macros",  icon:"📊", label:"Macros"},
-    {id:"meals",   icon:"🍽️", label:"Meals"},
-    {id:"grocery", icon:"🛒", label:"Shop"},
-    {id:"learn",   icon:"📚", label:"Learn"},
+    {id:"home",     icon:"🏠", label:"Home"},
+    {id:"workout",  icon:"🏋️", label:"Train"},
+    {id:"macros",   icon:"📊", label:"Macros"},
+    {id:"meals",    icon:"🍽️", label:"Meals"},
+    {id:"grocery",  icon:"🛒", label:"Shop"},
+    {id:"progress", icon:"📈", label:"Progress"},
+    {id:"learn",    icon:"📚", label:"Learn"},
   ];
 
   if (!prefs) {
@@ -2020,7 +2384,7 @@ export default function App() {
       <div className="app">
         <div className="top-bar">
           <div className="brand">Health<em>Fund</em></div>
-          {(tab==="macros"||tab==="meals"||tab==="grocery"||tab==="learn")&&(
+          {(tab==="macros"||tab==="meals"||tab==="grocery"||tab==="learn"||tab==="progress")&&(
             <div className="access-badge">Full Access</div>
           )}
           {(tab==="home"||tab==="workout")&&(
@@ -2035,7 +2399,8 @@ export default function App() {
         {tab==="macros"  && <MacroTab prefs={prefs}/>}
         {tab==="meals"   && <MealsTab prefs={prefs} mealState={mealState} setMealState={setMealState}/>}
         {tab==="grocery" && <GroceryTab prefs={prefs} mealState={mealState}/>}
-        {tab==="learn"   && <LearnTab/>}
+        {tab==="learn"    && <LearnTab/>}
+        {tab==="progress" && <ProgressTab prefs={prefs}/>}
       </div>
 
       <div className="bottom-nav">
