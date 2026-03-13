@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0a0b08"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-  <title>Health Fundamentals — Full Access</title>
+  <title>Health Fundamentals — Full System+</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Lato:wght@400;700&display=swap" rel="stylesheet"/>
   <style>
@@ -42,7 +42,7 @@
 <div id="gate">
   <div class="gate-logo">Health<em>Fund</em></div>
   <div class="gate-icon">⚡</div>
-  <h1 class="gate-title">Full Access</h1>
+  <h1 class="gate-title">Full System+</h1>
   <p class="gate-sub">Enter the access code from your purchase confirmation email to unlock your program.</p>
   <div class="gate-label">Access Code</div>
   <input id="code-input" class="gate-input" type="text" placeholder="Enter your code" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false"/>
@@ -68,11 +68,11 @@
 <script>
   // Codes stored as SHA-256 hashes — actual values never appear in source
   const CODE_HASHES = [
-    "2355a5ac039f6c9c7700ae34798dc18535b0c7104225d7bdd64533e1c5303ba1",
-    "d70a097fc2ed326edde69999d16d2b1cd6fb188085d44a3c450f0e8065fbc475",
-    "1a80a74e7f1d5bf039237a326bedcba7fee9022cdc05d8f1e20c34e7e4e557ae",
+    "1042084c1897ab386b629e2cb78ee2e9888a0d51d1425fd1705207e24a352502",
+    "f3cf32d062cc5d20c2a44ca90ee8bb60547c161d5a1808732ebf128ef6b347ac",
+    "1499ac46bb59234ebba5bd7efff98ce50c031a391f0e6f5fb9ababcedbc4552f",
   ];
-  const STORAGE_KEY = "hf_pro_access_v1";
+  const STORAGE_KEY = "hf_proplus_access_v1";
 
   async function hashCode(str) {
     const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
@@ -2116,7 +2116,7 @@ function ProgressTab({ prefs }) {
         </div>
 
         <div style={{fontSize:"0.7rem",color:"var(--muted)",textAlign:"center",opacity:0.6}}>
-          cjrochest.github.io/HealthFundamentals/pro
+          cjrochest.github.io/HealthFundamentals/pro-plus
         </div>
       </div>
     );
@@ -2370,7 +2370,7 @@ export default function App() {
         <div className="app">
           <div className="top-bar">
             <div className="brand">Health<em>Fund</em></div>
-            <div className="access-badge">Full Access</div>
+            <div className="access-badge">Full System+</div>
           </div>
           <PlanBuilder onGenerate={(p)=>{ setPrefs(p); setTab("workout"); }} />
         </div>
@@ -2385,7 +2385,7 @@ export default function App() {
         <div className="top-bar">
           <div className="brand">Health<em>Fund</em></div>
           {(tab==="macros"||tab==="meals"||tab==="grocery"||tab==="learn"||tab==="progress")&&(
-            <div className="access-badge">Full Access</div>
+            <div className="access-badge">Full System+</div>
           )}
           {(tab==="home"||tab==="workout")&&(
             <div style={{fontSize:"0.7rem",color:"var(--muted)",fontWeight:700}}>
