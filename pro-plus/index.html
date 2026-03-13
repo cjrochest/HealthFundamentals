@@ -130,7 +130,7 @@
 </script>
 
 <!-- ── App — inlined so GitHub Pages MIME type is never an issue ── -->
-<script type="text/babel">
+<script type="text/babel" data-presets="react">
 const { useState, useMemo, useRef, useCallback } = React;
 
 const STYLE = `
@@ -2305,7 +2305,7 @@ function HomeTab({ prefs, setTab }) {
 }
 
 // ─── ROOT ─────────────────────────────────────────────────────────────────────
-export default function App() {
+function App() {
   const [tab, setTab] = useState("home");
   const [prefs, setPrefs] = useState(null); // null = not yet built
 
