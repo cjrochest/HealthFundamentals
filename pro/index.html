@@ -108,10 +108,18 @@
     if (stored && CODE_HASHES.includes(stored)) unlockApp();
   });
 
+  // Babel transpiles the JSX asynchronously — we wait for it to signal ready
+  window._appReady = false;
+  window._unlockPending = false;
+
   function unlockApp() {
     document.getElementById("gate").style.display = "none";
     document.getElementById("loading").classList.add("visible");
-    setTimeout(mountApp, 200);
+    if (window._appReady) {
+      mountApp();
+    } else {
+      window._unlockPending = true;
+    }
   }
 
   function mountApp() {
@@ -2415,6 +2423,12 @@ export default function App() {
   );
 }
 
+
+// Signal that Babel has finished transpiling
+window._appReady = true;
+if (window._unlockPending) {
+  mountApp();
+}
 </script>
 
 </body>
