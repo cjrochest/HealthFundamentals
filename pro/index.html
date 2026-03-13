@@ -123,35 +123,15 @@
   }
 
   function mountApp() {
-    try {
-      document.getElementById("loading").classList.remove("visible");
-      document.getElementById("app-root").classList.add("visible");
-      const root = ReactDOM.createRoot(document.getElementById("app-root"));
-      root.render(React.createElement(App));
-    } catch(err) {
-      document.getElementById("loading").innerHTML =
-        "<div style='color:#ff6b6b;padding:24px;font-size:0.8rem;max-width:360px;margin:0 auto;line-height:1.6'>" +
-        "<strong style='display:block;margin-bottom:8px'>Error loading app:</strong>" +
-        err.message + "<br><br>" +
-        "<span style='color:#656857'>" + (err.stack||"").split("\n").slice(0,3).join("<br>") + "</span>" +
-        "</div>";
-    }
+    document.getElementById("loading").classList.remove("visible");
+    document.getElementById("app-root").classList.add("visible");
+    const root = ReactDOM.createRoot(document.getElementById("app-root"));
+    root.render(React.createElement(App));
   }
-
-  window.addEventListener("error", function(e) {
-    if (document.getElementById("loading").classList.contains("visible")) {
-      document.getElementById("loading").innerHTML =
-        "<div style='color:#ff6b6b;padding:24px;font-size:0.8rem;max-width:360px;margin:0 auto;line-height:1.6'>" +
-        "<strong style='display:block;margin-bottom:8px'>Script error:</strong>" +
-        e.message + "<br><br>" +
-        "<span style='color:#656857'>Line " + e.lineno + "</span>" +
-        "</div>";
-    }
-  });
 </script>
 
 <!-- ── App — inlined so GitHub Pages MIME type is never an issue ── -->
-<script type="text/babel">
+<script type="text/babel" data-presets="react">
 const { useState, useMemo, useRef, useCallback } = React;
 
 const STYLE = `
