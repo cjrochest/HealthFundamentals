@@ -124,7 +124,7 @@
 
 <!-- ── App — inlined so GitHub Pages MIME type is never an issue ── -->
 <script type="text/babel">
-import { useState, useMemo } from "react";
+const { useState, useMemo, useRef, useCallback } = React;
 
 const STYLE = `
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Lato:ital,wght@0,300;0,400;0,700;1,300&family=DM+Mono:wght@400;500&display=swap');
@@ -1967,12 +1967,12 @@ function parseDate(s) {
 
 function ProgressTab({ prefs }) {
   const startWeight = prefs?.weight || 0;
-  const [data, setData]         = React.useState(loadProgress);
-  const [inputVal, setInputVal] = React.useState("");
-  const [view, setView]         = React.useState("month"); // week | month | year
-  const [showShare, setShowShare] = React.useState(false);
-  const [toast, setToast]       = React.useState({ show: false, msg: "" });
-  const shareRef                = React.useRef(null);
+  const [data, setData]         = useState(loadProgress);
+  const [inputVal, setInputVal] = useState("");
+  const [view, setView]         = useState("month"); // week | month | year
+  const [showShare, setShowShare] = useState(false);
+  const [toast, setToast]       = useState({ show: false, msg: "" });
+  const shareRef                = useRef(null);
 
   const today = formatDate(new Date());
 
@@ -1981,7 +1981,7 @@ function ProgressTab({ prefs }) {
   const todayEntry= entries.find(e => e.date === today);
   const checkinStreak = data.streaks?.checkin || 0;
 
-  const filtered = React.useMemo(() => {
+  const filtered = useMemo(() => {
     const now = new Date();
     const cutoff = new Date();
     if (view === "week")  cutoff.setDate(now.getDate() - 6);
@@ -2370,7 +2370,7 @@ export default function App() {
         <div className="app">
           <div className="top-bar">
             <div className="brand">Health<em>Fund</em></div>
-            <div className="access-badge">Full System+</div>
+            <div className="access-badge">Full Access</div>
           </div>
           <PlanBuilder onGenerate={(p)=>{ setPrefs(p); setTab("workout"); }} />
         </div>
@@ -2385,7 +2385,7 @@ export default function App() {
         <div className="top-bar">
           <div className="brand">Health<em>Fund</em></div>
           {(tab==="macros"||tab==="meals"||tab==="grocery"||tab==="learn"||tab==="progress")&&(
-            <div className="access-badge">Full System+</div>
+            <div className="access-badge">Full Access</div>
           )}
           {(tab==="home"||tab==="workout")&&(
             <div style={{fontSize:"0.7rem",color:"var(--muted)",fontWeight:700}}>
