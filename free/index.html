@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta name="theme-color" content="#0a0b08"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <title>Health Fundamentals — Starter Week</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Lato:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;background:#0a0b08;-webkit-font-smoothing:antialiased;}
+  </style>
+</head>
+<body>
+  <div id="app-root"></div>
+
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script type="text/babel">
+const { useState } = React;
+
+const GUMROAD_URL = "https://rochesterian3.gumroad.com/l/xoizj";
+
+const STYLE = `
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Lato:ital,wght@0,300;0,400;0,700;1,300&family=DM+Mono:wght@400;500&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0b08;--s1:#131410;--s2:#1b1d16;--s3:#22251a;--border:#272920;
+  --accent:#c8f135;--adim:rgba(200,241,53,0.11);--aborder:rgba(200,241,53,0.26);
+  --orange:#f5a623;--odim:rgba(245,166,35,0.1);--oborder:rgba(245,166,35,0.25);
+  --blue:#5db8fe;--bdim:rgba(93,184,254,0.1);--bborder:rgba(93,184,254,0.25);
+  --red:#ff6b6b;--rdim:rgba(255,107,107,0.1);--rborder:rgba(255,107,107,0.25);
+  --purple:#c084fc;--pdim:rgba(192,132,252,0.1);--pborder:rgba(192,132,252,0.25);
+  --text:#e9ead6;--muted:#656857;--muted2:#3e4033;
+  --r:14px;--r-sm:8px;--r-xs:6px;
+}
+body{background:var(--bg);color:var(--text);font-family:'Lato',sans-serif;min-height:100vh;max-width:430px;margin:0 auto;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+.app{display:flex;flex-direction:column;min-height:100vh;padding-bottom:92px;}
+
+.top-bar{padding:16px 18px 14px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50;background:rgba(10,11,8,0.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);}
+.brand{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;}
+.brand em{color:var(--accent);font-style:normal;}
+.free-badge{background:var(--s2);border:1px solid var(--border);border-radius:99px;padding:4px 12px;font-size:0.62rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);}
+
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(10,11,8,0.96);backdrop-filter:blur(16px);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:8px 0 20px;z-index:100;}
+.nav-btn{background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 10px;transition:all 0.15s;}
+.nav-icon{font-size:1.2rem;}
+.nav-label{font-size:0.56rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);transition:color 0.15s;}
+.nav-btn.active .nav-label{color:var(--accent);}
+.nav-btn.locked .nav-icon{filter:grayscale(1);opacity:0.35;}
+.nav-btn.locked .nav-label{opacity:0.35;}
+
+.hero{margin:14px 16px 0;padding:20px;background:linear-gradient(140deg,#141b08 0%,#0a0f05 100%);border:1px solid #1f2814;border-radius:var(--r);position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;right:-30px;top:-30px;width:160px;height:160px;background:radial-gradient(circle,rgba(200,241,53,0.08) 0%,transparent 70%);}
+.hero-eyebrow{font-size:0.62rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--accent);margin-bottom:5px;}
+.hero-title{font-family:'Syne',sans-serif;font-size:1.7rem;font-weight:800;line-height:1.05;color:var(--text);}
+.hero-sub{font-size:0.78rem;color:var(--muted);margin-top:7px;line-height:1.5;}
+
+.section-head{padding:20px 18px 10px;display:flex;justify-content:space-between;align-items:baseline;}
+.section-title{font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:800;color:var(--text);}
+.section-sub{font-size:0.7rem;color:var(--muted);font-family:'DM Mono',monospace;}
+
+.card-stack{padding:0 16px;display:flex;flex-direction:column;gap:10px;}
+.card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;transition:border-color 0.18s;}
+.card.clickable{cursor:pointer;}
+.card.clickable:active{transform:scale(0.985);}
+.card.open{border-color:var(--aborder);}
+.card.open-orange{border-color:var(--oborder);}
+
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;}
+.tag{font-size:0.6rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border-radius:99px;border:1px solid var(--border);color:var(--muted);background:var(--s2);}
+.tag-g{background:var(--adim);color:var(--accent);border-color:var(--aborder);}
+.tag-o{background:var(--odim);color:var(--orange);border-color:var(--oborder);}
+.tag-b{background:var(--bdim);color:var(--blue);border-color:var(--bborder);}
+
+.card-title{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;color:var(--text);line-height:1.2;}
+.card-desc{font-size:0.77rem;color:var(--muted);margin-top:4px;line-height:1.45;}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;}
+.chevron{font-size:0.9rem;color:var(--muted);transition:transform 0.2s;flex-shrink:0;margin-left:6px;margin-top:2px;}
+.chevron.open{transform:rotate(180deg);color:var(--accent);}
+.card-detail{margin-top:14px;border-top:1px solid var(--border);padding-top:14px;}
+
+.ex-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:start;padding:10px 0;border-bottom:1px solid rgba(39,41,32,0.7);}
+.ex-row:last-of-type{border-bottom:none;}
+.ex-name{font-size:0.88rem;font-weight:700;color:var(--text);}
+.ex-tip{font-size:0.72rem;color:var(--muted);margin-top:2px;line-height:1.4;}
+.ex-sets{font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--accent);white-space:nowrap;text-align:right;}
+
+.action-btn{width:100%;border:none;border-radius:var(--r-sm);padding:13px;font-family:'Lato',sans-serif;font-size:0.8rem;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:opacity 0.15s;margin-top:14px;}
+.action-btn:active{opacity:0.75;}
+.btn-primary{background:var(--accent);color:#0a0b08;}
+.btn-secondary{background:var(--s2);border:1px solid var(--border);color:var(--text);}
+.btn-saved{background:var(--s2);border:1px solid var(--aborder);color:var(--accent);}
+
+/* ONBOARD */
+.onboard-wrap{padding:16px;}
+.onboard-step{margin-bottom:20px;}
+.step-label{font-size:0.62rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+.step-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--text);margin-bottom:12px;}
+.cardio-option{background:var(--s2);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 14px;cursor:pointer;transition:all 0.15s;}
+.cardio-option.selected{border-color:var(--aborder);background:var(--adim);}
+.co-title{font-size:0.84rem;font-weight:700;color:var(--text);}
+.co-detail{font-size:0.72rem;color:var(--muted);margin-top:2px;}
+.generate-btn{width:100%;background:var(--accent);color:#0a0b08;border:none;border-radius:var(--r-sm);padding:14px;font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:800;letter-spacing:0.04em;cursor:pointer;margin-top:16px;transition:opacity 0.15s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.generate-btn:active{opacity:0.8;}
+.generate-btn:disabled{opacity:0.35;cursor:not-allowed;}
+
+/* UPGRADE */
+.upgrade-banner{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#151f06,#0c1404);border:1px solid var(--aborder);border-radius:var(--r);padding:16px;margin:0 16px 14px;text-decoration:none;cursor:pointer;transition:opacity 0.2s;}
+.upgrade-banner:active{opacity:0.85;}
+.ub-icon{font-size:1.8rem;flex-shrink:0;}
+.ub-eyebrow{font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:3px;}
+.ub-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:var(--text);line-height:1.15;}
+.ub-sub{font-size:0.72rem;color:var(--muted);margin-top:3px;}
+.ub-arrow{margin-left:auto;color:var(--accent);font-size:1.1rem;flex-shrink:0;}
+
+.lock-gate{background:linear-gradient(160deg,#141a07,#0b1004);border:1px solid var(--aborder);border-radius:var(--r);padding:28px 22px;text-align:center;cursor:pointer;transition:opacity 0.2s;}
+.lock-gate:active{opacity:0.85;}
+.lock-icon{font-size:2.4rem;margin-bottom:12px;}
+.lock-title{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--text);margin-bottom:8px;}
+.lock-desc{font-size:0.8rem;color:var(--muted);line-height:1.55;margin-bottom:18px;}
+.lock-features{list-style:none;margin-bottom:20px;text-align:left;display:flex;flex-direction:column;gap:8px;}
+.lock-features li{font-size:0.8rem;color:var(--text);display:flex;gap:10px;align-items:flex-start;}
+.lock-features li::before{content:'✓';color:var(--accent);font-weight:700;flex-shrink:0;margin-top:1px;}
+.lock-btn{display:inline-block;background:var(--accent);color:#0a0b08;border:none;border-radius:var(--r-sm);padding:13px 28px;font-family:'Lato',sans-serif;font-size:0.82rem;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;cursor:pointer;text-decoration:none;width:100%;text-align:center;}
+.lock-price{font-size:0.7rem;color:var(--muted);margin-top:10px;}
+
+/* MEAL PREVIEW (teaser) */
+.meal-preview-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;position:relative;}
+.meal-preview-blur{filter:blur(3px);pointer-events:none;opacity:0.5;padding:14px 16px;}
+.meal-preview-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:rgba(10,11,8,0.6);backdrop-filter:blur(2px);cursor:pointer;padding:20px;}
+.mpo-label{font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--orange);}
+.mpo-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:var(--text);text-align:center;line-height:1.3;}
+.mpo-btn{background:var(--accent);color:#0a0b08;border:none;border-radius:99px;padding:8px 20px;font-size:0.75rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;margin-top:4px;}
+
+/* EDU */
+.edu-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:border-color 0.18s;}
+.edu-card.eg{border-color:var(--aborder);}
+.edu-card.eo{border-color:var(--oborder);}
+.edu-card.eb{border-color:var(--bborder);}
+.edu-header{padding:16px 18px;display:flex;align-items:center;gap:14px;}
+.edu-icon{font-size:1.8rem;flex-shrink:0;}
+.edu-num{font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:2px;}
+.edu-title-t{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--text);line-height:1.2;}
+.edu-preview{font-size:0.74rem;color:var(--muted);margin-top:3px;}
+.edu-body{padding:0 18px 18px;border-top:1px solid var(--border);}
+.edu-h{font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:8px;margin-top:16px;}
+.edu-h.cg{color:var(--accent);}
+.edu-h.co{color:var(--orange);}
+.edu-h.cb{color:var(--blue);}
+.edu-text{font-size:0.82rem;color:var(--muted);line-height:1.6;}
+.edu-callout{background:var(--s2);border-radius:var(--r-sm);padding:12px 14px;margin-top:12px;}
+.edu-callout.cg{border-left:3px solid var(--aborder);}
+.edu-callout.co{border-left:3px solid var(--oborder);}
+.edu-callout.cb{border-left:3px solid var(--bborder);}
+.edu-callout-label{font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:4px;}
+.edu-callout-label.cg{color:var(--accent);}
+.edu-callout-label.co{color:var(--orange);}
+.edu-callout-label.cb{color:var(--blue);}
+.edu-callout-text{font-size:0.8rem;color:var(--text);line-height:1.5;}
+.edu-stat-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
+.edu-stat-box{background:var(--s1);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px;}
+.edu-stat-val{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;}
+.edu-stat-val.cg{color:var(--accent);}
+.edu-stat-val.co{color:var(--orange);}
+.edu-stat-val.cb{color:var(--blue);}
+.edu-stat-label{font-size:0.7rem;color:var(--muted);margin-top:2px;line-height:1.3;}
+.checklist{list-style:none;margin-top:10px;display:flex;flex-direction:column;gap:7px;}
+.checklist li{display:flex;gap:9px;font-size:0.8rem;color:var(--text);line-height:1.4;align-items:flex-start;}
+.checklist li.cg::before{content:'✓';color:var(--accent);font-weight:700;font-size:0.75rem;margin-top:1px;flex-shrink:0;}
+.checklist li.co::before{content:'✓';color:var(--orange);font-weight:700;font-size:0.75rem;margin-top:1px;flex-shrink:0;}
+.checklist li.cb::before{content:'✓';color:var(--blue);font-weight:700;font-size:0.75rem;margin-top:1px;flex-shrink:0;}
+
+.toast{position:fixed;bottom:104px;left:50%;transform:translateX(-50%);background:var(--s2);color:var(--text);border:1px solid var(--aborder);padding:10px 22px;border-radius:99px;font-size:0.78rem;font-weight:700;letter-spacing:0.05em;z-index:300;white-space:nowrap;opacity:0;transition:opacity 0.3s;pointer-events:none;}
+.toast span{color:var(--accent);}
+.toast.show{opacity:1;}
+
+.field-label{font-size:0.62rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);}
+.field-input{background:var(--s2);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px 12px;font-family:'DM Mono',monospace;font-size:0.92rem;color:var(--text);outline:none;width:100%;transition:border-color 0.15s;-moz-appearance:textfield;}
+.field-input:focus{border-color:var(--aborder);}
+.field-input::-webkit-inner-spin-button{display:none;}
+`;
+
+// ─── WORKOUT DATA — sex-specific starter sets ─────────────────────────────────
+const FREE_WORKOUTS = {
+  male: [
+    { id:"m1", day:"Day 1 — Monday", name:"Full Body Strength A", focus:"Chest & Back", duration:"45 min", rest:"60s",
+      desc:"Learn the pattern. Light weight — leave 3 reps in reserve every set.",
+      exercises:[
+        {name:"Barbell Bench Press",   sets:"3×10–12", tip:"3s descent, full ROM"},
+        {name:"Pull-Up / Lat Pulldown",sets:"3×10–12", tip:"Dead hang start, chin over bar"},
+        {name:"Back Squat",            sets:"3×10–12", tip:"Brace, drive knees out"},
+        {name:"Dumbbell Shoulder Press",sets:"3×10–12",tip:"Full ROM, don't arch"},
+        {name:"Plank",                 sets:"3×30s",   tip:"Squeeze glutes, neutral spine"},
+      ]
+    },
+    { id:"m2", day:"Day 2 — Wednesday", name:"Full Body Strength B", focus:"Legs & Shoulders", duration:"45 min", rest:"60s",
+      desc:"Focus on control and depth. Slow eccentrics on leg work.",
+      exercises:[
+        {name:"Romanian Deadlift",     sets:"3×10–12", tip:"Load hamstrings, slow descent"},
+        {name:"Incline DB Press",      sets:"3×10–12", tip:"Stretch at bottom, squeeze top"},
+        {name:"Seated Cable Row",      sets:"3×10–12", tip:"Chest tall, squeeze blades"},
+        {name:"Lateral Raise",         sets:"3×12–15", tip:"Lead with elbows, no swinging"},
+        {name:"Dead Bug",              sets:"3×10",    tip:"Low back pressed to floor"},
+      ]
+    },
+    { id:"m3", day:"Day 3 — Friday", name:"Full Body Strength C", focus:"Arms & Core", duration:"45 min", rest:"60s",
+      desc:"Finish the week. Aim to add 5 lbs or 1–2 reps vs Day 1 where possible.",
+      exercises:[
+        {name:"Leg Press",             sets:"3×12",    tip:"Full ROM, don't lock knees"},
+        {name:"EZ-Bar Curl",           sets:"3×10–12", tip:"Full supination at top"},
+        {name:"Skull Crusher",         sets:"3×10–12", tip:"Elbows in, lower to forehead"},
+        {name:"Face Pull",             sets:"3×15",    tip:"Pull to forehead, rotate out"},
+        {name:"Ab Wheel Rollout",      sets:"3×8–10",  tip:"Brace hard, don't let hips drop"},
+      ]
+    },
+  ],
+  female: [
+    { id:"f1", day:"Day 1 — Monday", name:"Glutes & Legs", focus:"Glutes & Legs", duration:"45 min", rest:"60s",
+      desc:"Learn hip thrust and squat patterns. Full range of motion — depth is your friend.",
+      exercises:[
+        {name:"Barbell Hip Thrust",    sets:"3×12–15", tip:"Drive through heels, 1s squeeze at top"},
+        {name:"Goblet Squat",          sets:"3×12–15", tip:"Drive knees out, sit deep"},
+        {name:"Romanian Deadlift",     sets:"3×10–12", tip:"Feel the hamstring stretch, slow descent"},
+        {name:"Leg Press (high feet)", sets:"3×12–15", tip:"High foot placement = more glute"},
+        {name:"Glute Bridge",          sets:"3×15",    tip:"Full extension, hard squeeze at top"},
+      ]
+    },
+    { id:"f2", day:"Day 2 — Wednesday", name:"Upper Body Tone + Core", focus:"Back, Shoulders & Core", duration:"45 min", rest:"60s",
+      desc:"Light-to-moderate weight. Focus on feel and control, not max load.",
+      exercises:[
+        {name:"Lat Pulldown",          sets:"3×12–15", tip:"Pull to upper chest, feel the lats"},
+        {name:"Seated Cable Row",      sets:"3×12–15", tip:"Chest tall, squeeze shoulder blades"},
+        {name:"Lateral Raise",         sets:"3×12–15", tip:"Lead elbows — builds shoulder width"},
+        {name:"Tricep Pushdown",       sets:"3×12–15", tip:"Full extension, feel the contraction"},
+        {name:"Plank",                 sets:"3×30s",   tip:"Squeeze core and glutes, don't sag"},
+      ]
+    },
+    { id:"f3", day:"Day 3 — Friday", name:"Glutes & Legs B + Core", focus:"Glutes & Core", duration:"45 min", rest:"60s",
+      desc:"Second glute session of the week. Slightly different exercises — same intent.",
+      exercises:[
+        {name:"Sumo Deadlift",         sets:"3×10–12", tip:"Wide stance, toes out, drive hips through"},
+        {name:"Bulgarian Split Squat", sets:"3×10 each",tip:"Drop rear knee down, stay upright"},
+        {name:"Cable Kickback",        sets:"3×15 each",tip:"Squeeze hard at top, control return"},
+        {name:"Lateral Band Walk",     sets:"3×15 each",tip:"Maintain tension, don't let knees cave"},
+        {name:"Dead Bug",              sets:"3×10",    tip:"Low back flat to floor throughout"},
+      ]
+    },
+  ],
+};
+
+// ─── FREE LESSONS (4 of 8) ────────────────────────────────────────────────────
+const FREE_LESSONS = [
+  { id:"l1", icon:"🔥", cc:"eg", number:"01", title:"What Is a Calorie?", preview:"The foundation of every nutrition decision.",
+    blocks:[
+      {t:"h",c:"cg",text:"The Simple Truth"},
+      {t:"p",text:"A calorie is a unit of energy — the amount needed to raise 1kg of water by 1°C. When food labels say '300 calories,' they mean 300 kilocalories: the energy stored in that food your body can use."},
+      {t:"h",c:"cg",text:"Why It Matters"},
+      {t:"p",text:"Your body runs on energy 24/7 — breathing, digesting, thinking, moving. All of it costs calories. Eat more than you spend → surplus stored as fat. Eat less → body pulls from those stores."},
+      {t:"call",c:"cg",label:"The Core Equation",text:"Calories In vs. Calories Out. Everything else in nutrition is detail layered on top of this one principle."},
+    ],
+    stats:[{val:"~2,000",c:"cg",label:"avg daily calories (sedentary adult)"},{val:"3,500",c:"cg",label:"calories in ~1 lb of body fat"}]
+  },
+  { id:"l2", icon:"⚖️", cc:"eo", number:"02", title:"Macronutrients Explained", preview:"Protein, carbs, fat — what each does.",
+    blocks:[
+      {t:"h",c:"co",text:"The Three Macros"},
+      {t:"p",text:"Every calorie comes from protein (4 cal/g), carbohydrates (4 cal/g), or fat (9 cal/g). Each plays a distinct role. None are 'bad.'"},
+      {t:"call",c:"co",label:"Key Insight",text:"Most people dramatically undereat protein. Hitting your protein target produces more change than any other single nutrition action."},
+    ],
+    stats:[{val:"4",c:"cg",label:"cal per gram: protein or carbs"},{val:"9",c:"co",label:"cal per gram: dietary fat"}]
+  },
+  { id:"l3", icon:"💪", cc:"eb", number:"03", title:"How Much Protein?", preview:"The most important number in your plan.",
+    blocks:[
+      {t:"h",c:"cb",text:"Research-Backed Range"},
+      {t:"p",text:"For people training with weights: 0.7–1g per pound of bodyweight per day. In a calorie deficit, lean toward the higher end to protect muscle mass."},
+      {t:"call",c:"cb",label:"Practical Target",text:"0.8g per pound of bodyweight. For a 180 lb person: 144g/day — spread across 3–4 meals."},
+    ],
+    checklist:[{c:"cb",text:"Include protein at every meal"},{c:"cb",text:"Target 0.8g per pound of bodyweight"},{c:"cb",text:"Spread across 3–4 meals, not just one"}]
+  },
+  { id:"l4", icon:"🌿", cc:"eb", number:"04", title:"Fiber & Why It Matters", preview:"The most ignored nutrient — with real consequences.",
+    blocks:[
+      {t:"h",c:"cb",text:"What Fiber Does"},
+      {t:"p",text:"Fiber slows digestion, blunts blood sugar spikes, feeds your gut microbiome, and keeps you full. Low fiber is linked to colon cancer, heart disease, and obesity."},
+      {t:"call",c:"cb",label:"Daily Target",text:"Men: 38g/day. Women: 25g/day. Most Americans get ~15g. That gap has real consequences over years."},
+    ],
+    stats:[{val:"38g",c:"cb",label:"daily fiber target — men"},{val:"25g",c:"cb",label:"daily fiber target — women"}]
+  },
+];
+
+// ─── MEAL PREVIEW DATA (blurred teaser) ───────────────────────────────────────
+const MEAL_PREVIEW = {
+  male:   { name:"Chicken Quinoa Power Bowl", macros:"48g P · 52g C · 12g F · 508 cal", time:"Lunch · 12:30PM" },
+  female: { name:"Egg White Veggie Scramble",  macros:"42g P · 28g C · 10g F · 370 cal", time:"Breakfast · 7AM" },
+};
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+function copyText(t){try{navigator.clipboard.writeText(t);}catch{const e=document.createElement("textarea");e.value=t;e.style.cssText="position:fixed;opacity:0";document.body.appendChild(e);e.select();document.execCommand("copy");document.body.removeChild(e);}}
+function Toast({msg,show}){return <div className={`toast${show?" show":""}`}><span>✓</span> {msg}</div>;}
+
+// ─── ONBOARDING ───────────────────────────────────────────────────────────────
+function Onboarding({ onDone }) {
+  const [step, setStep] = useState(0);
+  const [sex, setSex]   = useState("");
+  const [goal, setGoal] = useState("");
+
+  const canNext = [sex !== "", goal !== ""];
+
+  const STEPS = [
+    <div key="s0">
+      <div className="step-label">Step 1 of 2</div>
+      <div className="step-title">Let's personalize your starter week.</div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+        {[["male","Male 💪","Strength-focused, full body"],["female","Female 🍑","Glutes, legs & toning"]].map(([v,l,s])=>(
+          <div key={v} className={`cardio-option${sex===v?" selected":""}`} onClick={()=>setSex(v)} style={{textAlign:"center"}}>
+            <div className="co-title">{l}</div>
+            <div className="co-detail">{s}</div>
+          </div>
+        ))}
+      </div>
+      {sex && (
+        <div style={{marginTop:12,background:sex==="female"?"var(--pdim)":"var(--adim)",border:`1px solid ${sex==="female"?"var(--pborder)":"var(--aborder)"}`,borderRadius:"var(--r-sm)",padding:"10px 14px",fontSize:"0.78rem",color:"var(--text)",lineHeight:1.5}}>
+          {sex==="female"
+            ? "🍑 Your starter week focuses on glutes, legs & core every session with upper body toning."
+            : "💪 Your starter week builds full-body strength across 3 sessions."}
+        </div>
+      )}
+    </div>,
+
+    <div key="s1">
+      <div className="step-label">Step 2 of 2</div>
+      <div className="step-title">What's your main goal right now?</div>
+      <div style={{display:"flex",flexDirection:"column",gap:8}}>
+        {[
+          ["cut",    sex==="female"?"Lean Out 🔥":"Lose Fat 🔥",     "Calorie deficit, preserve muscle"],
+          ["maintain",sex==="female"?"Recomp & Tone ⚖️":"Get Stronger ⚖️","Build habits, improve body comp"],
+          ["build",  sex==="female"?"Build & Sculpt 💪":"Build Muscle 💪","Calorie surplus, grow muscle"],
+        ].map(([v,l,s])=>(
+          <div key={v} className={`cardio-option${goal===v?" selected":""}`} onClick={()=>setGoal(v)}>
+            <div className="co-title">{l}</div>
+            <div className="co-detail">{s}</div>
+          </div>
+        ))}
+      </div>
+    </div>,
+  ];
+
+  const isLast = step === STEPS.length - 1;
+  return (
+    <div>
+      <div className="section-head">
+        <span className="section-title">Build Your Plan</span>
+        <span className="section-sub">Step {step+1} of 2</span>
+      </div>
+      <div style={{padding:"0 16px 16px",display:"flex",gap:6}}>
+        {STEPS.map((_,i)=>(
+          <div key={i} style={{flex:1,height:3,borderRadius:99,background:i<=step?"var(--accent)":"var(--s3)",transition:"background 0.3s"}}/>
+        ))}
+      </div>
+      <div className="onboard-wrap">
+        <div className="onboard-step">{STEPS[step]}</div>
+        <div style={{display:"flex",gap:10}}>
+          {step > 0 && (
+            <button className="action-btn btn-secondary" style={{flex:"0 0 80px",marginTop:0}} onClick={()=>setStep(s=>s-1)}>← Back</button>
+          )}
+          <button className="generate-btn" style={{flex:1,marginTop:0,borderRadius:"var(--r-sm)",padding:13,fontSize:"0.82rem"}}
+            disabled={!canNext[step]}
+            onClick={()=>{ if(isLast) onDone({sex,goal}); else setStep(s=>s+1); }}>
+            {isLast ? "⚡ Start My Free Week" : "Continue →"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── UPGRADE BANNER ───────────────────────────────────────────────────────────
+function UpgradeBanner() {
+  return (
+    <a className="upgrade-banner" href={GUMROAD_URL} target="_blank" rel="noopener">
+      <span className="ub-icon">⚡</span>
+      <div>
+        <div className="ub-eyebrow">Unlock Full Access · $29</div>
+        <div className="ub-title">Weeks 1–4 + Macros + Meals</div>
+        <div className="ub-sub">Personalized plan, macro calculator & weekly meal rotation</div>
+      </div>
+      <span className="ub-arrow">→</span>
+    </a>
+  );
+}
+
+// ─── LOCK GATE ────────────────────────────────────────────────────────────────
+function LockGate({ icon, title, desc, features }) {
+  return (
+    <div style={{padding:"16px 16px 0"}}>
+      <div className="lock-gate" onClick={()=>window.open(GUMROAD_URL,"_blank")}>
+        <div className="lock-icon">🔒</div>
+        <div className="lock-title">{icon} {title}</div>
+        <div className="lock-desc">{desc}</div>
+        <ul className="lock-features">
+          {features.map((f,i)=><li key={i}>{f}</li>)}
+        </ul>
+        <a className="lock-btn" href={GUMROAD_URL} target="_blank" rel="noopener">Unlock for $29 →</a>
+        <div className="lock-price">One-time payment · Instant access</div>
+      </div>
+    </div>
+  );
+}
+
+// ─── WORKOUT TAB ─────────────────────────────────────────────────────────────
+function WorkoutTab({ sex }) {
+  const [openId, setOpenId] = useState(null);
+  const [saved,  setSaved]  = useState({});
+  const [toast,  setToast]  = useState({show:false,msg:""});
+  const workouts = FREE_WORKOUTS[sex] || FREE_WORKOUTS.male;
+
+  function showToast(msg){setToast({show:true,msg});setTimeout(()=>setToast({show:false,msg:""}),2400);}
+  function handleCopy(w,e){
+    e.stopPropagation();
+    let t=`💪 ${w.name.toUpperCase()}\n📅 ${w.day} · ${w.duration} · Rest: ${w.rest}\nFocus: ${w.focus}\n\nEXERCISES:\n`;
+    w.exercises.forEach((ex,i)=>{t+=`${i+1}. ${ex.name} — ${ex.sets}\n   Tip: ${ex.tip}\n`;});
+    t+=`\nNote: ${w.desc}\n— Health Fundamentals (Free)`;
+    copyText(t);
+    setSaved(s=>({...s,[w.id]:true}));
+    showToast("Copied — paste into Notes!");
+  }
+
+  return (
+    <div>
+      <div style={{padding:"14px 16px 0",display:"flex",alignItems:"center",gap:8}}>
+        <span style={{background:sex==="female"?"var(--pdim)":"var(--adim)",border:`1px solid ${sex==="female"?"var(--pborder)":"var(--aborder)"}`,borderRadius:99,padding:"4px 12px",fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:sex==="female"?"var(--purple)":"var(--accent)"}}>
+          {sex==="female"?"Female 🍑":"Male 💪"}
+        </span>
+        <span style={{background:"var(--s2)",border:"1px solid var(--border)",borderRadius:99,padding:"4px 12px",fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:"var(--muted)"}}>
+          Starter Week · Beginner
+        </span>
+      </div>
+      <div className="section-head">
+        <span className="section-title">This Week's Training</span>
+        <span className="section-sub">3 sessions</span>
+      </div>
+      <div style={{padding:"0 16px 10px",fontSize:"0.76rem",color:"var(--muted)",lineHeight:1.5}}>
+        Light weight. Form first. Leave 2–3 reps in reserve every set. Completing 2 of 3 days is still progress.
+      </div>
+      <div className="card-stack">
+        {workouts.map(w=>{
+          const isOpen=openId===w.id;
+          return(
+            <div key={w.id} className={`card clickable${isOpen?" open":""}`} onClick={()=>setOpenId(isOpen?null:w.id)}>
+              <div className="card-top">
+                <div style={{flex:1}}>
+                  <div className="tags">
+                    <span className="tag tag-g">{w.day.split("—")[0].trim()}</span>
+                    <span className="tag tag-o">{w.focus}</span>
+                    <span className="tag">⏱ {w.duration}</span>
+                  </div>
+                  <div className="card-title">{w.name}</div>
+                  <div className="card-desc">{w.desc}</div>
+                </div>
+                <span className={`chevron${isOpen?" open":""}`}>▾</span>
+              </div>
+              {isOpen&&(
+                <div className="card-detail">
+                  {w.exercises.map((ex,i)=>(
+                    <div key={i} className="ex-row">
+                      <div><div className="ex-name">{ex.name}</div><div className="ex-tip">{ex.tip}</div></div>
+                      <div className="ex-sets">{ex.sets}</div>
+                    </div>
+                  ))}
+                  <button className={`action-btn${saved[w.id]?" btn-saved":" btn-primary"}`} onClick={e=>handleCopy(w,e)}>
+                    {saved[w.id]?"✓ Copied":"📋 Copy to Notes"}
+                  </button>
+                </div>
+              )}
+            </div>
+          );
+        })}
+        {/* Locked weeks teaser */}
+        <div className="card" style={{borderColor:"var(--aborder)",background:"linear-gradient(140deg,#141b08,#0a0f05)",cursor:"pointer",opacity:0.7}} onClick={()=>window.open(GUMROAD_URL,"_blank")}>
+          <div className="tags"><span className="tag tag-g">Weeks 2–4</span><span className="tag">🔒 Locked</span></div>
+          <div className="card-title">Progressive Overload Program</div>
+          <div className="card-desc">Sets increase to 4, reps shift to 8–10, rest extends. Full 4-week periodized plan in the paid program.</div>
+        </div>
+      </div>
+      <div style={{padding:"14px 16px 0"}}><UpgradeBanner/></div>
+      <Toast msg={toast.msg} show={toast.show}/>
+    </div>
+  );
+}
+
+// ─── MEALS PREVIEW TAB ───────────────────────────────────────────────────────
+function MealsPreviewTab({ sex, goal }) {
+  const preview = MEAL_PREVIEW[sex] || MEAL_PREVIEW.male;
+  return (
+    <div>
+      <div className="section-head"><span className="section-title">Meal Prep</span></div>
+      <div style={{padding:"0 16px 14px",fontSize:"0.78rem",color:"var(--muted)",lineHeight:1.5}}>
+        Goal-based meal plans with weekly rotation, food filters, and allergen settings — unlocked in the full program.
+      </div>
+
+      {/* Blurred meal preview */}
+      <div style={{padding:"0 16px",marginBottom:14}}>
+        <div className="meal-preview-card">
+          <div className="meal-preview-blur">
+            <div style={{fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:"var(--orange)",marginBottom:4}}>{preview.time}</div>
+            <div style={{fontFamily:"'Syne',sans-serif",fontSize:"1.05rem",fontWeight:700,color:"var(--text)",marginBottom:8}}>{preview.name}</div>
+            <div style={{display:"flex",gap:10,fontSize:"0.82rem",fontFamily:"'DM Mono',monospace",color:"var(--muted)"}}>{preview.macros}</div>
+            <div style={{marginTop:12,display:"flex",flexDirection:"column",gap:6}}>
+              {["████████████","██████████","████████████████"].map((b,i)=>(
+                <div key={i} style={{height:10,background:"var(--s2)",borderRadius:4,width:["80%","60%","90%"][i]}}/>
+              ))}
+            </div>
+          </div>
+          <div className="meal-preview-overlay" onClick={()=>window.open(GUMROAD_URL,"_blank")}>
+            <div className="mpo-label">🔒 Full Access</div>
+            <div className="mpo-title">4 meals/day · Weekly rotation · Food filters</div>
+            <button className="mpo-btn">Unlock for $29 →</button>
+          </div>
+        </div>
+      </div>
+
+      {/* Feature list */}
+      <LockGate
+        icon="🍽️" title="Meal Prep Plans"
+        desc="Your meal plan rotates weekly so you never get bored — and filters out anything you don't eat."
+        features={[
+          `${goal==="cut"?"Lean Out 🔥":goal==="build"?"Build & Sculpt 💪":"Recomp & Tone ⚖️"} meal plan — 3 options per slot`,
+          "⚙️ Configure allergens & food dislikes (16 filters)",
+          "❤️ Pin meals you love — they won't rotate",
+          "🔄 Swap any meal with one tap",
+          "📋 Copy ingredients to Notes for grocery prep",
+          "🛒 Auto-generated grocery list with checkboxes",
+        ]}
+      />
+    </div>
+  );
+}
+
+// ─── LEARN TAB ───────────────────────────────────────────────────────────────
+function LearnTab() {
+  const [openId, setOpenId] = useState(null);
+  return (
+    <div>
+      <div className="section-head">
+        <span className="section-title">Nutrition 101</span>
+        <span className="section-sub">4 of 8 lessons</span>
+      </div>
+      <div style={{padding:"0 16px 10px",fontSize:"0.76rem",color:"var(--muted)",lineHeight:1.5}}>
+        The foundation lessons — free. 4 more in the full program: Meal Timing, Supplements, Sleep & Recovery, Cardio & Body Comp.
+      </div>
+      <div className="card-stack">
+        {FREE_LESSONS.map(lesson=>{
+          const isOpen=openId===lesson.id;
+          return(
+            <div key={lesson.id} className={`edu-card${isOpen?" "+lesson.cc:""}`} onClick={()=>setOpenId(isOpen?null:lesson.id)}>
+              <div className="edu-header">
+                <span className="edu-icon">{lesson.icon}</span>
+                <div style={{flex:1}}>
+                  <div className="edu-num">{lesson.number}</div>
+                  <div className="edu-title-t">{lesson.title}</div>
+                  <div className="edu-preview">{lesson.preview}</div>
+                </div>
+                <span className={`chevron${isOpen?" open":""}`}>▾</span>
+              </div>
+              {isOpen&&(
+                <div className="edu-body">
+                  {lesson.blocks.map((b,i)=>{
+                    if(b.t==="h") return <div key={i} className={`edu-h ${b.c}`} style={{marginTop:i===0?14:16}}>{b.text}</div>;
+                    if(b.t==="p") return <div key={i} className="edu-text" style={{marginTop:6}}>{b.text}</div>;
+                    if(b.t==="call") return(
+                      <div key={i} className={`edu-callout ${b.c}`} style={{marginTop:12}}>
+                        <div className={`edu-callout-label ${b.c}`}>{b.label}</div>
+                        <div className="edu-callout-text">{b.text}</div>
+                      </div>
+                    );
+                    return null;
+                  })}
+                  {lesson.stats&&<div className="edu-stat-row">{lesson.stats.map((st,i)=>(
+                    <div key={i} className="edu-stat-box">
+                      <div className={`edu-stat-val ${st.c}`}>{st.val}</div>
+                      <div className="edu-stat-label">{st.label}</div>
+                    </div>
+                  ))}</div>}
+                  {lesson.checklist&&<ul className="checklist" style={{marginTop:14}}>{lesson.checklist.map((item,i)=><li key={i} className={item.c}>{item.text}</li>)}</ul>}
+                </div>
+              )}
+            </div>
+          );
+        })}
+        {/* Locked lessons teaser */}
+        <div className="card" style={{borderColor:"var(--aborder)",opacity:0.65,cursor:"pointer"}} onClick={()=>window.open(GUMROAD_URL,"_blank")}>
+          <div className="tags"><span className="tag tag-o">Lessons 5–8</span><span className="tag">🔒 Locked</span></div>
+          <div className="card-title">Meal Timing, Supplements, Sleep & Cardio</div>
+          <div className="card-desc">The advanced lessons that explain the why behind every decision in your full program.</div>
+        </div>
+      </div>
+      <div style={{padding:"14px 16px 0"}}><UpgradeBanner/></div>
+    </div>
+  );
+}
+
+// ─── HOME TAB ────────────────────────────────────────────────────────────────
+function HomeTab({ sex, goal, setTab }) {
+  return (
+    <div>
+      <div className="hero">
+        <div className="hero-eyebrow">Starter Week · Beginner · Free</div>
+        <div className="hero-title">{sex==="female"?"Build The Foundation.":"Build The Foundation."}</div>
+        <div className="hero-sub">
+          {sex==="female"
+            ? "3 glute & leg-focused sessions. Learn the movements. Show up — that's the whole job this week."
+            : "3 full-body strength sessions. Learn every movement with light weight. Form first, always."}
+        </div>
+      </div>
+
+      <div className="section-head" style={{paddingBottom:6}}><span className="section-title">This Week</span></div>
+      <div className="card-stack" style={{marginBottom:14}}>
+        <div className="card">
+          <div className="tags"><span className="tag tag-g">Training</span></div>
+          <div className="card-desc" style={{color:"var(--text)",fontSize:"0.82rem"}}>
+            {sex==="female"
+              ? "3 sessions — glutes and legs every day. Light weight, full range of motion. Leave 2–3 reps in reserve."
+              : "3 full-body sessions. Learn every movement. Light weight, full ROM. Leave 2–3 reps in reserve."}
+          </div>
+        </div>
+        <div className="card">
+          <div className="tags"><span className="tag tag-o">Nutrition</span></div>
+          <div className="card-desc" style={{color:"var(--text)",fontSize:"0.82rem"}}>
+            Don't overhaul your diet this week. One goal: include a protein source at every meal. That single habit creates more change than anything else.
+          </div>
+        </div>
+        <div className="card">
+          <div className="tags"><span className="tag tag-b">Mindset</span></div>
+          <div className="card-desc" style={{color:"var(--text)",fontSize:"0.82rem"}}>
+            Completing 2 of 3 sessions is still progress. The goal is to learn the patterns — not to be perfect.
+          </div>
+        </div>
+      </div>
+
+      <div className="section-head" style={{paddingBottom:6}}><span className="section-title">Quick Access</span></div>
+      <div style={{padding:"0 16px",display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:14}}>
+        {[
+          {icon:"🏋️",label:"This Week's Workouts",tab:"workout"},
+          {icon:"📚",label:"Nutrition 101",tab:"learn"},
+          {icon:"🍽️",label:"Meal Prep Preview",tab:"meals"},
+          {icon:"📊",label:"Macro Calculator",tab:"macros"},
+        ].map(item=>(
+          <div key={item.label} style={{background:"var(--s1)",border:"1px solid var(--border)",borderRadius:"var(--r)",padding:"16px 14px",cursor:"pointer"}} onClick={()=>setTab(item.tab)}>
+            <div style={{fontSize:"1.4rem",marginBottom:6}}>{item.icon}</div>
+            <div style={{fontSize:"0.78rem",fontWeight:700,color:"var(--text)",lineHeight:1.3}}>{item.label}</div>
+          </div>
+        ))}
+      </div>
+      <UpgradeBanner/>
+    </div>
+  );
+}
+
+// ─── ROOT ─────────────────────────────────────────────────────────────────────
+function App() {
+  const [tab,    setTab]  = useState("onboard");
+  const [profile,setProfile] = useState(null); // { sex, goal }
+
+  const NAV = [
+    {id:"home",    icon:"🏠",label:"Home",   locked:false},
+    {id:"workout", icon:"🏋️",label:"Train",  locked:false},
+    {id:"learn",   icon:"📚",label:"Learn",  locked:false},
+    {id:"meals",   icon:"🍽️",label:"Meals",  locked:false},
+    {id:"macros",  icon:"📊",label:"Macros", locked:true},
+  ];
+
+  if (!profile) {
+    return (
+      <>
+        <style>{STYLE}</style>
+        <div className="app">
+          <div className="top-bar">
+            <div className="brand">Health<em>Fund</em></div>
+            <div className="free-badge">Free Tier</div>
+          </div>
+          <Onboarding onDone={p=>{ setProfile(p); setTab("home"); }}/>
+        </div>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <style>{STYLE}</style>
+      <div className="app">
+        <div className="top-bar">
+          <div className="brand">Health<em>Fund</em></div>
+          <div className="free-badge">Free Tier</div>
+        </div>
+
+        {tab==="home"    && <HomeTab sex={profile.sex} goal={profile.goal} setTab={setTab}/>}
+        {tab==="workout" && <WorkoutTab sex={profile.sex}/>}
+        {tab==="learn"   && <LearnTab/>}
+        {tab==="meals"   && <MealsPreviewTab sex={profile.sex} goal={profile.goal}/>}
+        {tab==="macros"  && (
+          <LockGate icon="📊" title="Macro Calculator"
+            desc="Calculate your TDEE and exact daily macro targets based on your body stats, goal, and activity level."
+            features={[
+              "Enter weight, height (ft/in), age & sex — pre-filled from your profile",
+              "Auto-calculates TDEE using Mifflin-St Jeor formula",
+              "Daily protein, carb & fat targets by goal (Cut / Maintain / Build)",
+              "Cardio adjustment — adds calories on training days automatically",
+              "Editable macro fields + visual bar breakdown",
+              "Copy macros directly to Notes",
+            ]}
+          />
+        )}
+      </div>
+
+      <div className="bottom-nav">
+        {NAV.map(n=>(
+          <button key={n.id} className={`nav-btn${tab===n.id?" active":""}${n.locked?" locked":""}`} onClick={()=>setTab(n.id)}>
+            <span className="nav-icon">{n.icon}</span>
+            <span className="nav-label">{n.locked?"🔒":n.label}</span>
+          </button>
+        ))}
+      </div>
+    </>
+  );
+}
+
+  const root = ReactDOM.createRoot(document.getElementById("app-root"));
+  root.render(React.createElement(App));
+  </script>
+</body>
+</html>
