@@ -186,7 +186,7 @@ body{background:var(--bg);color:var(--text);font-family:'Lato',sans-serif;min-he
 .field-input::-webkit-inner-spin-button{display:none;}
 `;
 
-// ─── WORKOUT DATA — sex-specific starter sets ─────────────────────────────────
+// ─── WORKOUT DATA — gender-specific starter sets ─────────────────────────────────
 const FREE_WORKOUTS = {
   male: [
     { id:"m1", day:"Day 1 — Monday", name:"Full Body Strength A", focus:"Chest & Back", duration:"45 min", rest:"60s",
@@ -305,10 +305,10 @@ function Toast({msg,show}){return <div className={`toast${show?" show":""}`}><sp
 // ─── ONBOARDING ───────────────────────────────────────────────────────────────
 function Onboarding({ onDone }) {
   const [step, setStep] = useState(0);
-  const [sex, setSex]   = useState("");
+  const [gender, setGender] = useState("");
   const [goal, setGoal] = useState("");
 
-  const canNext = [sex !== "", goal !== ""];
+  const canNext = [gender !== "", goal !== ""];
 
   const STEPS = [
     <div key="s0">
@@ -316,15 +316,15 @@ function Onboarding({ onDone }) {
       <div className="step-title">Let's personalize your starter week.</div>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
         {[["male","Male 💪","Strength-focused, full body"],["female","Female 🍑","Glutes, legs & toning"]].map(([v,l,s])=>(
-          <div key={v} className={`cardio-option${sex===v?" selected":""}`} onClick={()=>setSex(v)} style={{textAlign:"center"}}>
+          <div key={v} className={`cardio-option${gender===v?" selected":""}`} onClick={()=>setGender(v)} style={{textAlign:"center"}}>
             <div className="co-title">{l}</div>
             <div className="co-detail">{s}</div>
           </div>
         ))}
       </div>
-      {sex && (
-        <div style={{marginTop:12,background:sex==="female"?"var(--pdim)":"var(--adim)",border:`1px solid ${sex==="female"?"var(--pborder)":"var(--aborder)"}`,borderRadius:"var(--r-sm)",padding:"10px 14px",fontSize:"0.78rem",color:"var(--text)",lineHeight:1.5}}>
-          {sex==="female"
+      {gender && (
+        <div style={{marginTop:12,background:gender==="female"?"var(--pdim)":"var(--adim)",border:`1px solid ${gender==="female"?"var(--pborder)":"var(--aborder)"}`,borderRadius:"var(--r-sm)",padding:"10px 14px",fontSize:"0.78rem",color:"var(--text)",lineHeight:1.5}}>
+          {gender==="female"
             ? "🍑 Your starter week focuses on glutes, legs & core every session with upper body toning."
             : "💪 Your starter week builds full-body strength across 3 sessions."}
         </div>
@@ -336,9 +336,9 @@ function Onboarding({ onDone }) {
       <div className="step-title">What's your main goal right now?</div>
       <div style={{display:"flex",flexDirection:"column",gap:8}}>
         {[
-          ["cut",    sex==="female"?"Lean Out 🔥":"Lose Fat 🔥",     "Calorie deficit, preserve muscle"],
-          ["maintain",sex==="female"?"Recomp & Tone ⚖️":"Get Stronger ⚖️","Build habits, improve body comp"],
-          ["build",  sex==="female"?"Build & Sculpt 💪":"Build Muscle 💪","Calorie surplus, grow muscle"],
+          ["cut",    gender==="female"?"Lean Out 🔥":"Lose Fat 🔥",     "Calorie deficit, preserve muscle"],
+          ["maintain",gender==="female"?"Recomp & Tone ⚖️":"Get Stronger ⚖️","Build habits, improve body comp"],
+          ["build",  gender==="female"?"Build & Sculpt 💪":"Build Muscle 💪","Calorie surplus, grow muscle"],
         ].map(([v,l,s])=>(
           <div key={v} className={`cardio-option${goal===v?" selected":""}`} onClick={()=>setGoal(v)}>
             <div className="co-title">{l}</div>
@@ -369,7 +369,7 @@ function Onboarding({ onDone }) {
           )}
           <button className="generate-btn" style={{flex:1,marginTop:0,borderRadius:"var(--r-sm)",padding:13,fontSize:"0.82rem"}}
             disabled={!canNext[step]}
-            onClick={()=>{ if(isLast) onDone({sex,goal}); else setStep(s=>s+1); }}>
+            onClick={()=>{ if(isLast) onDone({gender,goal}); else setStep(s=>s+1); }}>
             {isLast ? "⚡ Start My Free Week" : "Continue →"}
           </button>
         </div>
@@ -412,11 +412,11 @@ function LockGate({ icon, title, desc, features }) {
 }
 
 // ─── WORKOUT TAB ─────────────────────────────────────────────────────────────
-function WorkoutTab({ sex }) {
+function WorkoutTab({ gender }) {
   const [openId, setOpenId] = useState(null);
   const [saved,  setSaved]  = useState({});
   const [toast,  setToast]  = useState({show:false,msg:""});
-  const workouts = FREE_WORKOUTS[sex] || FREE_WORKOUTS.male;
+  const workouts = FREE_WORKOUTS[gender] || FREE_WORKOUTS.male;
 
   function showToast(msg){setToast({show:true,msg});setTimeout(()=>setToast({show:false,msg:""}),2400);}
   function handleCopy(w,e){
@@ -432,8 +432,8 @@ function WorkoutTab({ sex }) {
   return (
     <div>
       <div style={{padding:"14px 16px 0",display:"flex",alignItems:"center",gap:8}}>
-        <span style={{background:sex==="female"?"var(--pdim)":"var(--adim)",border:`1px solid ${sex==="female"?"var(--pborder)":"var(--aborder)"}`,borderRadius:99,padding:"4px 12px",fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:sex==="female"?"var(--purple)":"var(--accent)"}}>
-          {sex==="female"?"Female 🍑":"Male 💪"}
+        <span style={{background:gender==="female"?"var(--pdim)":"var(--adim)",border:`1px solid ${gender==="female"?"var(--pborder)":"var(--aborder)"}`,borderRadius:99,padding:"4px 12px",fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:gender==="female"?"var(--purple)":"var(--accent)"}}>
+          {gender==="female"?"Female 🍑":"Male 💪"}
         </span>
         <span style={{background:"var(--s2)",border:"1px solid var(--border)",borderRadius:99,padding:"4px 12px",fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:"var(--muted)"}}>
           Starter Week · Beginner
@@ -518,8 +518,8 @@ function WorkoutTab({ sex }) {
 }
 
 // ─── MEALS PREVIEW TAB ───────────────────────────────────────────────────────
-function MealsPreviewTab({ sex, goal }) {
-  const preview = MEAL_PREVIEW[sex] || MEAL_PREVIEW.male;
+function MealsPreviewTab({ gender, goal }) {
+  const preview = MEAL_PREVIEW[gender] || MEAL_PREVIEW.male;
   return (
     <div>
       <div className="section-head"><span className="section-title">Meal Prep</span></div>
@@ -629,14 +629,14 @@ function LearnTab() {
 }
 
 // ─── HOME TAB ────────────────────────────────────────────────────────────────
-function HomeTab({ sex, goal, setTab }) {
+function HomeTab({ gender, goal, setTab }) {
   return (
     <div>
       <div className="hero">
         <div className="hero-eyebrow">Starter Week · Beginner · Free</div>
-        <div className="hero-title">{sex==="female"?"Build The Foundation.":"Build The Foundation."}</div>
+        <div className="hero-title">{gender==="female"?"Build The Foundation.":"Build The Foundation."}</div>
         <div className="hero-sub">
-          {sex==="female"
+          {gender==="female"
             ? "3 glute & leg-focused sessions. Learn the movements. Show up — that's the whole job this week."
             : "3 full-body strength sessions. Learn every movement with light weight. Form first, always."}
         </div>
@@ -647,7 +647,7 @@ function HomeTab({ sex, goal, setTab }) {
         <div className="card">
           <div className="tags"><span className="tag tag-g">Training</span></div>
           <div className="card-desc" style={{color:"var(--text)",fontSize:"0.82rem"}}>
-            {sex==="female"
+            {gender==="female"
               ? "3 sessions — glutes and legs every day. Light weight, full range of motion. Leave 2–3 reps in reserve."
               : "3 full-body sessions. Learn every movement. Light weight, full ROM. Leave 2–3 reps in reserve."}
           </div>
@@ -688,7 +688,7 @@ function HomeTab({ sex, goal, setTab }) {
 // ─── ROOT ─────────────────────────────────────────────────────────────────────
 function App() {
   const [tab,    setTab]  = useState("onboard");
-  const [profile,setProfile] = useState(null); // { sex, goal }
+  const [profile,setProfile] = useState(null); // { gender, goal }
 
   const NAV = [
     {id:"home",    icon:"🏠",label:"Home",   locked:false},
@@ -722,15 +722,15 @@ function App() {
           <div className="free-badge">Free Tier</div>
         </div>
 
-        {tab==="home"    && <HomeTab sex={profile.sex} goal={profile.goal} setTab={setTab}/>}
-        {tab==="workout" && <WorkoutTab sex={profile.sex}/>}
+        {tab==="home"    && <HomeTab gender={profile.gender} goal={profile.goal} setTab={setTab}/>}
+        {tab==="workout" && <WorkoutTab gender={profile.gender}/>}
         {tab==="learn"   && <LearnTab/>}
-        {tab==="meals"   && <MealsPreviewTab sex={profile.sex} goal={profile.goal}/>}
+        {tab==="meals"   && <MealsPreviewTab gender={profile.gender} goal={profile.goal}/>}
         {tab==="macros"  && (
           <LockGate icon="📊" title="Macro Calculator"
             desc="Calculate your TDEE and exact daily macro targets based on your body stats, goal, and activity level."
             features={[
-              "Enter weight, height (ft/in), age & sex — pre-filled from your profile",
+              "Enter weight, height (ft/in), age & gender — pre-filled from your profile",
               "Auto-calculates TDEE using Mifflin-St Jeor formula",
               "Daily protein, carb & fat targets by goal (Cut / Maintain / Build)",
               "Cardio adjustment — adds calories on training days automatically",
