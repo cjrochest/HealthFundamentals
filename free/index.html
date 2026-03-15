@@ -192,31 +192,31 @@ const FREE_WORKOUTS = {
     { id:"m1", day:"Day 1 — Monday", name:"Full Body Strength A", focus:"Chest & Back", duration:"45 min", rest:"60s",
       desc:"Learn the pattern. Light weight — leave 3 reps in reserve every set.",
       exercises:[
-        {name:"Barbell Bench Press",   sets:"3×10–12", tip:"3s descent, full ROM"},
-        {name:"Pull-Up / Lat Pulldown",sets:"3×10–12", tip:"Dead hang start, chin over bar"},
-        {name:"Back Squat",            sets:"3×10–12", tip:"Brace, drive knees out"},
-        {name:"Dumbbell Shoulder Press",sets:"3×10–12",tip:"Full ROM, don't arch"},
-        {name:"Plank",                 sets:"3×30s",   tip:"Squeeze glutes, neutral spine"},
+        {name:"Barbell Bench Press",    sets:"3×10–12", tip:"3s descent, bar to mid-chest, drive up"},
+        {name:"Lat Pulldown",           sets:"3×10–12", tip:"Pull to upper chest, feel lats stretch at top"},
+        {name:"Back Squat",             sets:"3×10–12", tip:"Brace hard, drive knees out, sit to parallel"},
+        {name:"Dumbbell Shoulder Press",sets:"3×10–12", tip:"Full ROM, don't arch lower back"},
+        {name:"Plank",                  sets:"3×30s",   tip:"Squeeze glutes and core, neutral spine"},
       ]
     },
     { id:"m2", day:"Day 2 — Wednesday", name:"Full Body Strength B", focus:"Legs & Shoulders", duration:"45 min", rest:"60s",
-      desc:"Focus on control and depth. Slow eccentrics on leg work.",
+      desc:"Focus on control and depth. Slow eccentrics on every leg exercise.",
       exercises:[
-        {name:"Romanian Deadlift",     sets:"3×10–12", tip:"Load hamstrings, slow descent"},
-        {name:"Incline DB Press",      sets:"3×10–12", tip:"Stretch at bottom, squeeze top"},
-        {name:"Seated Cable Row",      sets:"3×10–12", tip:"Chest tall, squeeze blades"},
-        {name:"Lateral Raise",         sets:"3×12–15", tip:"Lead with elbows, no swinging"},
-        {name:"Dead Bug",              sets:"3×10",    tip:"Low back pressed to floor"},
+        {name:"Romanian Deadlift",      sets:"3×10–12", tip:"Hinge at hips, load hamstrings all the way down"},
+        {name:"Incline DB Press",       sets:"3×10–12", tip:"30-45° incline, feel the upper chest stretch"},
+        {name:"Seated Cable Row",       sets:"3×10–12", tip:"Chest tall, squeeze shoulder blades at the top"},
+        {name:"Lateral Raise",          sets:"3×12–15", tip:"Lead with elbows, stop at shoulder height"},
+        {name:"Bicycle Crunch",         sets:"3×15",    tip:"Slow and controlled, full rotation each rep"},
       ]
     },
     { id:"m3", day:"Day 3 — Friday", name:"Full Body Strength C", focus:"Arms & Core", duration:"45 min", rest:"60s",
-      desc:"Finish the week. Aim to add 5 lbs or 1–2 reps vs Day 1 where possible.",
+      desc:"Finish the week strong. Aim to add 5 lbs or 1–2 reps vs Day 1.",
       exercises:[
-        {name:"Leg Press",             sets:"3×12",    tip:"Full ROM, don't lock knees"},
-        {name:"EZ-Bar Curl",           sets:"3×10–12", tip:"Full supination at top"},
-        {name:"Skull Crusher",         sets:"3×10–12", tip:"Elbows in, lower to forehead"},
-        {name:"Face Pull",             sets:"3×15",    tip:"Pull to forehead, rotate out"},
-        {name:"Ab Wheel Rollout",      sets:"3×8–10",  tip:"Brace hard, don't let hips drop"},
+        {name:"Leg Press",              sets:"3×12",    tip:"Feet shoulder-width, full ROM, don't lock knees"},
+        {name:"Barbell Curl",           sets:"3×10–12", tip:"Full supination at top, slow 2s eccentric"},
+        {name:"Tricep Pushdown",        sets:"3×10–12", tip:"Full extension at bottom, elbows locked at sides"},
+        {name:"Face Pull",              sets:"3×15",    tip:"Pull to forehead, externally rotate at top"},
+        {name:"Hanging Leg Raise",      sets:"3×10",    tip:"Control descent, no swinging, knees to chest"},
       ]
     },
   ],
@@ -224,31 +224,31 @@ const FREE_WORKOUTS = {
     { id:"f1", day:"Day 1 — Monday", name:"Glutes & Legs", focus:"Glutes & Legs", duration:"45 min", rest:"60s",
       desc:"Learn hip thrust and squat patterns. Full range of motion — depth is your friend.",
       exercises:[
-        {name:"Barbell Hip Thrust",    sets:"3×12–15", tip:"Drive through heels, 1s squeeze at top"},
-        {name:"Goblet Squat",          sets:"3×12–15", tip:"Drive knees out, sit deep"},
-        {name:"Romanian Deadlift",     sets:"3×10–12", tip:"Feel the hamstring stretch, slow descent"},
-        {name:"Leg Press (high feet)", sets:"3×12–15", tip:"High foot placement = more glute"},
-        {name:"Glute Bridge",          sets:"3×15",    tip:"Full extension, hard squeeze at top"},
+        {name:"Barbell Hip Thrust",     sets:"3×12–15", tip:"Drive through heels, 1s squeeze at top"},
+        {name:"Goblet Squat",           sets:"3×12–15", tip:"Drive knees out, sit deep"},
+        {name:"Romanian Deadlift",      sets:"3×10–12", tip:"Feel the hamstring stretch, slow descent"},
+        {name:"Leg Press (high feet)",  sets:"3×12–15", tip:"High foot placement = more glute activation"},
+        {name:"Glute Bridge",           sets:"3×15",    tip:"Full hip extension, hard squeeze at top"},
       ]
     },
-    { id:"f2", day:"Day 2 — Wednesday", name:"Upper Body Tone + Core", focus:"Back, Shoulders & Core", duration:"45 min", rest:"60s",
+    { id:"f2", day:"Day 2 — Wednesday", name:"Upper Body + Core", focus:"Back, Shoulders & Core", duration:"45 min", rest:"60s",
       desc:"Light-to-moderate weight. Focus on feel and control, not max load.",
       exercises:[
-        {name:"Lat Pulldown",          sets:"3×12–15", tip:"Pull to upper chest, feel the lats"},
-        {name:"Seated Cable Row",      sets:"3×12–15", tip:"Chest tall, squeeze shoulder blades"},
-        {name:"Lateral Raise",         sets:"3×12–15", tip:"Lead elbows — builds shoulder width"},
-        {name:"Tricep Pushdown",       sets:"3×12–15", tip:"Full extension, feel the contraction"},
-        {name:"Plank",                 sets:"3×30s",   tip:"Squeeze core and glutes, don't sag"},
+        {name:"Lat Pulldown",           sets:"3×12–15", tip:"Pull to upper chest, feel lats working"},
+        {name:"Seated Cable Row",       sets:"3×12–15", tip:"Chest tall, squeeze shoulder blades hard"},
+        {name:"Lateral Raise",          sets:"3×12–15", tip:"Lead with elbows — builds shoulder width"},
+        {name:"Tricep Pushdown",        sets:"3×12–15", tip:"Full extension at bottom, feel the contraction"},
+        {name:"Plank",                  sets:"3×30s",   tip:"Squeeze core and glutes, don't let hips sag"},
       ]
     },
-    { id:"f3", day:"Day 3 — Friday", name:"Glutes & Legs B + Core", focus:"Glutes & Core", duration:"45 min", rest:"60s",
-      desc:"Second glute session of the week. Slightly different exercises — same intent.",
+    { id:"f3", day:"Day 3 — Friday", name:"Glutes & Legs B", focus:"Glutes & Core", duration:"45 min", rest:"60s",
+      desc:"Second glute session. Different exercises, same intent — full depth every rep.",
       exercises:[
-        {name:"Sumo Deadlift",         sets:"3×10–12", tip:"Wide stance, toes out, drive hips through"},
-        {name:"Bulgarian Split Squat", sets:"3×10 each",tip:"Drop rear knee down, stay upright"},
-        {name:"Cable Kickback",        sets:"3×15 each",tip:"Squeeze hard at top, control return"},
-        {name:"Lateral Band Walk",     sets:"3×15 each",tip:"Maintain tension, don't let knees cave"},
-        {name:"Dead Bug",              sets:"3×10",    tip:"Low back flat to floor throughout"},
+        {name:"Bulgarian Split Squat",  sets:"3×10 each",tip:"Drop rear knee straight down, torso upright"},
+        {name:"Leg Curl",               sets:"3×12–15", tip:"Full ROM, slow 2s eccentric"},
+        {name:"Cable Kickback",         sets:"3×15 each",tip:"Squeeze glute hard at top, control return"},
+        {name:"Lateral Band Walk",      sets:"3×15 each",tip:"Maintain tension, don't let knees cave in"},
+        {name:"Bicycle Crunch",         sets:"3×15",    tip:"Slow and controlled, full rotation each rep"},
       ]
     },
   ],
@@ -466,9 +466,34 @@ function WorkoutTab({ sex }) {
               {isOpen&&(
                 <div className="card-detail">
                   {w.exercises.map((ex,i)=>(
-                    <div key={i} className="ex-row">
-                      <div><div className="ex-name">{ex.name}</div><div className="ex-tip">{ex.tip}</div></div>
-                      <div className="ex-sets">{ex.sets}</div>
+                    <div key={i} style={{paddingBottom:10,marginBottom:10,borderBottom:i<w.exercises.length-1?"1px solid rgba(39,41,32,0.7)":"none"}}>
+                      <div style={{display:"flex",alignItems:"flex-start",gap:8,marginBottom:6}}>
+                        <div style={{flex:1}}>
+                          <div className="ex-name">{ex.name}</div>
+                          <div className="ex-tip">{ex.tip}</div>
+                        </div>
+                        <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:4,flexShrink:0}}>
+                          <div className="ex-sets">{ex.sets}</div>
+                          {/* Locked swap — teaser */}
+                          <div style={{fontSize:"0.62rem",fontWeight:700,color:"var(--muted2)",background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"var(--r-xs)",padding:"3px 8px",opacity:0.6,display:"flex",alignItems:"center",gap:3}}>
+                            🔒 Swap
+                          </div>
+                        </div>
+                      </div>
+                      {/* Exercise visual teaser */}
+                      <div style={{background:"var(--s2)",border:"1px dashed var(--border)",borderRadius:"var(--r-xs)",padding:"8px 12px",display:"flex",alignItems:"center",gap:10}}>
+                        <div style={{width:44,height:44,background:"var(--s1)",borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,border:"1px solid var(--border)",opacity:0.5}}>
+                          <span style={{fontSize:"1.2rem"}}>🔒</span>
+                        </div>
+                        <div style={{flex:1}}>
+                          <div style={{fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.08em",textTransform:"uppercase",color:"var(--muted2)",marginBottom:2}}>Exercise Visual</div>
+                          <div style={{fontSize:"0.7rem",color:"var(--muted2)",lineHeight:1.4}}>Animated form guides available in Core Program</div>
+                        </div>
+                        <a href="https://rochesterian3.gumroad.com/l/xoizj" target="_blank" rel="noopener"
+                          style={{fontSize:"0.62rem",fontWeight:700,color:"var(--accent)",textDecoration:"none",whiteSpace:"nowrap",flexShrink:0}}>
+                          Unlock →
+                        </a>
+                      </div>
                     </div>
                   ))}
                   <button className={`action-btn${saved[w.id]?" btn-saved":" btn-primary"}`} onClick={e=>handleCopy(w,e)}>
