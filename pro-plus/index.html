@@ -351,22 +351,114 @@ const CARDIO_TYPES = [
 // ─── EXERCISE DATABASE — SEX-SPECIFIC ────────────────────────────────────────
 const EXERCISE_DB = {
   male: {
-    chest:    [{name:"Barbell Bench Press",tip:"3s descent, full ROM — primary strength builder"},{name:"Incline DB Press",tip:"Stretch at bottom, squeeze at top"},{name:"Weighted Chest Dip",tip:"Lean forward for chest bias, add weight as you progress"},{name:"Cable Fly",tip:"Wide arc, feel the stretch across the chest"},{name:"Push-Up",tip:"Straight body, elbows at 45°"}],
-    back:     [{name:"Weighted Pull-Up",tip:"Dead hang start, chin clears the bar"},{name:"Barbell Row",tip:"Hinge at hips, drive elbows back hard"},{name:"Seated Cable Row",tip:"Chest tall, squeeze shoulder blades at top"},{name:"Single-Arm DB Row",tip:"Brace on bench, pull to hip"},{name:"Face Pull",tip:"Pull to forehead, externally rotate at top"}],
-    legs:     [{name:"Back Squat",tip:"Brace hard, drive knees out, sit to parallel or below"},{name:"Romanian Deadlift",tip:"Load hamstrings, slow and controlled descent"},{name:"Leg Press",tip:"Full ROM, don't lock knees at top"},{name:"Bulgarian Split Squat",tip:"Drop rear knee straight down, stay upright"},{name:"Leg Curl",tip:"Full ROM, 2s eccentric"},{name:"Nordic Curl",tip:"Control the entire descent — hardest hamstring exercise"}],
-    shoulders:[{name:"Seated Barbell Press",tip:"Drive the bar straight up, brace core"},{name:"Arnold Press",tip:"Rotate palms fully on the way up"},{name:"Lateral Raise",tip:"Lead with elbows, slight bend, no swinging"},{name:"Rear Delt Fly",tip:"Hinge forward, wide arc, pause at top"},{name:"Upright Row",tip:"Shoulder-width grip, lead with elbows"}],
-    arms:     [{name:"EZ-Bar Curl",tip:"Full supination at the top, slow eccentric"},{name:"Hammer Curl",tip:"Neutral grip, no body swing"},{name:"Incline DB Curl",tip:"Arms fully behind body, maximum stretch"},{name:"Close-Grip Bench Press",tip:"Elbows in, tricep-focused pressing"},{name:"Skull Crusher",tip:"Elbows in, lower to forehead"},{name:"Weighted Tricep Dip",tip:"Full range, upright torso for tricep focus"}],
-    core:     [{name:"Ab Wheel Rollout",tip:"Brace hard, don't let hips drop"},{name:"Hanging Leg Raise",tip:"Control the descent, no swinging"},{name:"Cable Crunch",tip:"Round through the spine, don't just lean"},{name:"Plank",tip:"Squeeze glutes, neutral spine"},{name:"Dead Bug",tip:"Low back pressed flat to floor throughout"}],
-    glutes:   [{name:"Hip Thrust",tip:"Drive through heels, 1s hold at top"},{name:"Sumo Deadlift",tip:"Wide stance, toes out, drive hips through"},{name:"Cable Kickback",tip:"Squeeze hard at top, control return"},{name:"Glute Bridge",tip:"Full hip extension, squeeze hard"}],
+    chest:    [
+      {name:"Barbell Bench Press",    tip:"3s descent, full ROM — primary chest builder. Bar to mid-chest, drive up.", gif:"bench-press"},
+      {name:"Incline DB Press",       tip:"30-45° incline, elbows 75° out, feel upper chest stretch at bottom.", gif:"incline-db-press"},
+      {name:"Cable Fly",              tip:"Wide arc from shoulder height, hands meet at chest level, slight elbow bend.", gif:"cable-fly"},
+      {name:"Weighted Chest Dip",     tip:"Lean forward for chest bias, full range, add weight via belt or vest.", gif:"chest-dip"},
+      {name:"Pec Deck Machine",       tip:"Adjust seat so handles are at chest height. Squeeze hard at peak.", gif:"pec-deck"},
+      {name:"Dumbbell Chest Press",   tip:"Full ROM, wrists neutral, 3s controlled descent.", gif:"db-chest-press"},
+    ],
+    back: [
+      {name:"Lat Pulldown",           tip:"Pull to upper chest, lean back slightly, feel lats stretch fully at top.", gif:"lat-pulldown"},
+      {name:"Barbell Row",            tip:"Hinge at hips, bar to belly button, drive elbows back hard.", gif:"barbell-row"},
+      {name:"Seated Cable Row",       tip:"Chest tall, squeeze shoulder blades hard at the peak.", gif:"cable-row"},
+      {name:"Single-Arm DB Row",      tip:"Brace on bench, pull to hip, feel full stretch at bottom.", gif:"db-row"},
+      {name:"Pull-Up",                tip:"Dead hang start, chin clears bar, full extension at bottom.", gif:"pull-up"},
+      {name:"Face Pull",              tip:"Pull to forehead, externally rotate at top — protects shoulders.", gif:"face-pull"},
+    ],
+    legs: [
+      {name:"Back Squat",             tip:"Brace hard, drive knees out, sit to parallel or deeper.", gif:"back-squat"},
+      {name:"Romanian Deadlift",      tip:"Hinge at hips, soft knee bend, load hamstrings all the way down.", gif:"rdl"},
+      {name:"Leg Press",              tip:"Feet shoulder-width, full ROM, don't lock knees at top.", gif:"leg-press"},
+      {name:"Bulgarian Split Squat",  tip:"Drop rear knee straight down, front shin stays vertical.", gif:"split-squat"},
+      {name:"Leg Curl",               tip:"Full ROM, 2s eccentric, toes pointed slightly out.", gif:"leg-curl"},
+      {name:"Leg Extension",          tip:"Full extension, pause at top, 2s down — quad isolation.", gif:"leg-extension"},
+    ],
+    shoulders: [
+      {name:"Barbell Overhead Press", tip:"Drive bar straight up, brace core hard, don't flare elbows too wide.", gif:"ohp"},
+      {name:"Seated DB Shoulder Press",tip:"Full ROM, controlled descent, don't arch lower back.", gif:"db-shoulder-press"},
+      {name:"Lateral Raise",          tip:"Lead with elbows, slight forward lean, stop at shoulder height.", gif:"lateral-raise"},
+      {name:"Rear Delt Fly",          tip:"Hinge forward 45°, wide arc, pause at the top.", gif:"rear-delt-fly"},
+      {name:"Arnold Press",           tip:"Start palms facing you, rotate fully on the way up.", gif:"arnold-press"},
+      {name:"Cable Lateral Raise",    tip:"Constant tension, cross body pull, lead with elbow.", gif:"cable-lateral"},
+    ],
+    arms: [
+      {name:"Barbell Curl",           tip:"Full supination at top, slow 2s eccentric, no body swing.", gif:"barbell-curl"},
+      {name:"Hammer Curl",            tip:"Neutral grip, controlled, builds brachialis for arm thickness.", gif:"hammer-curl"},
+      {name:"Incline DB Curl",        tip:"Arms fully behind body at bottom — maximum bicep stretch.", gif:"incline-curl"},
+      {name:"Close-Grip Bench Press", tip:"Elbows in tight, tricep-focused press, don't flare arms.", gif:"close-grip-bench"},
+      {name:"Tricep Pushdown",        tip:"Full extension at bottom, elbows locked at sides throughout.", gif:"tricep-pushdown"},
+      {name:"Overhead Tricep Extension",tip:"Elbows stay forward, full stretch at bottom hits the long head.", gif:"overhead-tri"},
+    ],
+    core: [
+      {name:"Hanging Leg Raise",      tip:"Control the descent, no swinging. Knees to chest or straight legs.", gif:"hanging-leg-raise"},
+      {name:"Cable Crunch",           tip:"Round through spine, pull elbows to knees, don't just lean forward.", gif:"cable-crunch"},
+      {name:"Plank",                  tip:"Squeeze glutes and core, neutral spine — don't let hips rise.", gif:"plank"},
+      {name:"Bicycle Crunch",         tip:"Slow and controlled, full rotation each rep, don't pull your neck.", gif:"bicycle-crunch"},
+      {name:"Pallof Press",           tip:"Anti-rotation — resist the cable pull, builds core stability.", gif:"pallof-press"},
+      {name:"Ab Crunch Machine",      tip:"Round through spine, don't use hip flexors to initiate the movement.", gif:"crunch-machine"},
+    ],
+    glutes: [
+      {name:"Barbell Hip Thrust",     tip:"Drive through heels, 1s hold at top, full hip extension.", gif:"hip-thrust"},
+      {name:"Romanian Deadlift",      tip:"Feel hamstring stretch, slow descent, brace core throughout.", gif:"rdl"},
+      {name:"Cable Kickback",         tip:"Squeeze glute hard at top, control the return.", gif:"cable-kickback"},
+      {name:"Glute Bridge",           tip:"Full hip extension, add plate on hips for progression.", gif:"glute-bridge"},
+    ],
   },
   female: {
-    glutes:   [{name:"Barbell Hip Thrust",tip:"Drive through heels, 1s squeeze at top — this is your main lift"},{name:"Romanian Deadlift",tip:"Feel the hamstring stretch, slow descent"},{name:"Bulgarian Split Squat",tip:"Drop rear knee straight down, keep torso upright"},{name:"Cable Kickback",tip:"Squeeze glute fully at top, control the return"},{name:"Lateral Band Walk",tip:"Maintain tension throughout, don't let knees cave"},{name:"Glute Bridge",tip:"Full hip extension, add weight over time"}],
-    legs:     [{name:"Goblet Squat / Back Squat",tip:"Drive knees out, sit deep — full depth builds more glute"},{name:"Sumo Deadlift",tip:"Wide stance, toes out, pull through hips"},{name:"Leg Press (high foot placement)",tip:"High feet = more glute activation"},{name:"Leg Curl",tip:"Full ROM, slow 2s eccentric"},{name:"Reverse Lunge",tip:"Long step, drop knee near floor, stay tall"},{name:"Step-Up",tip:"Drive through heel of front foot, full hip extension"}],
-    core:     [{name:"Plank",tip:"Squeeze glutes and core, neutral spine"},{name:"Dead Bug",tip:"Low back flat to floor — protects and strengthens"},{name:"Cable Woodchop",tip:"Rotate from core, keep hips square"},{name:"Pallof Press",tip:"Anti-rotation — builds a tight, strong waist"},{name:"Bicycle Crunch",tip:"Slow and controlled, feel the oblique"}],
-    back:     [{name:"Lat Pulldown",tip:"Pull to upper chest, feel lats working — builds the V-taper"},{name:"Seated Cable Row",tip:"Chest tall, squeeze shoulder blades"},{name:"Single-Arm DB Row",tip:"Brace, pull to hip, full ROM"},{name:"Face Pull",tip:"Critical for posture and shoulder health"},{name:"Assisted Pull-Up",tip:"Full hang, chin over bar — progress over time"}],
-    shoulders:[{name:"Lateral Raise",tip:"Lead with elbows — builds shoulder width, creates waist illusion"},{name:"Seated DB Press",tip:"Full ROM, controlled descent"},{name:"Rear Delt Fly",tip:"Hinge forward, wide arc — improves posture"},{name:"Arnold Press",tip:"Rotate fully, targets all three delt heads"},{name:"Cable Front Raise",tip:"Controlled, feel the front delt"}],
-    chest:    [{name:"Incline DB Press",tip:"30–45° incline — upper chest focus, improves posture"},{name:"Cable Fly",tip:"Wide arc, feel the stretch, toning focus"},{name:"Push-Up",tip:"Straight body, elbows 45° — build bodyweight strength"},{name:"Pec Deck",tip:"Controlled range, squeeze at peak contraction"},{name:"DB Chest Press",tip:"Full ROM, light to moderate weight"}],
-    arms:     [{name:"Tricep Pushdown",tip:"Full extension at bottom — tones the back of the arm"},{name:"Overhead Tricep Extension",tip:"Elbows forward, full stretch — hits the long head"},{name:"DB Curl",tip:"Full supination, controlled descent"},{name:"Hammer Curl",tip:"Neutral grip, builds brachialis for arm shape"},{name:"Rope Pushdown",tip:"Flare ropes at bottom, feel the contraction"}],
+    glutes: [
+      {name:"Barbell Hip Thrust",     tip:"Drive through heels, 1s squeeze at top — this is your main lift.", gif:"hip-thrust"},
+      {name:"Romanian Deadlift",      tip:"Feel the hamstring stretch, slow descent, brace core.", gif:"rdl"},
+      {name:"Bulgarian Split Squat",  tip:"Drop rear knee straight down, keep torso upright.", gif:"split-squat"},
+      {name:"Cable Kickback",         tip:"Squeeze glute fully at top, control the return.", gif:"cable-kickback"},
+      {name:"Lateral Band Walk",      tip:"Maintain tension throughout, don't let knees cave inward.", gif:"band-walk"},
+      {name:"Glute Bridge",           tip:"Full hip extension, add plate on hips for progression.", gif:"glute-bridge"},
+    ],
+    legs: [
+      {name:"Back Squat",             tip:"Drive knees out, sit deep — full depth builds more glute.", gif:"back-squat"},
+      {name:"Leg Press (high feet)",  tip:"High foot placement = more glute and hamstring activation.", gif:"leg-press"},
+      {name:"Leg Curl",               tip:"Full ROM, slow 2s eccentric, builds the hamstring-glute tie-in.", gif:"leg-curl"},
+      {name:"Reverse Lunge",          tip:"Long step back, drop knee near floor, drive up through front heel.", gif:"reverse-lunge"},
+      {name:"Step-Up",                tip:"Drive through heel of front foot, full hip extension at top.", gif:"step-up"},
+      {name:"Goblet Squat",           tip:"Hold DB at chest, sit deep, knees tracking over toes.", gif:"goblet-squat"},
+    ],
+    core: [
+      {name:"Plank",                  tip:"Squeeze glutes and core, neutral spine, 30–60s.", gif:"plank"},
+      {name:"Bicycle Crunch",         tip:"Slow and controlled, full rotation, feel the oblique.", gif:"bicycle-crunch"},
+      {name:"Cable Woodchop",         tip:"Rotate from core, keep hips square, do both directions.", gif:"woodchop"},
+      {name:"Pallof Press",           tip:"Anti-rotation — builds a tight, stable waist.", gif:"pallof-press"},
+      {name:"Hanging Leg Raise",      tip:"Control descent, no swinging, knees to chest.", gif:"hanging-leg-raise"},
+      {name:"Ab Crunch Machine",      tip:"Round through spine, squeeze at the bottom.", gif:"crunch-machine"},
+    ],
+    back: [
+      {name:"Lat Pulldown",           tip:"Pull to upper chest, feel lats working — builds the V-taper.", gif:"lat-pulldown"},
+      {name:"Seated Cable Row",       tip:"Chest tall, squeeze shoulder blades hard at the top.", gif:"cable-row"},
+      {name:"Single-Arm DB Row",      tip:"Brace on bench, pull to hip, full ROM at bottom.", gif:"db-row"},
+      {name:"Face Pull",              tip:"Pull to forehead, externally rotate — critical for posture.", gif:"face-pull"},
+      {name:"Assisted Pull-Up",       tip:"Full hang, chin over bar — reduce assistance over time.", gif:"pull-up"},
+    ],
+    shoulders: [
+      {name:"Lateral Raise",          tip:"Lead with elbows — builds width and creates the waist illusion.", gif:"lateral-raise"},
+      {name:"Seated DB Shoulder Press",tip:"Full ROM, controlled descent, brace core.", gif:"db-shoulder-press"},
+      {name:"Rear Delt Fly",          tip:"Hinge forward, wide arc — dramatically improves posture.", gif:"rear-delt-fly"},
+      {name:"Arnold Press",           tip:"Rotate fully on the way up, targets all three delt heads.", gif:"arnold-press"},
+      {name:"Cable Lateral Raise",    tip:"Constant tension, cross body, controlled throughout.", gif:"cable-lateral"},
+    ],
+    chest: [
+      {name:"Incline DB Press",       tip:"30-45° incline — upper chest focus, improves posture.", gif:"incline-db-press"},
+      {name:"Cable Fly",              tip:"Wide arc, feel the stretch at bottom, toning focus.", gif:"cable-fly"},
+      {name:"Push-Up",                tip:"Straight body, elbows 45° — add weight over time.", gif:"push-up"},
+      {name:"Pec Deck Machine",       tip:"Seat at chest height, controlled range, squeeze at peak.", gif:"pec-deck"},
+      {name:"Dumbbell Chest Press",   tip:"Full ROM, light to moderate weight, feel the squeeze.", gif:"db-chest-press"},
+    ],
+    arms: [
+      {name:"Tricep Pushdown",        tip:"Full extension at bottom — tones the back of the arm.", gif:"tricep-pushdown"},
+      {name:"Overhead Tricep Extension",tip:"Elbows stay forward, full stretch at bottom hits long head.", gif:"overhead-tri"},
+      {name:"Dumbbell Curl",          tip:"Full supination at top, controlled descent.", gif:"barbell-curl"},
+      {name:"Hammer Curl",            tip:"Neutral grip, builds brachialis for arm shape.", gif:"hammer-curl"},
+      {name:"Cable Curl",             tip:"Constant tension throughout, squeeze at top.", gif:"cable-curl"},
+    ],
   },
 };
 
@@ -399,9 +491,9 @@ const WEEK_PROGRESSIONS = [
 const DAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 
 function buildPlan(prefs) {
-  const { daysPerWeek, selectedDays, level, sex = "male", week } = prefs;
+  const { daysPerWeek, selectedDays, level, gender = "male", week } = prefs;
   const prog = WEEK_PROGRESSIONS[week - 1];
-  const sexKey = sex === "female" ? "female" : "male";
+  const sexKey = gender === "female" ? "female" : "male";
   const splitsBySex = SPLIT_TEMPLATES[sexKey];
   const split = splitsBySex[daysPerWeek]?.[level] || splitsBySex[3][level];
   const db = EXERCISE_DB[sexKey];
@@ -1040,13 +1132,26 @@ function groceryToText(categorized) {
   t += `— Health Fundamentals`;
   return t;
 }
-function calculateTDEE(w,ft,inch,a,sex,act) {
+function calculateTDEE(w,ft,inch,a,gender,act) {
   const ww=parseFloat(w),fft=parseFloat(ft)||0,iinch=parseFloat(inch)||0,aa=parseFloat(a);
   if(!ww||(!fft&&!iinch)||!aa) return null;
   const heightCm = (fft * 12 + iinch) * 2.54;
-  const bmr=sex==="male"?10*ww*0.453592+6.25*heightCm-5*aa+5:10*ww*0.453592+6.25*heightCm-5*aa-161;
+  const bmr=gender==="male"?10*ww*0.453592+6.25*heightCm-5*aa+5:10*ww*0.453592+6.25*heightCm-5*aa-161;
   const mults={sedentary:1.2,light:1.375,moderate:1.55,active:1.725,very:1.9};
   return Math.round(bmr*(mults[act]||1.55));
+}
+
+// Compute deficit for cut based on BMI — heavier users get a more aggressive deficit
+function getCutDeficit(w, ft, inch) {
+  const heightCm = ((parseFloat(ft)||0) * 12 + (parseFloat(inch)||0)) * 2.54;
+  const heightM  = heightCm / 100;
+  const weightKg = parseFloat(w) * 0.453592;
+  if (!heightM || !weightKg) return 400;
+  const bmi = weightKg / (heightM * heightM);
+  if (bmi >= 35) return 900;   // severely obese  → ~1.8 lb/week
+  if (bmi >= 30) return 750;   // obese           → ~1.5 lb/week
+  if (bmi >= 27) return 600;   // overweight      → ~1.2 lb/week
+  return 400;                   // healthy/mild    → ~0.8 lb/week
 }
 function Toast({msg,show}){return <div className={`toast${show?" show":""}`}><span>✓</span> {msg}</div>;}
 
@@ -1055,7 +1160,7 @@ function PlanBuilder({ onGenerate }) {
   const [step, setStep] = useState(0);
   const [prefs, setPrefs] = useState({
     // body stats
-    sex: "", weight: "", feet: "", inches: "", age: "",
+    gender: "", weight: "", feet: "", inches: "", age: "",
     // program
     level: "", goal: "", daysPerWeek: 0,
     selectedDays: [], cardioDays: [],
@@ -1065,7 +1170,7 @@ function PlanBuilder({ onGenerate }) {
 
   function p(k, v) { setPrefs(prev => ({ ...prev, [k]: v })); }
 
-  const statsComplete = prefs.sex !== "" && prefs.weight !== "" && prefs.feet !== "" && prefs.age !== "";
+  const statsComplete = prefs.gender !== "" && prefs.weight !== "" && prefs.feet !== "" && prefs.age !== "";
 
   const canNext = [
     statsComplete,                                       // step 0: body stats
@@ -1091,17 +1196,17 @@ function PlanBuilder({ onGenerate }) {
   }
 
   const STEPS = [
-    // Step 0 — body stats + sex
+    // Step 0 — body stats + gender
     <div key="s0">
       <div className="step-label">Step 1 of 6</div>
       <div className="step-title">Let's start with the basics.</div>
 
-      {/* Sex selector */}
+      {/* Gender selector */}
       <div style={{marginBottom:14}}>
-        <div style={{fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.12em",textTransform:"uppercase",color:"var(--muted)",marginBottom:8}}>Sex</div>
+        <div style={{fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.12em",textTransform:"uppercase",color:"var(--muted)",marginBottom:8}}>Gender</div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
           {[["male","Male 💪","Strength & muscle-focused program"],["female","Female 🍑","Glute, leg & toning-focused program"]].map(([val,label,sub])=>(
-            <div key={val} className={`cardio-option${prefs.sex===val?" selected":""}`} onClick={()=>p("sex",val)} style={{textAlign:"center"}}>
+            <div key={val} className={`cardio-option${prefs.gender===val?" selected":""}`} onClick={()=>p("gender",val)} style={{textAlign:"center"}}>
               <div className="co-title">{label}</div>
               <div className="co-detail" style={{fontSize:"0.68rem"}}>{sub}</div>
             </div>
@@ -1151,9 +1256,9 @@ function PlanBuilder({ onGenerate }) {
         </div>
       </div>
 
-      {prefs.sex && (
-        <div style={{marginTop:14,background:prefs.sex==="female"?"var(--pdim)":"var(--adim)",border:`1px solid ${prefs.sex==="female"?"var(--pborder)":"var(--aborder)"}`,borderRadius:"var(--r-sm)",padding:"10px 14px",fontSize:"0.78rem",color:"var(--text)",lineHeight:1.5}}>
-          {prefs.sex==="female"
+      {prefs.gender && (
+        <div style={{marginTop:14,background:prefs.gender==="female"?"var(--pdim)":"var(--adim)",border:`1px solid ${prefs.gender==="female"?"var(--pborder)":"var(--aborder)"}`,borderRadius:"var(--r-sm)",padding:"10px 14px",fontSize:"0.78rem",color:"var(--text)",lineHeight:1.5}}>
+          {prefs.gender==="female"
             ? "🍑 Your program will prioritize glutes, legs & core every session, with toning-focused upper body work."
             : "💪 Your program will balance strength across all muscle groups with progressive overload."}
         </div>
@@ -1180,9 +1285,9 @@ function PlanBuilder({ onGenerate }) {
       <div className="step-title">What's your primary goal?</div>
       <div style={{display:"flex",flexDirection:"column",gap:8}}>
         {[
-          ["cut",    prefs.sex==="female"?"Lean Out 🔥":"Lose Fat 🔥",            prefs.sex==="female"?"Calorie deficit — lose fat, keep muscle tone":"Calorie deficit, preserve muscle"],
-          ["maintain",prefs.sex==="female"?"Recomp & Tone ⚖️":"Body Recomposition ⚖️", prefs.sex==="female"?"Maintain weight, improve shape and definition":"Maintain weight, improve composition"],
-          ["build",  prefs.sex==="female"?"Build & Sculpt 💪":"Build Muscle 💪",   prefs.sex==="female"?"Moderate surplus — grow glutes and legs, stay lean":"Calorie surplus, maximize growth"],
+          ["cut",    prefs.gender==="female"?"Lean Out 🔥":"Lose Fat 🔥",            prefs.gender==="female"?"Calorie deficit — lose fat, keep muscle tone":"Calorie deficit, preserve muscle"],
+          ["maintain",prefs.gender==="female"?"Recomp & Tone ⚖️":"Body Recomposition ⚖️", prefs.gender==="female"?"Maintain weight, improve shape and definition":"Maintain weight, improve composition"],
+          ["build",  prefs.gender==="female"?"Build & Sculpt 💪":"Build Muscle 💪",   prefs.gender==="female"?"Moderate surplus — grow glutes and legs, stay lean":"Calorie surplus, maximize growth"],
         ].map(([val,label,sub])=>(
           <div key={val} className={`cardio-option${prefs.goal===val?" selected":""}`} onClick={()=>p("goal",val)}>
             <div className="co-title">{label}</div>
@@ -1326,11 +1431,35 @@ function PlanBuilder({ onGenerate }) {
 }
 
 // ─── WORKOUT TAB ──────────────────────────────────────────────────────────────
+function getMuscleEmoji(muscle) {
+  const map = {chest:"💪",back:"🏋️",legs:"🦵",shoulders:"🙆",arms:"💪",core:"🔥",glutes:"🍑"};
+  return map[muscle] || "💪";
+}
+
 function WorkoutTab({ prefs, setPrefs, onRebuild }) {
   const [openId, setOpenId] = useState(null);
   const [saved, setSaved] = useState({});
   const [weekModal, setWeekModal] = useState(false);
   const [toast, setToast] = useState({show:false,msg:""});
+  // swappedExercises: { "day-0-0": nextIndex } — keyed by dayIdx-exIdx
+  const [swappedEx, setSwappedEx] = useState({});
+
+  function swapExercise(dayId, exIdx, muscle, gender) {
+    const pool = (EXERCISE_DB[gender||"male"]?.[muscle] || []);
+    if (pool.length <= 1) { showToast("No other options for this muscle group"); return; }
+    const key = dayId + "-" + exIdx;
+    const curIdx = swappedEx[key] ?? exIdx;
+    const nextIdx = (curIdx + 1) % pool.length;
+    setSwappedEx(prev => ({...prev, [key]: nextIdx}));
+    showToast("Swapped to: " + pool[nextIdx].name);
+  }
+
+  function getExercise(dayId, exIdx, originalEx, gender) {
+    const key = dayId + "-" + exIdx;
+    if (!(key in swappedEx)) return originalEx;
+    const pool = (EXERCISE_DB[gender||"male"]?.[originalEx.muscle] || []);
+    return pool[swappedEx[key]] || originalEx;
+  }
 
   const weekInfo = WEEK_PROGRESSIONS[prefs.week-1];
   const plan = useMemo(()=>buildPlan(prefs),[prefs]);
@@ -1349,7 +1478,7 @@ function WorkoutTab({ prefs, setPrefs, onRebuild }) {
     <div>
       {/* Plan summary strip */}
       <div style={{padding:"14px 16px 0",display:"flex",flexWrap:"wrap",gap:8,alignItems:"center"}}>
-        <span className="ps-chip green">{prefs.sex === "female" ? "Female 🍑" : "Male 💪"}</span>
+        <span className="ps-chip green">{prefs.gender === "female" ? "Female 🍑" : "Male 💪"}</span>
         <span className="ps-chip green">{prefs.level.charAt(0).toUpperCase()+prefs.level.slice(1)}</span>
         <span className="ps-chip green">{prefs.goal.charAt(0).toUpperCase()+prefs.goal.slice(1)}</span>
         <span className="ps-chip">{prefs.daysPerWeek}×/week</span>
@@ -1384,15 +1513,36 @@ function WorkoutTab({ prefs, setPrefs, onRebuild }) {
               </div>
               {isOpen && (
                 <div className="card-detail">
-                  {w.exercises.map((ex,i)=>(
-                    <div key={i} className="ex-row">
-                      <div>
-                        <div className="ex-name">{ex.name}</div>
-                        <div className="ex-tip">{ex.tip}</div>
+                  {w.exercises.map((ex,i)=>{
+                    const displayEx = getExercise(w.id, i, ex, prefs.gender);
+                    return (
+                      <div key={i} className="ex-row" style={{flexDirection:"column",gap:6}}>
+                        <div style={{display:"flex",alignItems:"flex-start",gap:8}}>
+                          <div style={{flex:1}}>
+                            <div className="ex-name">{displayEx.name}</div>
+                            <div className="ex-tip">{displayEx.tip}</div>
+                          </div>
+                          <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:4,flexShrink:0}}>
+                            <div className="ex-sets">{ex.sets}</div>
+                            <button onClick={e=>{e.stopPropagation();swapExercise(w.id,i,ex.muscle,prefs.gender);}}
+                              style={{fontSize:"0.62rem",fontWeight:700,color:"var(--muted)",background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"var(--r-xs)",padding:"3px 8px",cursor:"pointer",whiteSpace:"nowrap"}}>
+                              🔄 Swap
+                            </button>
+                          </div>
+                        </div>
+                        {/* Exercise GIF visual */}
+                        <div style={{background:"var(--s1)",border:"1px solid var(--border)",borderRadius:"var(--r-xs)",padding:"10px 12px",display:"flex",alignItems:"center",gap:10}}>
+                          <div style={{width:56,height:56,background:"var(--s2)",borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,border:"1px solid var(--border)"}}>
+                            <span style={{fontSize:"1.6rem"}}>{getMuscleEmoji(ex.muscle)}</span>
+                          </div>
+                          <div style={{flex:1}}>
+                            <div style={{fontSize:"0.65rem",fontWeight:700,letterSpacing:"0.08em",textTransform:"uppercase",color:"var(--muted)",marginBottom:2}}>{ex.muscle?.charAt(0).toUpperCase()+(ex.muscle?.slice(1)||"")}</div>
+                            <div style={{fontSize:"0.72rem",color:"var(--text)",lineHeight:1.4}}>{displayEx.tip}</div>
+                          </div>
+                        </div>
                       </div>
-                      <div className="ex-sets">{ex.sets}</div>
-                    </div>
-                  ))}
+                    );
+                  })}
                   {prefs.cardioEnabled && ct && (
                     <div className="cardio-row">
                       <div><div className="cardio-label">+ {ct.label} Cardio</div><div className="cardio-detail">{ct.desc}</div></div>
@@ -1576,21 +1726,23 @@ function PlanTab({ prefs, setPrefs, mealState, setMealState, setTab }) {
 
   // Restore persisted macros on mount
   const [hasMacros, setHasMacros] = useState(!!prefs.savedMacros);
-  useState(() => {
-    if (prefs.savedMacros) {
-      setResult(prefs.savedMacros.result);
-      setManual(prefs.savedMacros.manual);
-      if (prefs.savedMacros.goal) setGoal(prefs.savedMacros.goal);
-      if (prefs.savedMacros.activity) setActivity(prefs.savedMacros.activity);
-    }
-  });
+  // Restore saved macros on mount — only run once
+  const restoredRef = useRef(false);
+  if (!restoredRef.current && prefs.savedMacros) {
+    restoredRef.current = true;
+    // Use the goal from prefs.goal (which is always current) not savedMacros.goal
+    if (prefs.savedMacros.result) setResult(prefs.savedMacros.result);
+    if (prefs.savedMacros.manual) setManual(prefs.savedMacros.manual);
+    if (prefs.savedMacros.activity) setActivity(prefs.savedMacros.activity);
+    // DON'T restore goal from savedMacros — use prefs.goal which is always live
+  }
 
   const [editForm, setEditForm] = useState({
     weight: prefs.weight || "",
     feet:   prefs.feet   || "",
     inches: prefs.inches || "",
     age:    prefs.age    || "",
-    sex:    prefs.sex    || "male",
+    gender: prefs.gender    || "male",
   });
   function ef(k, v) { setEditForm(p => ({...p, [k]: v})); }
 
@@ -1606,9 +1758,10 @@ function PlanTab({ prefs, setPrefs, mealState, setMealState, setTab }) {
     ? Math.round((ct.burn * prefs.cardioFreq) / 7) : 0;
 
   function calculate() {
-    const tdee = calculateTDEE(prefs.weight, prefs.feet, prefs.inches, prefs.age, prefs.sex, activity);
+    const tdee = calculateTDEE(prefs.weight, prefs.feet, prefs.inches, prefs.age, prefs.gender, activity);
     if (!tdee) return;
-    const adj     = goal === "cut" ? tdee - 400 : goal === "build" ? tdee + 300 : tdee;
+    const cutDef  = getCutDeficit(prefs.weight, prefs.feet, prefs.inches);
+    const adj     = goal === "cut" ? Math.max(1400, tdee - cutDef) : goal === "build" ? tdee + 300 : tdee;
     const protein = Math.round(adj * 0.3 / 4);
     const fat     = Math.round(adj * 0.25 / 9);
     const carbs   = Math.round((adj - protein * 4 - fat * 9) / 4);
@@ -1617,7 +1770,7 @@ function PlanTab({ prefs, setPrefs, mealState, setMealState, setTab }) {
     setResult(newResult);
     setManual(newManual);
     // Persist so macros survive tab switching
-    setPrefs(p => ({...p, savedMacros: { result: newResult, manual: newManual, goal, activity }}));
+    setPrefs(p => ({...p, goal, savedMacros: { result: newResult, manual: newManual, goal, activity }}));
     setTimeout(() => { if (resultRef.current) resultRef.current.scrollIntoView({ behavior:"smooth", block:"start" }); }, 80);
   }
 
@@ -1642,7 +1795,7 @@ function PlanTab({ prefs, setPrefs, mealState, setMealState, setTab }) {
   }
 
   const ACTIVITY_OPTIONS = [
-    { id:"sedentary", label:"Sedentary",   sub:"Desk job · under 3,000 steps/day" },
+    { id:"sedentary", label:"Sedentary",   sub:"No gym · desk job · under 3,000 steps/day" },
     { id:"light",     label:"Light",       sub:"Light movement · 3,000–6,000 steps/day" },
     { id:"moderate",  label:"Moderate",    sub:"Gym 3–5×/week · 6,000–10,000 steps/day" },
     { id:"active",    label:"Active",      sub:"Gym 6–7×/week · 10,000–15,000 steps/day" },
@@ -1685,7 +1838,7 @@ function PlanTab({ prefs, setPrefs, mealState, setMealState, setTab }) {
     { label:"Weight", val: prefs.weight ? prefs.weight + " lbs" : "—" },
     { label:"Height", val: heightStr },
     { label:"Age",    val: prefs.age    ? prefs.age + " yrs"    : "—" },
-    { label:"Sex",    val: prefs.sex    ? prefs.sex.charAt(0).toUpperCase() + prefs.sex.slice(1) : "—" },
+    { label:"Gender",    val: prefs.gender    ? prefs.gender.charAt(0).toUpperCase() + prefs.gender.slice(1) : "—" },
   ];
 
   return (
@@ -1720,7 +1873,7 @@ function PlanTab({ prefs, setPrefs, mealState, setMealState, setTab }) {
         <div className="goal-pills">
           {[["cut","Cut 🔥"],["maintain","Maintain ⚖️"],["build","Build 💪"]].map(([g,l]) => (
             <button key={g} className={"goal-pill" + (goal === g ? " active" : "")}
-              onClick={() => { setGoal(g); setResult(null); setManual(null); }}>
+              onClick={() => { setGoal(g); setResult(null); setManual(null); setPrefs(p => ({...p, goal: g, savedMacros: p.savedMacros ? {...p.savedMacros, goal: g} : p.savedMacros})); }}>
               {l}
             </button>
           ))}
@@ -1730,7 +1883,7 @@ function PlanTab({ prefs, setPrefs, mealState, setMealState, setTab }) {
       {/* ── Activity Level — FOCAL SELECTOR ── */}
       <div style={{padding:"0 16px 16px"}}>
         <div style={{fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.12em",textTransform:"uppercase",color:"var(--muted)",marginBottom:4}}>Activity Level</div>
-        <div style={{fontSize:"0.72rem",color:"var(--muted)",marginBottom:10,lineHeight:1.4}}>How active are you on a typical day?</div>
+        <div style={{fontSize:"0.72rem",color:"var(--orange)",background:"var(--odim)",border:"1px solid var(--oborder)",borderRadius:"var(--r-xs)",padding:"7px 10px",marginBottom:10,lineHeight:1.5}}>⚠️ Choose your <strong>current</strong> level — not your goal. If you don't currently work out, pick Sedentary or Light.</div>
         <div style={{display:"flex",flexDirection:"column",gap:7}}>
           {ACTIVITY_OPTIONS.map(opt => (
             <button key={opt.id}
@@ -1767,7 +1920,7 @@ function PlanTab({ prefs, setPrefs, mealState, setMealState, setTab }) {
         <div style={{padding:"0 16px"}}>
           <div className="result-strip" ref={resultRef}>
             <div style={{fontSize:"0.6rem",fontWeight:700,letterSpacing:"0.12em",textTransform:"uppercase",color:"var(--muted)",marginBottom:8}}>
-              TDEE&nbsp;<span style={{color:"var(--text)"}}>{result.tdee}</span>&nbsp;cal · {goal === "cut" ? "−400 deficit" : goal === "build" ? "+300 surplus" : "Maintenance"}
+              TDEE&nbsp;<span style={{color:"var(--text)"}}>{result.tdee}</span>&nbsp;cal · {goal === "cut" ? `−${getCutDeficit(prefs.weight, prefs.feet, prefs.inches)} deficit` : goal === "build" ? "+300 surplus" : "Maintenance"}
             </div>
 
             <div className="result-cals">
@@ -1936,8 +2089,8 @@ function PlanTab({ prefs, setPrefs, mealState, setMealState, setTab }) {
               </div>
             </div>
             <div className="field" style={{marginBottom:16}}>
-              <span className="field-label">Sex</span>
-              <select className="field-select" value={editForm.sex} onChange={e => ef("sex", e.target.value)}>
+              <span className="field-label">Gender</span>
+              <select className="field-select" value={editForm.gender} onChange={e => ef("gender", e.target.value)}>
                 <option value="male">Male</option>
                 <option value="female">Female</option>
               </select>
@@ -1980,19 +2133,35 @@ function MealsTab({ prefs, mealState, setMealState, goal, setTab }) {
 
   const rawCals = activeMeals.reduce((s,m) => s + m.calories, 0);
   const cardioAdj = prefs.cardioEnabled && ct && prefs.cardioFreq ? Math.round(ct.burn * prefs.cardioFreq / 7) : 0;
-
-  // Compute personal target — same formula as calculator
-  const tdeeForMeals = calculateTDEE(prefs.weight, prefs.feet, prefs.inches, prefs.age, prefs.sex, prefs.activity || "moderate");
   const goalForMeals = goal || prefs.goal || "maintain";
-  const targetCalsRaw = tdeeForMeals
-    ? (goalForMeals==="cut" ? tdeeForMeals-400 : goalForMeals==="build" ? tdeeForMeals+300 : tdeeForMeals)
-    : 0;
+
+  // Use saved calculator result when available — this is the EXACT number the user calculated.
+  // Only recompute from scratch if no saved macros exist yet.
+  // This ensures the meal plan always matches whatever the macro calculator showed.
+  const savedCals = prefs.savedMacros?.result?.calories;
+  const savedGoal = prefs.savedMacros?.goal;
+
+  let targetCalsRaw;
+  if (savedCals && savedGoal === goalForMeals) {
+    // Saved macros match current goal — use exact calculator result
+    targetCalsRaw = savedCals;
+  } else {
+    // No saved macros or goal changed — recompute using same formula as calculator
+    const tdeeForMeals = calculateTDEE(prefs.weight, prefs.feet, prefs.inches, prefs.age, prefs.gender,
+      prefs.savedMacros?.activity || prefs.activity || "moderate");
+    const cutDef = getCutDeficit(prefs.weight, prefs.feet, prefs.inches);
+    targetCalsRaw = tdeeForMeals
+      ? (goalForMeals==="cut" ? Math.max(1400, tdeeForMeals - cutDef)
+       : goalForMeals==="build" ? tdeeForMeals + 300
+       : tdeeForMeals)
+      : 0;
+  }
+
   const targetCalsTotal = targetCalsRaw + cardioAdj;
 
-  // Scale each meal proportionally to hit user's personal target
-  // Capped at 0.75–1.55x to keep portions realistic
-  const scaleFactor = (tdeeForMeals && rawCals > 0)
-    ? Math.min(1.55, Math.max(0.75, targetCalsTotal / (rawCals + cardioAdj)))
+  // Scale each meal proportionally to hit the target. Capped 0.75–1.55x for realism.
+  const scaleFactor = (targetCalsRaw && rawCals > 0)
+    ? Math.min(1.55, Math.max(0.75, targetCalsTotal / Math.max(rawCals + cardioAdj, 1)))
     : 1;
 
   // Scaled meals for display — does not mutate the meal pool
@@ -2092,10 +2261,19 @@ function MealsTab({ prefs, mealState, setMealState, goal, setTab }) {
       {/* Daily totals vs calculator targets */}
       {(()=>{
         // Recalculate targets from prefs so they always match the calculator
-        const tdee = calculateTDEE(prefs.weight, prefs.feet, prefs.inches, prefs.age, prefs.sex, prefs.activity || "moderate");
+        const tdee = calculateTDEE(prefs.weight, prefs.feet, prefs.inches, prefs.age, prefs.gender, prefs.activity || "moderate");
         const hasTDEE = !!tdee;
         const goalKey = goal || prefs.goal || "maintain";
-        const targetCals = hasTDEE ? (goalKey==="cut" ? tdee-400 : goalKey==="build" ? tdee+300 : tdee) : 0;
+        // Use saved calculator result when it matches current goal — exact same as calculator showed
+        const _savedC = prefs.savedMacros?.result?.calories;
+        const _savedG = prefs.savedMacros?.goal;
+        let targetCals;
+        if (_savedC && _savedG === goalKey) {
+          targetCals = _savedC;
+        } else {
+          const _cutDef = getCutDeficit(prefs.weight, prefs.feet, prefs.inches);
+          targetCals = hasTDEE ? (goalKey==="cut" ? Math.max(1400, tdee - _cutDef) : goalKey==="build" ? tdee+300 : tdee) : 0;
+        }
         const targetP = hasTDEE ? Math.round(targetCals*0.30/4) : 0;
         const targetF = hasTDEE ? Math.round(targetCals*0.25/9) : 0;
         const targetC = hasTDEE ? Math.round((targetCals - targetP*4 - targetF*9)/4) : 0;
@@ -2203,7 +2381,7 @@ function MealsTab({ prefs, mealState, setMealState, goal, setTab }) {
                 </div>
                 <div style={{fontSize:"0.72rem",color:"var(--muted)",lineHeight:1.55}}>
                   Based on your {w}lb body weight{prefs.cardioEnabled&&cardioBonus>0?` + ${cardioBonus}oz for cardio`:""}. Sip consistently — don't wait until thirsty.
-                  {prefs.sex==="female"?" Women: aim for the lower end of this range.":" Men: aim for the full target, especially on training days."}
+                  {prefs.gender==="female"?" Women: aim for the lower end of this range.":" Men: aim for the full target, especially on training days."}
                 </div>
               </div>
             </div>
