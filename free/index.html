@@ -467,32 +467,48 @@ function WorkoutTab({ gender }) {
                 <div className="card-detail">
                   {w.exercises.map((ex,i)=>(
                     <div key={i} style={{paddingBottom:10,marginBottom:10,borderBottom:i<w.exercises.length-1?"1px solid rgba(39,41,32,0.7)":"none"}}>
-                      <div style={{display:"flex",alignItems:"flex-start",gap:8,marginBottom:6}}>
+                      <div style={{display:"flex",alignItems:"flex-start",gap:8,marginBottom:8}}>
                         <div style={{flex:1}}>
                           <div className="ex-name">{ex.name}</div>
                           <div className="ex-tip">{ex.tip}</div>
                         </div>
                         <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:4,flexShrink:0}}>
                           <div className="ex-sets">{ex.sets}</div>
-                          {/* Locked swap — teaser */}
-                          <div style={{fontSize:"0.62rem",fontWeight:700,color:"var(--muted2)",background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"var(--r-xs)",padding:"3px 8px",opacity:0.6,display:"flex",alignItems:"center",gap:3}}>
+                          <div style={{fontSize:"0.62rem",fontWeight:700,color:"var(--muted2)",background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"var(--r-xs)",padding:"3px 8px",opacity:0.55,display:"flex",alignItems:"center",gap:3}}>
                             🔒 Swap
                           </div>
                         </div>
                       </div>
-                      {/* Exercise visual teaser */}
-                      <div style={{background:"var(--s2)",border:"1px dashed var(--border)",borderRadius:"var(--r-xs)",padding:"8px 12px",display:"flex",alignItems:"center",gap:10}}>
-                        <div style={{width:44,height:44,background:"var(--s1)",borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,border:"1px solid var(--border)",opacity:0.5}}>
-                          <span style={{fontSize:"1.2rem"}}>🔒</span>
+                      {/* Exercise GIF teaser — blurred with upgrade overlay */}
+                      <div style={{position:"relative",borderRadius:"var(--r-xs)",overflow:"hidden",aspectRatio:"16/9",background:"#fff",border:"1px solid var(--border)"}}>
+                        {/* Blurred placeholder image */}
+                        <div style={{
+                          position:"absolute",inset:0,
+                          background:"linear-gradient(135deg,#1a1c14 0%,#2a2c1f 50%,#1a1c14 100%)",
+                          display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:8,
+                        }}>
+                          <div style={{fontSize:"2.2rem",opacity:0.2}}>🏋️</div>
+                          <div style={{fontSize:"0.65rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:"rgba(230,234,214,0.3)"}}>
+                            Form Guide
+                          </div>
                         </div>
-                        <div style={{flex:1}}>
-                          <div style={{fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.08em",textTransform:"uppercase",color:"var(--muted2)",marginBottom:2}}>Exercise Visual</div>
-                          <div style={{fontSize:"0.7rem",color:"var(--muted2)",lineHeight:1.4}}>Animated form guides available in Core Program</div>
+                        {/* Lock overlay */}
+                        <div style={{
+                          position:"absolute",inset:0,
+                          backdropFilter:"blur(4px)",
+                          display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:8,
+                          background:"rgba(10,11,8,0.55)",
+                        }}>
+                          <div style={{width:36,height:36,background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1rem"}}>🔒</div>
+                          <div style={{textAlign:"center",padding:"0 16px"}}>
+                            <div style={{fontSize:"0.72rem",fontWeight:700,color:"var(--text)",marginBottom:4}}>Animated Form Guide</div>
+                            <div style={{fontSize:"0.65rem",color:"var(--muted)",lineHeight:1.4,marginBottom:8}}>See exactly how to perform every exercise</div>
+                            <a href="https://rochesterian3.gumroad.com/l/xoizj" target="_blank" rel="noopener"
+                              style={{display:"inline-block",background:"var(--accent)",color:"#0a0b08",borderRadius:99,padding:"6px 16px",fontSize:"0.7rem",fontWeight:800,textDecoration:"none",letterSpacing:"0.06em"}}>
+                              Unlock — $29 →
+                            </a>
+                          </div>
                         </div>
-                        <a href="https://rochesterian3.gumroad.com/l/xoizj" target="_blank" rel="noopener"
-                          style={{fontSize:"0.62rem",fontWeight:700,color:"var(--accent)",textDecoration:"none",whiteSpace:"nowrap",flexShrink:0}}>
-                          Unlock →
-                        </a>
                       </div>
                     </div>
                   ))}

@@ -338,7 +338,7 @@ body{background:var(--bg);color:var(--text);font-family:'Lato',sans-serif;min-he
 /* TOAST */
 .toast{position:fixed;bottom:104px;left:50%;transform:translateX(-50%);background:var(--s2);color:var(--text);border:1px solid var(--aborder);padding:10px 22px;border-radius:99px;font-size:0.78rem;font-weight:700;letter-spacing:0.05em;z-index:300;white-space:nowrap;opacity:0;transition:opacity 0.3s;pointer-events:none;}
 .toast span{color:var(--accent);}
-.toast.show{opacity:1;}
+.toast.show{opacity:1;}@keyframes spin{to{transform:rotate(360deg)}}
 `;
 
 // ─── CARDIO CONFIG ────────────────────────────────────────────────────────────
@@ -349,6 +349,116 @@ const CARDIO_TYPES = [
 ];
 
 // ─── EXERCISE DATABASE — SEX-SPECIFIC ────────────────────────────────────────
+// ─── EXERCISE GIF MAP — Wger open-source exercise database ───────────────────
+// GIF URL: https://wger.de/static/images/exercises/main/<id>.gif
+// License: CC BY SA — wger.de
+const WGER_GIF_MAP = {
+  "bench-press":       "105",
+  "incline-db-press":  "305",
+  "cable-fly":         "172",
+  "chest-dip":         "202",
+  "pec-deck":          "314",
+  "db-chest-press":    "301",
+  "lat-pulldown":      "122",
+  "barbell-row":       "109",
+  "cable-row":         "175",
+  "db-row":            "213",
+  "pull-up":           "194",
+  "face-pull":         "313",
+  "back-squat":        "111",
+  "rdl":               "191",
+  "leg-press":         "126",
+  "split-squat":       "206",
+  "leg-curl":          "128",
+  "leg-extension":     "127",
+  "ohp":               "113",
+  "db-shoulder-press": "115",
+  "lateral-raise":     "130",
+  "rear-delt-fly":     "312",
+  "arnold-press":      "197",
+  "cable-lateral":     "232",
+  "barbell-curl":      "108",
+  "hammer-curl":       "123",
+  "incline-curl":      "350",
+  "close-grip-bench":  "121",
+  "tricep-pushdown":   "133",
+  "overhead-tri":      "220",
+  "hip-thrust":        "370",
+  "glute-bridge":      "198",
+  "cable-kickback":    "222",
+  "hanging-leg-raise": "124",
+  "cable-crunch":      "173",
+  "plank":             "187",
+  "bicycle-crunch":    "168",
+  "pallof-press":      "371",
+  "crunch-machine":    "185",
+  "band-walk":         "372",
+  "goblet-squat":      "209",
+  "reverse-lunge":     "200",
+  "step-up":           "255",
+  "push-up":           "192",
+  "cable-curl":        "176",
+  "woodchop":          "373",
+};
+
+function ExerciseGif({ gifKey, name }) {
+  const [loaded, setLoaded] = useState(false);
+  const [error, setError]   = useState(false);
+  const wgerId = WGER_GIF_MAP[gifKey];
+  if (!wgerId) return null;
+  // Primary: self-hosted on GitHub Pages (fast, reliable)
+  // Fallback: Wger CDN (used until you run download_exercise_gifs.sh and push)
+  const GITHUB_BASE = "https://cjrochest.github.io/HealthFundamentals/assets/exercises/";
+  const WGER_BASE   = "https://wger.de/static/images/exercises/main/";
+  const [src, setSrc] = useState(GITHUB_BASE + gifKey + ".gif");
+  const url = src; // kept for img tag below
+
+  return (
+    <div style={{
+      width:"100%", borderRadius:"var(--r-xs)", overflow:"hidden",
+      background:"var(--s1)", border:"1px solid var(--border)",
+      aspectRatio:"16/9", position:"relative", marginTop:8,
+      display:"flex", alignItems:"center", justifyContent:"center",
+    }}>
+      {/* Loading skeleton */}
+      {!loaded && !error && (
+        <div style={{position:"absolute",inset:0,background:"var(--s2)",display:"flex",
+          alignItems:"center",justifyContent:"center",flexDirection:"column",gap:6}}>
+          <div style={{width:32,height:32,border:"3px solid var(--border)",
+            borderTopColor:"var(--accent)",borderRadius:"50%",
+            animation:"spin 0.8s linear infinite"}}/>
+          <div style={{fontSize:"0.62rem",color:"var(--muted)"}}>Loading...</div>
+        </div>
+      )}
+      {error ? (
+        <div style={{padding:16,textAlign:"center",color:"var(--muted)",fontSize:"0.72rem"}}>
+          Visual not available
+        </div>
+      ) : (
+        <img
+          src={url}
+          alt={name + " exercise demonstration"}
+          onLoad={()=>setLoaded(true)}
+          onError={()=>{
+            // If GitHub Pages fails, try Wger directly
+            if (src.includes("github.io")) {
+              setSrc(WGER_BASE + wgerId + ".gif");
+            } else {
+              setError(true);
+            }
+          }}
+          style={{
+            width:"100%", height:"100%", objectFit:"contain",
+            display:loaded?"block":"none",
+            background:"#fff", // Wger GIFs have white backgrounds
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+
 const EXERCISE_DB = {
   male: {
     chest:    [
@@ -1531,15 +1641,7 @@ function WorkoutTab({ prefs, setPrefs, onRebuild }) {
                           </div>
                         </div>
                         {/* Exercise GIF visual */}
-                        <div style={{background:"var(--s1)",border:"1px solid var(--border)",borderRadius:"var(--r-xs)",padding:"10px 12px",display:"flex",alignItems:"center",gap:10}}>
-                          <div style={{width:56,height:56,background:"var(--s2)",borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,border:"1px solid var(--border)"}}>
-                            <span style={{fontSize:"1.6rem"}}>{getMuscleEmoji(ex.muscle)}</span>
-                          </div>
-                          <div style={{flex:1}}>
-                            <div style={{fontSize:"0.65rem",fontWeight:700,letterSpacing:"0.08em",textTransform:"uppercase",color:"var(--muted)",marginBottom:2}}>{ex.muscle?.charAt(0).toUpperCase()+(ex.muscle?.slice(1)||"")}</div>
-                            <div style={{fontSize:"0.72rem",color:"var(--text)",lineHeight:1.4}}>{displayEx.tip}</div>
-                          </div>
-                        </div>
+                        <ExerciseGif gifKey={displayEx.gif} name={displayEx.name}/>
                       </div>
                     );
                   })}
