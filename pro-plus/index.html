@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0a0b08"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-  <title>Health Fundamentals — Full System+</title>
+  <title>Health Fundamentals — Full Access</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Lato:wght@400;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <style>*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html,body{height:100%;background:#0a0b08;-webkit-font-smoothing:antialiased;}</style>
@@ -17,9 +17,9 @@
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script>
-    const CODE_HASHES=["1042084c1897ab386b629e2cb78ee2e9888a0d51d1425fd1705207e24a352502", "f3cf32d062cc5d20c2a44ca90ee8bb60547c161d5a1808732ebf128ef6b347ac", "1499ac46bb59234ebba5bd7efff98ce50c031a391f0e6f5fb9ababcedbc4552f"];
+    const CODE_HASHES=["2355a5ac039f6c9c7700ae34798dc18535b0c7104225d7bdd64533e1c5303ba1", "d70a097fc2ed326edde69999d16d2b1cd6fb188085d44a3c450f0e8065fbc475", "1a80a74e7f1d5bf039237a326bedcba7fee9022cdc05d8f1e20c34e7e4e557ae"];
     async function sha256(m){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(m));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');}
-    const STORAGE_KEY='hf_proplus_access_v1';
+    const STORAGE_KEY='hf_pro_access_v1';
     let _root=null;
     function mountApp(){if(!_root)_root=ReactDOM.createRoot(document.getElementById('app-root'));_root.render(React.createElement(App));}
     function UnlockScreen(){
@@ -30,7 +30,7 @@
       return React.createElement('div',{style:{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',background:'#0a0b08',padding:'24px'}},
         React.createElement('div',{style:{width:'100%',maxWidth:360,textAlign:'center'}},
           React.createElement('div',{style:{fontFamily:"'Syne',sans-serif",fontSize:'1.6rem',fontWeight:800,color:'#e9ead6',marginBottom:6}},'Health',React.createElement('em',{style:{color:'#c8f135'}},'Fund')),
-          React.createElement('div',{style:{fontSize:'0.78rem',color:'#656857',marginBottom:28}},'Full System+ — $69'),
+          React.createElement('div',{style:{fontSize:'0.78rem',color:'#656857',marginBottom:28}},'Full Access — $29'),
           React.createElement('input',{type:'text',placeholder:'Enter access code',value:code,onChange:e=>setCode(e.target.value),onKeyDown:e=>e.key==='Enter'&&attempt(),style:{width:'100%',background:'#1a1c15',border:'1px solid #2e3028',borderRadius:10,padding:'13px 16px',color:'#e9ead6',fontSize:'0.95rem',outline:'none',marginBottom:10,fontFamily:"'Lato',sans-serif",letterSpacing:'0.08em',textAlign:'center'}}),
           React.createElement('button',{onClick:attempt,disabled:busy||!code.trim(),style:{width:'100%',background:'#c8f135',color:'#0a0b08',border:'none',borderRadius:10,padding:'13px',fontFamily:"'Syne',sans-serif",fontSize:'0.95rem',fontWeight:800,cursor:busy||!code.trim()?'not-allowed':'pointer',opacity:busy||!code.trim()?0.5:1}},busy?'Checking…':'Unlock Access'),
           err&&React.createElement('div',{style:{marginTop:10,color:'#ff6b6b',fontSize:'0.8rem'}},err),
@@ -3077,6 +3077,7 @@ const CHEAT_OPTIONS = {
     desc: "You choose the ingredients — highest control.",
     tips: [
       "Use real ingredients — burger, pasta, fries, whatever you want.",
+      "Air fryer or oven is your best friend here — same great taste, significantly less oil and calories than frying.",
       "Don't track it. The point is to enjoy it guilt-free.",
       "Cook extra protein alongside it to stay closer to your targets.",
     ],
@@ -3774,7 +3775,7 @@ function HomeTab({ prefs, setPrefs, setTab }) {
   const initRef = useRef(false);
   if (!initRef.current) {
     initRef.current = true;
-    const maxWeeks = 12; // pro has 4 weeks; pro-plus has 12
+    const maxWeeks = 4; // pro has 4 weeks; pro-plus has 12
     const now = new Date().toISOString().split("T")[0];
     let needsUpdate = {};
 
@@ -3937,7 +3938,7 @@ function App() {
         <div className="app">
           <div className="top-bar">
             <div className="brand">Health<em>Fund</em></div>
-            <div className="access-badge">Full System+</div>
+            <div className="access-badge">Full Access</div>
           </div>
           <PlanBuilder onGenerate={(p)=>{ setPrefs(p); setTab("home"); }} />
         </div>
@@ -3952,7 +3953,7 @@ function App() {
         <div className="top-bar">
           <div className="brand">Health<em>Fund</em></div>
           {(tab==="plan"||tab==="meals"||tab==="grocery"||tab==="learn"||tab==="progress")&&(
-            <div className="access-badge">Full System+</div>
+            <div className="access-badge">Full Access</div>
           )}
           {(tab==="home"||tab==="workout")&&(
             <div style={{fontSize:"0.7rem",color:"var(--muted)",fontWeight:700}}>
@@ -3967,7 +3968,7 @@ function App() {
         {tab==="meals"   && <MealsTab prefs={prefs} mealState={mealState} setMealState={setMealState} goal={prefs.goal||"maintain"} setTab={setTab}/>}
         {tab==="grocery" && <GroceryTab prefs={prefs} mealState={mealState}/>}
         {tab==="learn"    && <LearnTab/>}
-        {tab==="progress" && <ProgressTab prefs={prefs}/>}
+        {tab==="progress" && <ProgressTeaserTab/>}
       </div>
 
       <div className="bottom-nav">
