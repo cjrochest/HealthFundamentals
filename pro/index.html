@@ -2260,6 +2260,7 @@ function MealsTab({ prefs, mealState, setMealState, goal, setTab }) {
   const setAvoidTags = fn => setMealState(s => ({...s, avoidTags: typeof fn === "function" ? fn(s.avoidTags) : fn}));
   // swapped = temporary slot overrides (not pinned — reset on week change)
   const [swapped, setSwapped] = useState({});
+  const [showCheatMeal, setShowCheatMeal] = useState(false);
 
   const ct = CARDIO_TYPES.find(c => c.id === prefs.cardioType);
   const activeSlots = SLOT_CONFIGS[mealCount];
@@ -2602,34 +2603,28 @@ function MealsTab({ prefs, mealState, setMealState, goal, setTab }) {
         })}
       </div>
 
-      {/* Cheat Meal teaser */}
+      {/* Cheat Meal Mode — functional in pro-plus */}
       <div style={{margin:"20px 16px 8px"}}>
-        <div style={{background:"var(--s1)",border:"1px solid var(--border)",borderRadius:"var(--r)",overflow:"hidden",opacity:0.92,position:"relative"}}>
-          <div style={{position:"absolute",top:12,right:12,background:"var(--s2)",border:"1px solid var(--border)",borderRadius:99,padding:"3px 10px",fontSize:"0.65rem",fontWeight:700,color:"var(--muted)"}}>Full System+ only</div>
-          <div style={{padding:"18px 16px 14px"}}>
-            <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:10}}>
-              <span style={{fontSize:"1.4rem"}}>🍕</span>
-              <div>
-                <div style={{fontFamily:"var(--ff-display)",fontWeight:800,fontSize:"1rem",color:"var(--text)"}}>Cheat Meal Mode</div>
-                <div style={{fontSize:"0.72rem",color:"var(--muted)",marginTop:1}}>Smart flexibility built into your plan</div>
-              </div>
-            </div>
-            <div style={{display:"grid",gap:8,marginBottom:14}}>
-              {[{icon:"🕐",text:"Best times to schedule a cheat meal"},{icon:"⚖️",text:"Portion guidance so one meal stays one meal"},{icon:"↩️",text:"Same-day recovery protocol to minimize impact"}].map(function(f){ return (
-                <div key={f.text} style={{display:"flex",alignItems:"center",gap:10,background:"var(--s2)",borderRadius:"var(--r-sm)",padding:"9px 12px"}}>
-                  <span>{f.icon}</span>
-                  <span style={{fontSize:"0.76rem",color:"var(--muted)"}}>{f.text}</span>
-                  <span style={{marginLeft:"auto",opacity:0.3}}>🔒</span>
-                </div>
-              );})}
-            </div>
-            <a href="https://rochesterian3.gumroad.com/l/fullsystemplus" target="_blank" rel="noopener"
-              style={{display:"block",background:"var(--accent)",color:"#0a0b08",borderRadius:"var(--r-sm)",padding:"13px",fontWeight:800,fontSize:"0.88rem",fontFamily:"var(--ff-display)",textAlign:"center",textDecoration:"none"}}>
-              Unlock Full System+ — $69 →
-            </a>
+        <button
+          onClick={()=>setShowCheatMeal(true)}
+          style={{
+            width:"100%",background:"var(--s1)",border:"1px solid var(--border)",
+            borderRadius:"var(--r)",padding:"16px",cursor:"pointer",
+            display:"flex",alignItems:"center",gap:14,textAlign:"left",
+            transition:"border-color 0.15s",
+          }}
+          onMouseEnter={e=>e.currentTarget.style.borderColor="var(--oborder)"}
+          onMouseLeave={e=>e.currentTarget.style.borderColor="var(--border)"}
+        >
+          <span style={{fontSize:"1.8rem",flexShrink:0}}>🍕</span>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:"var(--ff-display)",fontSize:"0.95rem",fontWeight:800,color:"var(--text)",marginBottom:3}}>Cheat Meal Mode</div>
+            <div style={{fontSize:"0.75rem",color:"var(--muted)",lineHeight:1.4}}>Cravings happen. Plan around it — we'll adjust your next workout to offset.</div>
           </div>
-        </div>
+          <span style={{color:"var(--orange)",fontSize:"0.82rem",fontWeight:700,flexShrink:0}}>Activate →</span>
+        </button>
       </div>
+      {showCheatMeal && <CheatMealModal onClose={()=>setShowCheatMeal(false)}/>}
 
       {/* Food Prefs Modal */}
       {configOpen && (
@@ -3074,12 +3069,231 @@ function ProgressShareCard({ lastW, totalChange, daysLogged, checkinStreak, toda
 }
 
 // ── Main ProgressTab ─────────────────────────────────────────────────────────
+// ─── CHEAT MEAL MODE ──────────────────────────────────────────────────────────
+const CHEAT_OPTIONS = {
+  cook: {
+    icon: "🍳",
+    label: "Cook a Cheat Meal",
+    desc: "You choose the ingredients — highest control.",
+    tips: [
+      "Use real ingredients — burger, pasta, fries, whatever you want.",
+      "Don't track it. The point is to enjoy it guilt-free.",
+      "Cook extra protein alongside it to stay closer to your targets.",
+    ],
+    adjustment: {
+      title: "Next Workout Adjustment — Cook at Home",
+      message: "Since you're cooking, the damage is manageable. Your next session stays the same — but add one extra working set to your first exercise as a small offset. Think of it as earning it.",
+      cardio: "Add 10–15 min of walking after your next session. Nothing intense — just a light walk to keep your metabolism active.",
+      rep_note: "No rep changes needed. Just bring the intensity on your first exercise.",
+      emoji: "💪",
+    }
+  },
+  order: {
+    icon: "📱",
+    label: "Order Out",
+    desc: "Restaurant or delivery — moderate control.",
+    tips: [
+      "Pick a place where you can identify the protein source.",
+      "Avoid liquid calories — skip the soda, stick to water.",
+      "One plate. Not two. Enjoy every bite of the one.",
+    ],
+    adjustment: {
+      title: "Next Workout Adjustment — Order Out",
+      message: "Restaurant portions run 200–400 cals over what you'd make at home. We'll offset that with a small cardio addition — nothing drastic.",
+      cardio: "Add 20 min of moderate cardio to your next session — walk, bike, or treadmill after lifting. That's the full offset.",
+      rep_note: "Bump your reps by 2 on all compound lifts next session — squats, rows, press. Small increase, meaningful calorie burn.",
+      emoji: "🏃",
+    }
+  },
+  fastfood: {
+    icon: "🍔",
+    label: "Fast Food",
+    desc: "Highest calories — but we've got a plan.",
+    tips: [
+      "Choose one item you really want — make it count.",
+      "Skip the combo. Order the thing you actually want, not the meal deal.",
+      "Drink water only. That alone saves 200+ calories.",
+    ],
+    adjustment: {
+      title: "Next Workout Adjustment — Fast Food",
+      message: "Fast food typically runs 800–1,200 calories for a full meal. That's significant — but one meal never derailed anyone who stayed consistent. Here's how we offset it.",
+      cardio: "Add a full cardio session after your next workout — 25–30 min moderate pace. This is the most important part of the recovery.",
+      rep_note: "Add a full extra set to every exercise next session. Not heavier — just one more round. You're burning the surplus, not punishing yourself.",
+      emoji: "🔥",
+    }
+  }
+};
+
+function CheatMealModal({ onClose }) {
+  const [step, setStep] = useState("intro"); // intro | options | result
+  const [chosen, setChosen] = useState(null);
+
+  function selectOption(key) {
+    setChosen(key);
+    setStep("result");
+  }
+
+  const opt = chosen ? CHEAT_OPTIONS[chosen] : null;
+
+  return (
+    <div className="week-modal-bg" onClick={onClose}>
+      <div className="week-modal" style={{maxHeight:"88vh",overflowY:"auto"}} onClick={e=>e.stopPropagation()}>
+
+        {/* ── INTRO ── */}
+        {step === "intro" && (
+          <>
+            <div style={{textAlign:"center",marginBottom:20}}>
+              <div style={{fontSize:"2.6rem",marginBottom:8}}>🍕</div>
+              <div style={{fontFamily:"var(--ff-display)",fontSize:"1.2rem",fontWeight:800,color:"var(--text)",marginBottom:6,lineHeight:1.15}}>
+                Cheat Meal Mode
+              </div>
+              <div style={{fontSize:"0.82rem",color:"var(--accent)",fontWeight:700}}>
+                Cravings are normal. Let's handle this smart.
+              </div>
+            </div>
+
+            <div style={{background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"var(--r-sm)",padding:"14px 16px",marginBottom:20,fontSize:"0.82rem",color:"var(--muted)",lineHeight:1.7}}>
+              The urge for a cheat meal is completely normal — it's part of being human. Fighting it completely usually backfires. The smart move is to plan it, enjoy it fully, and adjust around it. One meal never broke a program. Quitting did. Let's figure out the best way to handle this one.
+            </div>
+
+            <div style={{background:"var(--adim)",border:"1px solid var(--aborder)",borderRadius:"var(--r-sm)",padding:"12px 14px",marginBottom:20}}>
+              <div style={{fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:"var(--accent)",marginBottom:6}}>
+                The Plan
+              </div>
+              <div style={{fontSize:"0.78rem",color:"var(--text)",lineHeight:1.6}}>
+                Tell us how you want to eat — and we'll tell you exactly how to adjust your next workout to offset it. No guilt. Just a plan.
+              </div>
+            </div>
+
+            <button className="action-btn btn-primary" onClick={()=>setStep("options")}>
+              Let's Do It →
+            </button>
+          </>
+        )}
+
+        {/* ── OPTIONS ── */}
+        {step === "options" && (
+          <>
+            <div style={{marginBottom:20}}>
+              <div style={{fontFamily:"var(--ff-display)",fontSize:"1.1rem",fontWeight:800,color:"var(--text)",marginBottom:6}}>
+                How do you want to eat?
+              </div>
+              <div style={{fontSize:"0.78rem",color:"var(--muted)"}}>
+                Pick your situation — we'll build the adjustment around it.
+              </div>
+            </div>
+
+            <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:20}}>
+              {Object.entries(CHEAT_OPTIONS).map(([key, opt]) => (
+                <button key={key}
+                  onClick={()=>selectOption(key)}
+                  style={{
+                    background:"var(--s2)",border:"1px solid var(--border)",
+                    borderRadius:"var(--r-sm)",padding:"16px 14px",
+                    cursor:"pointer",textAlign:"left",
+                    display:"flex",alignItems:"center",gap:14,
+                    transition:"border-color 0.15s",
+                  }}
+                  onMouseEnter={e=>e.currentTarget.style.borderColor="var(--aborder)"}
+                  onMouseLeave={e=>e.currentTarget.style.borderColor="var(--border)"}
+                >
+                  <span style={{fontSize:"1.8rem",flexShrink:0}}>{opt.icon}</span>
+                  <div style={{flex:1}}>
+                    <div style={{fontFamily:"var(--ff-display)",fontSize:"0.95rem",fontWeight:800,color:"var(--text)",marginBottom:3}}>{opt.label}</div>
+                    <div style={{fontSize:"0.75rem",color:"var(--muted)"}}>{opt.desc}</div>
+                  </div>
+                  <span style={{color:"var(--muted)",fontSize:"0.9rem",flexShrink:0}}>→</span>
+                </button>
+              ))}
+            </div>
+
+            <button onClick={()=>setStep("intro")}
+              style={{background:"none",border:"none",color:"var(--muted)",fontSize:"0.78rem",cursor:"pointer",padding:"4px 0",fontWeight:700}}>
+              ← Back
+            </button>
+          </>
+        )}
+
+        {/* ── RESULT ── */}
+        {step === "result" && opt && (
+          <>
+            <div style={{textAlign:"center",marginBottom:18}}>
+              <div style={{fontSize:"2.4rem",marginBottom:8}}>{opt.adjustment.emoji}</div>
+              <div style={{fontFamily:"var(--ff-display)",fontSize:"1.1rem",fontWeight:800,color:"var(--text)",marginBottom:4,lineHeight:1.15}}>
+                {opt.adjustment.title}
+              </div>
+            </div>
+
+            {/* Enjoy tips */}
+            <div style={{background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"var(--r-sm)",padding:"14px 16px",marginBottom:14}}>
+              <div style={{fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:"var(--accent)",marginBottom:10}}>
+                {opt.icon} Tips for the Meal
+              </div>
+              <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                {opt.tips.map((tip,i)=>(
+                  <div key={i} style={{display:"flex",gap:10,alignItems:"flex-start"}}>
+                    <span style={{color:"var(--accent)",fontWeight:700,flexShrink:0,fontSize:"0.75rem",marginTop:1}}>✓</span>
+                    <span style={{fontSize:"0.78rem",color:"var(--muted)",lineHeight:1.5}}>{tip}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Main adjustment message */}
+            <div style={{background:"var(--adim)",border:"1px solid var(--aborder)",borderRadius:"var(--r-sm)",padding:"14px 16px",marginBottom:10}}>
+              <div style={{fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:"var(--accent)",marginBottom:8}}>
+                Next Workout Adjustment
+              </div>
+              <div style={{fontSize:"0.8rem",color:"var(--text)",lineHeight:1.65,marginBottom:12}}>
+                {opt.adjustment.message}
+              </div>
+              <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                <div style={{display:"flex",gap:10,alignItems:"flex-start",background:"var(--s2)",borderRadius:"var(--r-xs)",padding:"10px 12px"}}>
+                  <span style={{fontSize:"1rem",flexShrink:0}}>🏃</span>
+                  <div>
+                    <div style={{fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.08em",textTransform:"uppercase",color:"var(--orange)",marginBottom:3}}>Cardio</div>
+                    <div style={{fontSize:"0.78rem",color:"var(--muted)",lineHeight:1.5}}>{opt.adjustment.cardio}</div>
+                  </div>
+                </div>
+                <div style={{display:"flex",gap:10,alignItems:"flex-start",background:"var(--s2)",borderRadius:"var(--r-xs)",padding:"10px 12px"}}>
+                  <span style={{fontSize:"1rem",flexShrink:0}}>💪</span>
+                  <div>
+                    <div style={{fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.08em",textTransform:"uppercase",color:"var(--accent)",marginBottom:3}}>Reps / Sets</div>
+                    <div style={{fontSize:"0.78rem",color:"var(--muted)",lineHeight:1.5}}>{opt.adjustment.rep_note}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Closing message */}
+            <div style={{background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"var(--r-sm)",padding:"12px 14px",marginBottom:20,fontSize:"0.78rem",color:"var(--muted)",lineHeight:1.6,textAlign:"center"}}>
+              Enjoy every bite. No guilt. You've got a plan for tomorrow — that's what makes this different.
+            </div>
+
+            <button className="action-btn btn-primary" onClick={onClose}>
+              Got It — Enjoy the Meal 🍕
+            </button>
+
+            <button onClick={()=>setStep("options")}
+              style={{background:"none",border:"none",color:"var(--muted)",fontSize:"0.78rem",cursor:"pointer",padding:"8px 0 0",fontWeight:700,display:"block",width:"100%",textAlign:"center"}}>
+              ← Change my choice
+            </button>
+          </>
+        )}
+
+      </div>
+    </div>
+  );
+}
+
+
 function ProgressTab({ prefs }) {
   const startWeight   = (prefs && prefs.weight) ? prefs.weight : 0;
   const [data, setData]             = useState(loadProgress);
   const [inputVal, setInputVal]     = useState("");
   const [view, setView]             = useState("month");
   const [showShare, setShowShare]   = useState(false);
+  const [showCheat, setShowCheat]   = useState(false);
   const [toast, setToast]           = useState({ show: false, msg: "" });
 
   const today = formatDate(new Date());
@@ -3259,7 +3473,31 @@ function ProgressTab({ prefs }) {
             color:"var(--accent)",cursor:"pointer"}}>
           {showShare ? "Hide share card" : "Generate share card"}
         </button>
-        {showShare && (
+        {/* Cheat Meal Mode Button */}
+      <div style={{padding:"0 16px 16px"}}>
+        <button
+          onClick={()=>setShowCheat(true)}
+          style={{
+            width:"100%",background:"var(--s2)",border:"1px solid var(--border)",
+            borderRadius:"var(--r)",padding:"16px",cursor:"pointer",
+            display:"flex",alignItems:"center",gap:14,textAlign:"left",
+            transition:"border-color 0.15s",
+          }}
+          onMouseEnter={e=>e.currentTarget.style.borderColor="var(--oborder)"}
+          onMouseLeave={e=>e.currentTarget.style.borderColor="var(--border)"}
+        >
+          <span style={{fontSize:"1.8rem",flexShrink:0}}>🍕</span>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:"var(--ff-display)",fontSize:"0.95rem",fontWeight:800,color:"var(--text)",marginBottom:3}}>Cheat Meal Mode</div>
+            <div style={{fontSize:"0.75rem",color:"var(--muted)",lineHeight:1.4}}>Cravings happen. Plan around it — we'll adjust your next workout to offset.</div>
+          </div>
+          <span style={{color:"var(--orange)",fontSize:"0.82rem",fontWeight:700,flexShrink:0}}>Activate →</span>
+        </button>
+      </div>
+
+      {showCheat && <CheatMealModal onClose={()=>setShowCheat(false)}/>}
+
+      {showShare && (
           <div style={{marginTop:12}}>
             <ProgressShareCard
               lastW={lastW}
