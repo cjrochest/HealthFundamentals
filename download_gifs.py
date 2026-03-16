@@ -1,8 +1,7 @@
 """
-Health Fundamentals — Exercise Image Downloader v5
-Targets only the 8 remaining failures using free-exercise-db (public domain JPGs)
-which has hip thrust, glute bridge, overhead press, lateral raise etc.
-Run from root of your HealthFundamentals repo:
+Health Fundamentals — Exercise GIF Downloader v10
+Final 5 remaining exercises.
+Run from root of HealthFundamentals repo:
     python download_gifs.py
 """
 
@@ -12,135 +11,127 @@ import json
 import os
 import time
 
-DEST = "assets/exercises"
+DEST    = "assets/exercises"
+HOST    = "exercisedb.p.rapidapi.com"
+API_KEY = "d218665d58msha204d034a27d5f9p10d3f5jsn2cbf861a6dcf"
+BASE    = f"https://{HOST}"
 
-# Source 1: Wger API (name search)
-WGER_API = "https://wger.de/api/v2"
+HEADERS = {
+    "X-RapidAPI-Key":  API_KEY,
+    "X-RapidAPI-Host": HOST,
+    "User-Agent":      "HealthFundamentals/1.0",
+}
 
-# Source 2: free-exercise-db on GitHub (public domain, ~800 exercises as JPG)
-FREE_DB = "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises"
-
-# Only the 8 still-missing exercises
-# Format: key -> [ (source, value), ... ]
-# source "wger" = search term, source "freedb" = exact folder name in free-exercise-db
+# Final 5 — broad single-word searches to cast widest net
 EXERCISES = {
-    "ohp":               [("freedb", "Barbell_Full_Squat"),          ("wger", "Push Press")],
-    "db-shoulder-press": [("freedb", "Dumbbell_Shoulder_Press"),     ("wger", "Dumbbell Shoulder Press")],
-    "lateral-raise":     [("freedb", "Side_Lateral_Raise"),          ("wger", "Dumbbell Lateral Raise")],
-    "rear-delt-fly":     [("freedb", "Seated_Bent_Over_Rear_Delt_Raise"), ("wger", "Bent Over Lateral Raise")],
-    "cable-lateral":     [("freedb", "Cable_Shoulder_Press"),        ("wger", "Cable Lateral Raise")],
-    "incline-curl":      [("freedb", "Alternate_Incline_Dumbbell_Curl"), ("wger", "Incline Dumbbell Curl")],
-    "overhead-tri":      [("freedb", "Seated_Triceps_Press"),        ("wger", "Triceps Extension")],
-    "hip-thrust":        [("freedb", "Barbell_Hip_Thrust"),          ("wger", "Hip Thrust")],
-    "glute-bridge":      [("freedb", "Glute_Bridge"),                ("wger", "Glute Bridge")],
-    "cable-kickback":    [("freedb", "Cable_Hip_Adduction"),         ("wger", "Cable Kickback")],
-    "hanging-leg-raise": [("freedb", "Hanging_Leg_Raise"),           ("wger", "Hanging Leg Raise")],
-    "plank":             [("freedb", "Front_Plank_with_Elbows"),     ("wger", "Front Plank")],
-    "step-up":           [("freedb", "Dumbbell_Step_Ups"),           ("wger", "Step Up")],
-    "cable-curl":        [("freedb", "Cable_Hammer_Curls_-_Rope_Attachment"), ("wger", "Cable Curl")],
+    "cable-fly":         ["cable fly", "fly", "crossover", "chest cable"],
+    "db-shoulder-press": ["shoulder press", "dumbbell press", "overhead dumbbell", "deltoid press"],
+    "cable-crunch":      ["cable crunch", "crunch cable", "ab cable", "kneeling crunch"],
+    "crunch-machine":    ["crunch machine", "ab machine", "machine ab", "abdominal machine"],
+    "woodchop":          ["wood chop", "chop", "cable rotation", "twist cable"],
 }
 
 os.makedirs(DEST, exist_ok=True)
-print("Health Fundamentals — Exercise Image Downloader v5")
+print("Health Fundamentals — Exercise GIF Downloader v10")
+print("Final 5 exercises")
 print("=" * 52)
-print(f"Saving to: {os.path.abspath(DEST)}\n")
 
-def fetch(url):
-    req = urllib.request.Request(url, headers={"User-Agent": "HealthFundamentals/1.0"})
+def api_get(path):
+    req = urllib.request.Request(BASE + path, headers=HEADERS)
     with urllib.request.urlopen(req, timeout=15) as r:
+        return json.loads(r.read())
+
+def download_url(url, use_auth=False):
+    h = HEADERS if use_auth else {"User-Agent": "HealthFundamentals/1.0"}
+    req = urllib.request.Request(url, headers=h)
+    with urllib.request.urlopen(req, timeout=30) as r:
         return r.read()
 
-def fetch_json(url):
-    return json.loads(fetch(url))
+def is_gif(data):
+    return data[:6] in (b'GIF87a', b'GIF89a')
 
-def try_freedb(folder):
-    """Try downloading from free-exercise-db using folder name."""
-    for idx in ["0", "1"]:
-        for ext in ["jpg", "jpeg", "png", "gif"]:
-            url = f"{FREE_DB}/{folder}/{idx}.{ext}"
-            try:
-                data = fetch(url)
-                if len(data) > 5000:  # real image, not error page
-                    return data, url
-            except:
-                pass
+def try_get_gif(term):
+    encoded = urllib.parse.quote(term.lower())
+    try:
+        results = api_get(f"/exercises/name/{encoded}?limit=10&offset=0")
+        if not isinstance(results, list) or not results:
+            return None, None
+        for ex in results:
+            ex_id   = ex.get("id", "")
+            ex_name = ex.get("name", term)
+            if ex_id:
+                try:
+                    url  = f"{BASE}/image?exerciseId={ex_id}&resolution=360&rapidapi-key={API_KEY}"
+                    data = download_url(url, use_auth=True)
+                    if is_gif(data) and len(data) > 5000:
+                        return data, ex_name
+                except:
+                    pass
+            gif_url = ex.get("gifUrl", "")
+            if gif_url:
+                try:
+                    data = download_url(gif_url)
+                    if len(data) > 5000:
+                        return data, ex_name
+                except:
+                    pass
+    except:
+        pass
     return None, None
 
-def try_wger(search_term):
-    """Try downloading from Wger via name search."""
-    try:
-        encoded = urllib.parse.quote(search_term)
-        url = f"{WGER_API}/exercise/search/?term={encoded}&language=english&format=json"
-        data = fetch_json(url)
-        suggestions = data.get("suggestions", [])
-        if not suggestions:
-            return None, None
-        exercise_id = suggestions[0].get("data", {}).get("base_id")
-        if not exercise_id:
-            return None, None
-        imgs_url = f"{WGER_API}/exerciseimage/?exercise={exercise_id}&format=json"
-        imgs = fetch_json(imgs_url).get("results", [])
-        if not imgs:
-            return None, None
-        img_url = next((i["image"] for i in imgs if i.get("is_main")), imgs[0]["image"])
-        img_data = fetch(img_url)
-        return img_data, img_url
-    except:
-        return None, None
-
 ok = 0
-skipped = 0
 failed = []
 
-for key, sources in EXERCISES.items():
+for key, terms in EXERCISES.items():
     out_path = os.path.join(DEST, f"{key}.gif")
 
     if os.path.exists(out_path):
-        size = os.path.getsize(out_path) // 1024
-        print(f"  skip  {key}  ({size}KB)")
-        skipped += 1
-        continue
+        with open(out_path, "rb") as f:
+            header = f.read(6)
+        if header in (b'GIF87a', b'GIF89a'):
+            print(f"  skip  {key}  (already animated)")
+            continue
+        os.remove(out_path)
 
     found = False
-    for source_type, value in sources:
-        try:
-            if source_type == "freedb":
-                data, src_url = try_freedb(value)
-            else:
-                data, src_url = try_wger(value)
-
-            if data and len(data) > 5000:
-                with open(out_path, "wb") as f:
-                    f.write(data)
-                fname = src_url.split("/")[-1] if src_url else "?"
-                print(f"  ok    {key}.gif  ({len(data)//1024}KB)  [{fname}]")
-                ok += 1
-                found = True
-                break
-        except Exception as e:
-            pass
-        time.sleep(0.3)
+    for term in terms:
+        data, name = try_get_gif(term)
+        if data and len(data) > 5000:
+            with open(out_path, "wb") as f:
+                f.write(data)
+            tag = "GIF ✓" if is_gif(data) else "static"
+            print(f"  ok    {key}.gif  ({len(data)//1024}KB)  [{tag}]  '{name}'")
+            ok += 1
+            found = True
+            break
+        time.sleep(0.4)
 
     if not found:
         print(f"  FAIL  {key}")
         failed.append(key)
 
-    time.sleep(0.4)
+    time.sleep(0.5)
 
-print(f"\n{'=' * 52}")
-print(f"Downloaded : {ok}")
-print(f"Skipped    : {skipped}")
-print(f"Failed     : {len(failed)}")
+print(f"\nDownloaded: {ok}  Failed: {len(failed)}")
 
 if failed:
     print(f"\nStill failed: {failed}")
-    print("For these, manually find a GIF online, name it <key>.gif")
-    print("and drop it into assets/exercises/")
+    print("\nManual download links:")
+    links = {
+        "cable-fly":         "https://www.google.com/search?q=cable+fly+exercise+animated+gif&tbm=isch",
+        "db-shoulder-press": "https://www.google.com/search?q=dumbbell+shoulder+press+exercise+animated+gif&tbm=isch",
+        "cable-crunch":      "https://www.google.com/search?q=cable+crunch+exercise+animated+gif&tbm=isch",
+        "crunch-machine":    "https://www.google.com/search?q=ab+crunch+machine+exercise+animated+gif&tbm=isch",
+        "woodchop":          "https://www.google.com/search?q=cable+woodchop+exercise+animated+gif&tbm=isch",
+    }
+    for k in failed:
+        if k in links:
+            print(f"  {k}: {links[k]}")
+    print("\nSave each as assets/exercises/<key>.gif")
 
-if ok > 0 or skipped > 0:
-    print("""
+print("""
 Next steps:
   git add assets/exercises/
-  git commit -m "Add exercise images"
+  git commit -m "Add animated exercise GIFs"
   git push
 """)

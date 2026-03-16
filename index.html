@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Health Fundamentals — The System That Actually Works</title>
+<title>Health Fundamentals — Your Personal Trainer. $69. One Time.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Lato:ital,wght@0,300;0,400;0,700;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <script src="https://gumroad.com/js/gumroad.js"></script>
@@ -14,7 +14,7 @@
   --border:#242618;--accent:#c8f135;--adim:rgba(200,241,53,0.1);--aborder:rgba(200,241,53,0.25);
   --orange:#f5a623;--odim:rgba(245,166,35,0.1);--oborder:rgba(245,166,35,0.3);
   --blue:#5db8fe;--bdim:rgba(93,184,254,0.1);--bborder:rgba(93,184,254,0.3);
-  --purple:#b97cf3;
+  --red:#ff5c5c;--rdim:rgba(255,92,92,0.1);--rborder:rgba(255,92,92,0.3);
   --text:#e8ead4;--muted:#666958;--muted2:#3e4033;
   --r:14px;--r-sm:8px;
 }
@@ -35,50 +35,66 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 5vw;height:64px;di
 /* HERO */
 .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:100px 5vw 80px;position:relative;overflow:hidden}
 .hero-bg::before{content:'';position:absolute;right:-10%;top:10%;width:700px;height:700px;background:radial-gradient(circle,rgba(200,241,53,0.06) 0%,transparent 60%);pointer-events:none}
-.hero-bg::after{content:'';position:absolute;left:-5%;bottom:0%;width:500px;height:500px;background:radial-gradient(circle,rgba(93,184,254,0.04) 0%,transparent 60%);pointer-events:none}
+.hero-bg::after{content:'';position:absolute;left:-5%;bottom:0;width:500px;height:500px;background:radial-gradient(circle,rgba(93,184,254,0.04) 0%,transparent 60%);pointer-events:none}
 .hero-content{position:relative;z-index:1;max-width:1100px;margin:0 auto;width:100%}
 .hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:var(--adim);border:1px solid var(--aborder);border-radius:99px;padding:6px 16px;font-size:0.7rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:28px}
 .hero-eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
-.hero-title{font-family:'Syne',sans-serif;font-size:clamp(3rem,8vw,7rem);font-weight:800;line-height:0.95;letter-spacing:-0.03em;color:var(--text);margin-bottom:28px}
+.hero-title{font-family:'Syne',sans-serif;font-size:clamp(2.8rem,7.5vw,6.5rem);font-weight:800;line-height:0.95;letter-spacing:-0.03em;color:var(--text);margin-bottom:28px}
 .hero-title em{font-style:normal;color:var(--accent)}
-.hero-title .line2{color:var(--muted);font-size:0.7em}
+.hero-title .dim{color:var(--muted);font-size:0.7em}
+.hero-title .strike{text-decoration:line-through;color:var(--muted2);font-size:0.65em}
 .hero-sub{font-size:clamp(1rem,2vw,1.2rem);color:var(--muted);line-height:1.6;max-width:580px;margin-bottom:40px;font-weight:300}
 .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:60px}
 .btn-main{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#0a0b08;border:none;border-radius:var(--r-sm);padding:16px 32px;font-family:'Lato',sans-serif;font-size:0.9rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:all 0.18s}
 .btn-main:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(200,241,53,0.22)}
+.btn-main.blue{background:var(--blue)}
 .btn-ghost{display:inline-flex;align-items:center;gap:8px;background:none;border:1px solid var(--border);border-radius:var(--r-sm);padding:16px 28px;font-family:'Lato',sans-serif;font-size:0.9rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);cursor:pointer;text-decoration:none;transition:all 0.18s}
 .btn-ghost:hover{border-color:var(--aborder);color:var(--accent)}
 .hero-proof{display:flex;gap:40px;flex-wrap:wrap}
 .proof-stat{display:flex;flex-direction:column}
 .proof-num{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:var(--accent);line-height:1}
+.proof-num.red{color:var(--red)}
 .proof-label{font-size:0.72rem;color:var(--muted);margin-top:4px;letter-spacing:0.04em}
 
-/* SHARED SECTION STYLES */
+/* SHARED */
 .section-inner{max-width:1100px;margin:0 auto}
 .section-eyebrow{font-size:0.65rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
 .section-eyebrow.orange{color:var(--orange)}
 .section-eyebrow.blue{color:var(--blue)}
+.section-eyebrow.red{color:var(--red)}
 .section-title{font-family:'Syne',sans-serif;font-size:clamp(2rem,5vw,3.4rem);font-weight:800;line-height:1.05;letter-spacing:-0.02em;color:var(--text);margin-bottom:16px}
 .section-body{font-size:1rem;color:var(--muted);line-height:1.7;max-width:600px;font-weight:300}
 
-/* PROBLEM */
-.problem{background:var(--s1);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:80px 5vw}
-.problem-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:48px}
-.problem-card{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:24px}
-.prob-icon{font-size:1.6rem;margin-bottom:12px}
-.prob-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--text);margin-bottom:6px}
-.prob-text{font-size:0.82rem;color:var(--muted);line-height:1.55}
+/* TRAINER COST SECTION */
+.trainer-cost{padding:80px 5vw;background:var(--s1);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.cost-compare{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:48px;max-width:900px;margin-left:auto;margin-right:auto}
+@media(max-width:600px){.cost-compare{grid-template-columns:1fr}}
+.cost-card{border-radius:var(--r);padding:32px;text-align:center}
+.cost-card.old{background:var(--rdim);border:1px solid var(--rborder)}
+.cost-card.new{background:var(--adim);border:1px solid var(--aborder)}
+.cost-label{font-size:0.65rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:12px}
+.cost-label.red{color:var(--red)}
+.cost-label.green{color:var(--accent)}
+.cost-price{font-family:'Syne',sans-serif;font-size:3.5rem;font-weight:800;line-height:1;margin-bottom:8px}
+.cost-price.red{color:var(--red)}
+.cost-price.green{color:var(--accent)}
+.cost-period{font-size:0.78rem;color:var(--muted);margin-bottom:16px}
+.cost-items{list-style:none;display:flex;flex-direction:column;gap:8px;text-align:left}
+.cost-items li{font-size:0.82rem;color:var(--muted);display:flex;gap:8px;align-items:flex-start}
+.cost-items li span{flex-shrink:0}
 
-/* SOLUTION */
-.solution{padding:100px 5vw;position:relative;overflow:hidden}
-.solution::before{content:'';position:absolute;left:-10%;top:20%;width:500px;height:500px;background:radial-gradient(circle,rgba(200,241,53,0.04) 0%,transparent 65%)}
-.solution-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;max-width:1100px;margin:0 auto}
-@media(max-width:760px){.solution-grid{grid-template-columns:1fr}}
-.solution-list{list-style:none;margin-top:28px;display:flex;flex-direction:column;gap:14px}
-.solution-list li{display:flex;gap:14px;align-items:flex-start}
-.sol-check{width:22px;height:22px;border-radius:6px;background:var(--adim);border:1px solid var(--aborder);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.72rem;color:var(--accent);margin-top:1px}
-.sol-text{font-size:0.9rem;color:var(--text);line-height:1.5}
-.sol-text strong{color:var(--accent)}
+/* WHAT YOU GET SECTION */
+.what-you-get{padding:100px 5vw}
+.wtg-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;max-width:1100px;margin:0 auto}
+@media(max-width:760px){.wtg-grid{grid-template-columns:1fr}}
+.wtg-list{list-style:none;margin-top:28px;display:flex;flex-direction:column;gap:16px}
+.wtg-list li{display:flex;gap:14px;align-items:flex-start}
+.wtg-icon{width:36px;height:36px;border-radius:10px;background:var(--adim);border:1px solid var(--aborder);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.wtg-icon.blue{background:var(--bdim);border-color:var(--bborder)}
+.wtg-icon.orange{background:var(--odim);border-color:var(--oborder)}
+.wtg-text{flex:1}
+.wtg-title{font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:800;color:var(--text);margin-bottom:3px}
+.wtg-body{font-size:0.82rem;color:var(--muted);line-height:1.55}
 
 /* PHONE MOCKUP */
 .phone-wrap{display:flex;justify-content:center;position:relative}
@@ -103,35 +119,30 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 5vw;height:64px;di
 .ps-macro-val.o{color:var(--orange)}
 .ps-macro-val.b{color:var(--blue)}
 .ps-macro-lbl{font-size:0.48rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-top:1px}
-.ps-water{display:flex;gap:8px;align-items:center;background:var(--bdim);border:1px solid var(--bborder);border-radius:8px;padding:8px 10px;margin-bottom:7px}
-.ps-water-text{font-size:0.6rem;color:var(--blue);font-weight:700}
 .ps-nav{display:flex;justify-content:space-around;padding:9px 0 3px;border-top:1px solid var(--border);margin-top:6px}
 .ps-nav-item{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:0.48rem;color:var(--muted)}
 .ps-nav-item.a{color:var(--accent)}
 
-/* FEATURES GRID */
-.features-section{padding:100px 5vw;background:var(--s1);border-top:1px solid var(--border)}
-.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:48px;max-width:1100px;margin-left:auto;margin-right:auto}
-.feature-card{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:26px;transition:border-color 0.2s,transform 0.2s}
-.feature-card:hover{border-color:var(--aborder);transform:translateY(-2px)}
-.feature-card.highlight{border-color:var(--aborder)}
-.feature-icon{font-size:1.8rem;margin-bottom:14px}
-.feature-title{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:800;color:var(--text);margin-bottom:8px}
-.feature-body{font-size:0.82rem;color:var(--muted);line-height:1.6}
-.feature-tag{display:inline-block;margin-top:10px;font-size:0.62rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);background:var(--adim);border:1px solid var(--aborder);border-radius:99px;padding:3px 10px}
-.feature-tag.orange{color:var(--orange);background:var(--odim);border-color:var(--oborder)}
-.feature-tag.blue{color:var(--blue);background:var(--bdim);border-color:var(--bborder)}
+/* TRAINER REPLACEMENT SECTION */
+.trainer-section{padding:100px 5vw;background:var(--s1);border-top:1px solid var(--border)}
+.trainer-features{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:48px;max-width:1100px;margin-left:auto;margin-right:auto}
+.tf-card{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:26px;transition:border-color 0.2s,transform 0.2s}
+.tf-card:hover{border-color:var(--bborder);transform:translateY(-2px)}
+.tf-card-icon{font-size:1.8rem;margin-bottom:14px}
+.tf-card-title{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:800;color:var(--text);margin-bottom:8px}
+.tf-card-body{font-size:0.82rem;color:var(--muted);line-height:1.6}
+.tf-card-tag{display:inline-block;margin-top:10px;font-size:0.62rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--blue);background:var(--bdim);border:1px solid var(--bborder);border-radius:99px;padding:3px 10px}
 
-/* MEAL SECTION */
-.meal-section{padding:100px 5vw}
-.meal-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:40px;max-width:1100px;margin-left:auto;margin-right:auto}
-.meal-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:22px;transition:border-color 0.18s}
-.meal-card:hover{border-color:var(--aborder)}
-.meal-card-icon{font-size:1.6rem;margin-bottom:10px}
-.meal-card-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:var(--text);margin-bottom:6px}
-.meal-card-body{font-size:0.82rem;color:var(--muted);line-height:1.55}
+/* REAL LIFE SECTION */
+.reallife{padding:100px 5vw}
+.reallife-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:48px;max-width:1100px;margin-left:auto;margin-right:auto}
+.rl-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:26px;transition:border-color 0.18s}
+.rl-card:hover{border-color:var(--aborder)}
+.rl-icon{font-size:1.6rem;margin-bottom:12px}
+.rl-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:var(--text);margin-bottom:6px}
+.rl-body{font-size:0.82rem;color:var(--muted);line-height:1.55}
 
-/* EDUCATION */
+/* EDU */
 .edu-strip{padding:100px 5vw;background:var(--s1);border-top:1px solid var(--border)}
 .edu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:48px;max-width:1100px;margin-left:auto;margin-right:auto}
 .edu-card{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:24px;transition:border-color 0.18s}
@@ -165,9 +176,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 5vw;height:64px;di
 .tier-period{font-size:0.72rem;color:var(--muted);margin-bottom:22px}
 .tier-features{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
 .tier-features li{display:flex;gap:10px;font-size:0.82rem;color:var(--muted);line-height:1.4;align-items:flex-start}
-.tf-check{font-weight:700;font-size:0.75rem;margin-top:1px;flex-shrink:0}
-.tf-check.g{color:var(--accent)}
-.tf-check.b{color:var(--blue)}
+.tfc{font-weight:700;font-size:0.75rem;margin-top:1px;flex-shrink:0}
+.tfc.g{color:var(--accent)}
+.tfc.b{color:var(--blue)}
 .tier-btn{display:block;text-align:center;border-radius:var(--r-sm);padding:13px;font-family:'Lato',sans-serif;font-size:0.82rem;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:all 0.15s;border:none}
 .tier-btn.primary{background:var(--accent);color:#0a0b08}
 .tier-btn.primary:hover{opacity:0.88}
@@ -185,6 +196,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 5vw;height:64px;di
 .cta-title em{color:var(--accent);font-style:normal}
 .cta-sub{font-size:1rem;color:var(--muted);margin-bottom:36px;line-height:1.6;font-weight:300}
 .cta-fine{font-size:0.72rem;color:var(--muted2);margin-top:14px}
+.cta-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 
 /* FOOTER */
 footer{border-top:1px solid var(--border);padding:32px 5vw;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
@@ -205,8 +217,8 @@ footer{border-top:1px solid var(--border);padding:32px 5vw;display:flex;justify-
 <nav>
   <div class="nav-brand">Health<em>Fund</em></div>
   <div class="nav-links">
-    <a href="#features">Features</a>
-    <a href="#learn">Education</a>
+    <a href="#compare">Why It Works</a>
+    <a href="#trainer">Full System+</a>
     <a href="#tiers">Pricing</a>
   </div>
   <a class="nav-cta" href="#tiers">Get Access →</a>
@@ -216,89 +228,105 @@ footer{border-top:1px solid var(--border);padding:32px 5vw;display:flex;justify-
 <section class="hero">
   <div class="hero-bg"></div>
   <div class="hero-content">
-    <div class="hero-eyebrow fade-up"><span class="dot"></span> Built for Real Life</div>
+    <div class="hero-eyebrow fade-up"><span class="dot"></span> It's 2026. Personal Trainers Are Optional.</div>
     <h1 class="hero-title fade-up delay-1">
-      The System<br/>
-      <em>Actually</em><br/>
-      <span class="line2">Works.</span>
+      Your Trainer.<br/>
+      <em>$69.</em><br/>
+      <span class="strike">$200/month.</span>
     </h1>
     <p class="hero-sub fade-up delay-2">
-      Personalized workouts, a macro calculator that matches your meal plan, weekly rotating meals scaled to your exact targets, and nutrition education — all in one mobile app.
+      Workouts, nutrition, meal plans, progress tracking, and real check-ins — everything a personal trainer gives you, built into an app that adjusts to your actual life. One-time payment. No monthly fees.
     </p>
     <div class="hero-actions fade-up delay-3">
-      <a class="btn-main" href="#tiers">Get The Full System →</a>
-      <a class="btn-ghost" href="#features">See What's Inside</a>
+      <a class="btn-main blue gumroad-button" href="https://rochesterian3.gumroad.com/l/ejrii" target="_blank" rel="noopener">Get Full System+ — $69 →</a>
+      <a class="btn-ghost" href="#compare">See How It Compares</a>
     </div>
     <div class="hero-proof fade-up delay-4">
+      <div class="proof-stat">
+        <span class="proof-num red">$200+</span>
+        <span class="proof-label">Avg trainer cost per month</span>
+      </div>
+      <div class="proof-stat">
+        <span class="proof-num">$69</span>
+        <span class="proof-label">Health Fundamentals. Once.</span>
+      </div>
       <div class="proof-stat">
         <span class="proof-num">12 Weeks</span>
         <span class="proof-label">Progressive Programming</span>
       </div>
       <div class="proof-stat">
-        <span class="proof-num">68+ Meals</span>
-        <span class="proof-label">Rotating Weekly Plans</span>
-      </div>
-      <div class="proof-stat">
-        <span class="proof-num">Auto-Scaled</span>
-        <span class="proof-label">Macros Match Your Target</span>
-      </div>
-      <div class="proof-stat">
-        <span class="proof-num">2 Tracks</span>
-        <span class="proof-label">Male 💪 &amp; Female 🍑</span>
+        <span class="proof-num">Real Life</span>
+        <span class="proof-label">Adjusts When Life Happens</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- PROBLEM -->
-<section class="problem">
+<!-- COST COMPARISON -->
+<section class="trainer-cost" id="compare">
   <div class="section-inner">
-    <div class="section-eyebrow orange">Sound Familiar?</div>
-    <h2 class="section-title">The Problem With Most Programs</h2>
-    <p class="section-body">Most people don't fail because they lack discipline. They fail because they're working from fragmented, conflicting information with no clear system underneath it.</p>
-    <div class="problem-grid">
-      <div class="problem-card">
-        <div class="prob-icon">🔁</div>
-        <div class="prob-title">The Restart Cycle</div>
-        <div class="prob-text">Miss a day, restart the week. Miss the week, wait for Monday. The program never gets traction because the system doesn't account for real life.</div>
+    <div class="section-eyebrow red">The Math Is Simple</div>
+    <h2 class="section-title">Why Pay Hundreds a Month for What an App Can Do Better?</h2>
+    <p class="section-body">A personal trainer gives you workouts, accountability, and nutrition guidance. So does Health Fundamentals — plus it never cancels on you, never has a bad day, and adjusts to your body in real time.</p>
+    <div class="cost-compare">
+      <div class="cost-card old">
+        <div class="cost-label red">Traditional Personal Trainer</div>
+        <div class="cost-price red">$200</div>
+        <div class="cost-period">per month · ongoing forever</div>
+        <ul class="cost-items">
+          <li><span>✓</span> Workout programming</li>
+          <li><span>✓</span> Accountability check-ins</li>
+          <li><span>✓</span> Nutrition guidance</li>
+          <li><span>✗</span> No real-time macro tracking</li>
+          <li><span>✗</span> No auto-adjusted meal plan</li>
+          <li><span>✗</span> No access between sessions</li>
+          <li><span>✗</span> Expensive. Every. Month.</li>
+        </ul>
       </div>
-      <div class="problem-card">
-        <div class="prob-icon">🤷</div>
-        <div class="prob-title">No Nutrition Foundation</div>
-        <div class="prob-text">You train hard but don't understand calories, macros, or how food affects your body. You're building a house without a blueprint.</div>
-      </div>
-      <div class="problem-card">
-        <div class="prob-icon">📉</div>
-        <div class="prob-title">Generic Meal Plans</div>
-        <div class="prob-text">Plans designed for a fictional average person. Wrong calories, wrong portions, can't be filtered for what you actually eat. You give up by week 2.</div>
-      </div>
-      <div class="problem-card">
-        <div class="prob-icon">🧩</div>
-        <div class="prob-title">Scattered Advice</div>
-        <div class="prob-text">YouTube says one thing. Reddit says another. No one gives you a complete, consistent system that ties workouts, food, and education together.</div>
+      <div class="cost-card new">
+        <div class="cost-label green">Health Fundamentals Full System+</div>
+        <div class="cost-price green">$69</div>
+        <div class="cost-period">one time · lifetime access</div>
+        <ul class="cost-items">
+          <li><span>✓</span> 12 weeks of progressive workouts</li>
+          <li><span>✓</span> Daily, weekly & monthly check-ins</li>
+          <li><span>✓</span> Nutrition + personalized macro calculator</li>
+          <li><span>✓</span> Meal plan that scales to your exact targets</li>
+          <li><span>✓</span> Progress tracker with trend chart</li>
+          <li><span>✓</span> Feedback system — log what worked</li>
+          <li><span>✓</span> Available 24/7 on your phone</li>
+        </ul>
       </div>
     </div>
   </div>
 </section>
 
-<!-- SOLUTION -->
-<section class="solution" id="solution">
-  <div class="solution-grid">
+<!-- WHAT YOU GET -->
+<section class="what-you-get" id="solution">
+  <div class="wtg-grid">
     <div>
-      <div class="section-eyebrow">The Solution</div>
-      <h2 class="section-title">One System. Everything Connected.</h2>
-      <p class="section-body">Health Fundamentals ties workouts, nutrition, and education into a single mobile app — personalized to your body, your goal, and your schedule.</p>
-      <ul class="solution-list">
-        <li><div class="sol-check">✓</div><div class="sol-text"><strong>Personalized from the start</strong> — enter your sex, goal, and schedule. The app builds a plan around you, not a fictional average person.</div></li>
-        <li><div class="sol-check">✓</div><div class="sol-text"><strong>Meals scaled to your exact macro target</strong> — the macro calculator and meal plan use the same formula. Your meal totals match your calculated targets every single week.</div></li>
-        <li><div class="sol-check">✓</div><div class="sol-text"><strong>68+ meals that rotate and filter</strong> — salmon, chicken, ground beef, plant-based options. Filter allergies, dislikes, and diet style. Pin meals you love. Swap without pinning.</div></li>
-        <li><div class="sol-check">✓</div><div class="sol-text"><strong>Cardio integration</strong> — add cardio sessions to your plan and your daily calorie and carb targets adjust automatically.</div></li>
-        <li><div class="sol-check">✓</div><div class="sol-text"><strong>Daily water target</strong> — calculated from your weight, activity level, and cardio frequency. Shown directly in your meal plan tab every day.</div></li>
-        <li><div class="sol-check">✓</div><div class="sol-text"><strong>Grocery list + nutrition education</strong> — auto-generated shopping list from your active meal plan, and 8 lessons explaining the principles behind everything.</div></li>
+      <div class="section-eyebrow">The Full Picture</div>
+      <h2 class="section-title">Everything a Trainer Gives You. Nothing They Don't.</h2>
+      <p class="section-body">Most trainers hand you a program and check in once a week. Health Fundamentals is with you every day — before your workout, during meal prep, and when life throws something unexpected at your schedule.</p>
+      <ul class="wtg-list">
+        <li>
+          <div class="wtg-icon">🏋️</div>
+          <div class="wtg-text"><div class="wtg-title">Progressive 12-Week Program</div><div class="wtg-body">Structured programming that increases intensity week over week — beginner and intermediate tracks, male and female specific. Exercises with animated form guides so you know exactly what you're doing.</div></div>
+        </li>
+        <li>
+          <div class="wtg-icon blue">📊</div>
+          <div class="wtg-text"><div class="wtg-title">Macro Calculator Tied to Your Meal Plan</div><div class="wtg-body">Enter your stats, get your exact daily targets. The meal plan reads those numbers directly — so the food you eat is automatically calibrated to your body, your goal, and your activity level.</div></div>
+        </li>
+        <li>
+          <div class="wtg-icon orange">🔄</div>
+          <div class="wtg-text"><div class="wtg-title">Adjusts When Life Happens</div><div class="wtg-body">Cardio changes your calorie targets automatically. Swap meals with one tap. Change your goal in the calculator and your meal plan updates immediately. The system bends so you don't break.</div></div>
+        </li>
+        <li>
+          <div class="wtg-icon">📈</div>
+          <div class="wtg-text"><div class="wtg-title">Track Progress Like a Trainer Tracks Clients</div><div class="wtg-body">Log your weight weekly. See your trend line, total change, and weekly streak. The data tells you what's working — without needing a trainer to read it for you.</div></div>
+        </li>
       </ul>
     </div>
-
-    <!-- PHONE MOCKUP -->
     <div class="phone-wrap">
       <div class="phone-frame">
         <div class="phone-notch"></div>
@@ -306,36 +334,32 @@ footer{border-top:1px solid var(--border);padding:32px 5vw;display:flex;justify-
           <div class="phone-screen-inner">
             <div class="ps-header">
               <div class="ps-brand">Health<em>Fund</em></div>
-              <div class="ps-pill">Wk 2 · Cut</div>
+              <div class="ps-pill">Week 8 · Cut</div>
             </div>
             <div class="ps-card">
-              <div class="ps-card-label">Meal Calories</div>
-              <div class="ps-card-title" style="color:var(--accent);font-family:'DM Mono',monospace;font-size:1.1rem">2,104 <span style="font-size:0.6rem;color:var(--muted)">/ 2,100 target</span></div>
+              <div class="ps-card-label b">📈 Progress — Week 8</div>
+              <div class="ps-card-title" style="color:var(--accent);font-family:'DM Mono',monospace">−8.4 lbs</div>
+              <div class="ps-card-sub">183 lbs current · 42 check-ins logged</div>
+            </div>
+            <div class="ps-card">
+              <div class="ps-card-label">Wednesday · Heavy Pull</div>
+              <div class="ps-card-title">Barbell Row</div>
+              <div class="ps-card-sub">4×8–10 · Rest 90s · Week 8 intensity</div>
+            </div>
+            <div class="ps-card">
+              <div class="ps-card-label g">Meal Calories</div>
+              <div class="ps-card-title" style="color:var(--accent);font-family:'DM Mono',monospace">1,924 <span style="font-size:0.6rem;color:var(--muted)">/ 1,900 target</span></div>
               <div class="ps-macro-row">
                 <div class="ps-macro"><div class="ps-macro-val g">158g</div><div class="ps-macro-lbl">Protein</div></div>
-                <div class="ps-macro"><div class="ps-macro-val o">237g</div><div class="ps-macro-lbl">Carbs</div></div>
-                <div class="ps-macro"><div class="ps-macro-val b">59g</div><div class="ps-macro-lbl">Fat</div></div>
+                <div class="ps-macro"><div class="ps-macro-val o">198g</div><div class="ps-macro-lbl">Carbs</div></div>
+                <div class="ps-macro"><div class="ps-macro-val b">52g</div><div class="ps-macro-lbl">Fat</div></div>
               </div>
-            </div>
-            <div class="ps-water">
-              <span style="font-size:1rem">💧</span>
-              <div><div class="ps-water-text">Daily Water Target — 96 oz</div><div style="font-size:0.56rem;color:var(--muted)">≈ 12.0 cups · 5.7 bottles</div></div>
-            </div>
-            <div class="ps-card">
-              <div class="ps-card-label g">Breakfast · 7AM</div>
-              <div class="ps-card-title">Cedar Plank Salmon</div>
-              <div class="ps-card-sub">52g Pro · 30g Carb · 492 cal</div>
-            </div>
-            <div class="ps-card">
-              <div class="ps-card-label">Lunch · 12:30PM</div>
-              <div class="ps-card-title">Chicken Quinoa Bowl</div>
-              <div class="ps-card-sub">52g Pro · 60g Carb · 578 cal</div>
             </div>
             <div class="ps-nav">
               <div class="ps-nav-item">🏠<span>Home</span></div>
               <div class="ps-nav-item">🏋️<span>Train</span></div>
-              <div class="ps-nav-item a">📋<span>Plan</span></div>
-              <div class="ps-nav-item">🛒<span>Grocery</span></div>
+              <div class="ps-nav-item">📋<span>Plan</span></div>
+              <div class="ps-nav-item a">📈<span>Progress</span></div>
               <div class="ps-nav-item">📚<span>Learn</span></div>
             </div>
           </div>
@@ -345,62 +369,90 @@ footer{border-top:1px solid var(--border);padding:32px 5vw;display:flex;justify-
   </div>
 </section>
 
-<!-- FEATURES -->
-<section class="features-section" id="features">
+<!-- FULL SYSTEM+ TRAINER REPLACEMENT -->
+<section class="trainer-section" id="trainer">
   <div class="section-inner">
-    <div class="section-eyebrow">What's Inside</div>
-    <h2 class="section-title">Built Around the Things That Actually Matter</h2>
-    <p class="section-body">Every feature exists for a reason. Nothing added to make the list look long.</p>
+    <div class="section-eyebrow blue">Full System+ — $69</div>
+    <h2 class="section-title">The Real Trainer Replacement</h2>
+    <p class="section-body">The $69 tier is built around one idea: a system that checks in with you, tracks your results, and adjusts — the same things you'd pay a trainer hundreds a month to do.</p>
   </div>
-  <div class="features-grid">
-    <div class="feature-card highlight">
-      <div class="feature-icon">📊</div>
-      <div class="feature-title">Macro Calculator That Matches Your Meals</div>
-      <div class="feature-body">Enter your stats once. The calculator computes your exact daily protein, carb, and fat targets — and the meal plan uses the same formula to scale every meal to your numbers. They always agree.</div>
-      <span class="feature-tag">Auto-aligned</span>
+  <div class="trainer-features">
+    <div class="tf-card">
+      <div class="tf-card-icon">📅</div>
+      <div class="tf-card-title">Daily, Weekly & Monthly Check-Ins</div>
+      <div class="tf-card-body">Log your weight and workouts daily. Weekly streak tracking keeps you accountable. Monthly summaries show your trend so you can see progress that's easy to miss day-to-day.</div>
+      <span class="tf-card-tag">Accountability system</span>
     </div>
-    <div class="feature-card">
-      <div class="feature-icon">🍽️</div>
-      <div class="feature-title">68+ Meals — Salmon, Chicken, Beef & More</div>
-      <div class="feature-body">Meals across every slot and goal with real variety — smoked salmon, ground beef stir fry, mango chicken salad, plant-based options. Rotating weekly so you never eat the same thing twice in a row.</div>
-      <span class="feature-tag orange">New meals added</span>
+    <div class="tf-card">
+      <div class="tf-card-icon">💬</div>
+      <div class="tf-card-title">Log What Worked — and What Didn't</div>
+      <div class="tf-card-body">After each week, record your feedback — what felt good, what was too hard, what you swapped. Your history builds a picture of how your body responds so you can make smarter adjustments.</div>
+      <span class="tf-card-tag">Feedback system</span>
     </div>
-    <div class="feature-card">
-      <div class="feature-icon">🔄</div>
-      <div class="feature-title">Swap Without Pinning</div>
-      <div class="feature-body">Don't like today's meal? Swap it to the next option with one tap — temporarily, without locking it in. Pin only the meals you want to keep every week. Both work independently.</div>
+    <div class="tf-card">
+      <div class="tf-card-icon">📈</div>
+      <div class="tf-card-title">Body Weight Trend Chart</div>
+      <div class="tf-card-body">Weekly weigh-ins plotted over time. See the actual trend line — not just today's number. Charts show total change, rate of progress, and trajectory toward your goal.</div>
+      <span class="tf-card-tag">Progress visualization</span>
     </div>
-    <div class="feature-card">
-      <div class="feature-icon">💧</div>
-      <div class="feature-title">Daily Water Target</div>
-      <div class="feature-body">Your water goal is calculated from your body weight, activity level, and cardio frequency. Shown in your meal plan every day in oz, cups, and bottle count so you never have to guess.</div>
-      <span class="feature-tag blue">In meal plan tab</span>
+    <div class="tf-card">
+      <div class="tf-card-icon">🏆</div>
+      <div class="tf-card-title">Progress Share Cards</div>
+      <div class="tf-card-body">Generate a shareable results card — total lbs lost or gained, days logged, streak count. Screenshot it and post. Your progress, formatted and ready.</div>
+      <span class="tf-card-tag">Shareable results</span>
     </div>
-    <div class="feature-card">
-      <div class="feature-icon">🏃</div>
-      <div class="feature-title">Cardio Integration</div>
-      <div class="feature-body">Add cardio from the Home tab — choose type, frequency, and sessions per week. Your daily calorie and carb targets adjust automatically to account for the burn. No manual math.</div>
+    <div class="tf-card">
+      <div class="tf-card-icon">🔥</div>
+      <div class="tf-card-title">Weekly Streak System</div>
+      <div class="tf-card-body">Check in every week and your streak grows. Miss one and it resets. Simple, visual accountability that doesn't require a human being on the other end.</div>
+      <span class="tf-card-tag">Built-in accountability</span>
     </div>
-    <div class="feature-card">
-      <div class="feature-icon">🌱</div>
-      <div class="feature-title">Diet Modes + 16 Food Filters</div>
-      <div class="feature-body">Set your diet style (vegetarian, vegan, or standard) and flag any allergies or dislikes. Gluten, dairy, eggs, fish, beef, spicy — 16 filters applied across your entire meal plan automatically.</div>
+    <div class="tf-card">
+      <div class="tf-card-icon">🍕</div>
+      <div class="tf-card-title">Cheat Meal Mode + Recovery Protocol</div>
+      <div class="tf-card-body">Schedule a cheat meal without guilt or guesswork. The app gives you timing, portion guidance, and a same-day recovery approach so one meal doesn't derail the week.</div>
+      <span class="tf-card-tag">Flexibility built in</span>
     </div>
-    <div class="feature-card">
-      <div class="feature-icon">💡</div>
-      <div class="feature-title">How to Use Your Macros — Per Goal</div>
-      <div class="feature-body">After calculating your macros, an expandable "Read This First" guide explains exactly how to use your protein, carb, and fat targets for your specific goal — cut, build, or maintain.</div>
+  </div>
+</section>
+
+<!-- ADJUSTS TO REAL LIFE -->
+<section class="reallife">
+  <div class="section-inner">
+    <div class="section-eyebrow orange">Built for Real People</div>
+    <h2 class="section-title">The System Adjusts. You Don't Have to Be Perfect.</h2>
+    <p class="section-body">Every program fails when life gets in the way. Health Fundamentals is built around the reality that schedules change, cravings happen, and no one hits every target every day.</p>
+  </div>
+  <div class="reallife-grid">
+    <div class="rl-card">
+      <div class="rl-icon">🔄</div>
+      <div class="rl-title">Change Your Goal Anytime</div>
+      <div class="rl-body">Switch from cut to maintain to build whenever you need to. Your macro targets and meal plan update instantly — no rebuilding from scratch.</div>
     </div>
-    <div class="feature-card">
-      <div class="feature-icon">🛒</div>
-      <div class="feature-title">Grocery Tab (Not "Shop")</div>
-      <div class="feature-body">Renamed to Grocery for clarity. Auto-generates a full shopping list from your active meal plan by week. Tap items to check off while you're in the store.</div>
+    <div class="rl-card">
+      <div class="rl-icon">🏃</div>
+      <div class="rl-title">Add or Remove Cardio — Calories Adjust</div>
+      <div class="rl-body">Starting to run three times a week? Your daily calorie and carb targets automatically increase to match. Stop cardio and they come back down. No manual math.</div>
     </div>
-    <div class="feature-card">
-      <div class="feature-icon">📈</div>
-      <div class="feature-title">Progress Tracker <span style="font-size:0.7rem;color:var(--blue);font-weight:700">Full System+</span></div>
-      <div class="feature-body">Log your weight weekly. The app tracks trend, calculates total change, charts your trajectory over time, and generates a shareable progress card showing your results.</div>
-      <span class="feature-tag blue">$69 tier</span>
+    <div class="rl-card">
+      <div class="rl-icon">🍽️</div>
+      <div class="rl-title">Swap Meals Without Losing Your Plan</div>
+      <div class="rl-body">Don't want salmon tonight? Swap it. Lock in meals you love so they never rotate out. Filter out foods you don't eat. The plan works around you.</div>
+    </div>
+    <div class="rl-card">
+      <div class="rl-icon">📱</div>
+      <div class="rl-title">On Your Phone. Always.</div>
+      <div class="rl-body">No app download. No login wall. Open in your browser, add to home screen, and it works like a native app — at the gym, in the grocery store, anywhere.</div>
+    </div>
+    <div class="rl-card">
+      <div class="rl-icon">⚖️</div>
+      <div class="rl-title">Deficit Scaled to Your Body — Not a Formula</div>
+      <div class="rl-body">The macro calculator uses your BMI to set a realistic deficit. If you have more to lose, the deficit is more aggressive. If you're close to your goal, it's conservative. Accurate, not generic.</div>
+    </div>
+    <div class="rl-card">
+      <div class="rl-icon">📚</div>
+      <div class="rl-title">Education So You Understand Why</div>
+      <div class="rl-body">8 built-in lessons covering calories, macros, protein, fiber, meal timing, sleep, supplements, and cardio. Know the principles and you can make good decisions forever — not just while using this app.</div>
     </div>
   </div>
 </section>
@@ -409,34 +461,34 @@ footer{border-top:1px solid var(--border);padding:32px 5vw;display:flex;justify-
 <section class="edu-strip" id="learn">
   <div class="section-inner">
     <div class="section-eyebrow">Built-In Education</div>
-    <h2 class="section-title">Understand What You're Doing — and Why</h2>
-    <p class="section-body">The program doesn't just tell you what to eat. It explains the principles so you can make better decisions on your own — permanently.</p>
+    <h2 class="section-title">Know the Principles. Own Them Forever.</h2>
+    <p class="section-body">A good trainer teaches you, not just tells you. These 8 lessons cover everything your trainer should have explained on day one.</p>
   </div>
   <div class="edu-grid">
-    <div class="edu-card"><div class="edu-num">01</div><div class="edu-title">What Is a Calorie?</div><div class="edu-text">The one concept that makes every other nutrition decision make sense.</div></div>
-    <div class="edu-card"><div class="edu-num">02</div><div class="edu-title">Macronutrients Explained</div><div class="edu-text">What protein, carbs, and fat actually do — and why removing any of them creates problems.</div></div>
+    <div class="edu-card"><div class="edu-num">01</div><div class="edu-title">What Is a Calorie?</div><div class="edu-text">The foundation of every nutrition decision. Understand this and everything else clicks.</div></div>
+    <div class="edu-card"><div class="edu-num">02</div><div class="edu-title">Macronutrients Explained</div><div class="edu-text">What protein, carbs, and fat actually do — and why removing any of them backfires.</div></div>
     <div class="edu-card"><div class="edu-num">03</div><div class="edu-title">How Much Protein?</div><div class="edu-text">The research-backed target and the simplest way to hit it daily without obsessing.</div></div>
-    <div class="edu-card"><div class="edu-num">04</div><div class="edu-title">Fiber — Why It Matters</div><div class="edu-text">The overlooked nutrient most people drastically under-consume.</div></div>
-    <div class="edu-card"><div class="edu-num">05</div><div class="edu-title">Meal Timing & Frequency</div><div class="edu-text">Does when you eat matter? What the research actually says about meal timing and muscle.</div></div>
-    <div class="edu-card"><div class="edu-num">06</div><div class="edu-title">Sleep & Recovery</div><div class="edu-text">Why poor sleep undoes hard training — and the non-negotiable habits that fix it.</div></div>
-    <div class="edu-card"><div class="edu-num">07</div><div class="edu-title">Supplements — What Works</div><div class="edu-text">A plain-English breakdown of what's worth buying and what's marketing.</div></div>
-    <div class="edu-card"><div class="edu-num">08</div><div class="edu-title">Cardio & Body Composition</div><div class="edu-text">How cardio fits into a training plan — and when it helps vs. quietly hurts your progress.</div></div>
+    <div class="edu-card"><div class="edu-num">04</div><div class="edu-title">Fiber — Why It Matters</div><div class="edu-text">The overlooked nutrient most people drastically under-consume and why it affects everything.</div></div>
+    <div class="edu-card"><div class="edu-num">05</div><div class="edu-title">Meal Timing & Frequency</div><div class="edu-text">Does when you eat actually matter? What the research says — and what it doesn't.</div></div>
+    <div class="edu-card"><div class="edu-num">06</div><div class="edu-title">Sleep & Recovery</div><div class="edu-text">Why poor sleep undoes hard training. The non-negotiable habits that make everything else work.</div></div>
+    <div class="edu-card"><div class="edu-num">07</div><div class="edu-title">Supplements — What Works</div><div class="edu-text">A plain-English breakdown of what's worth buying and what's just expensive marketing.</div></div>
+    <div class="edu-card"><div class="edu-num">08</div><div class="edu-title">Cardio & Body Composition</div><div class="edu-text">How cardio fits into a training plan — and when it helps vs. quietly works against you.</div></div>
   </div>
 </section>
 
 <!-- QUOTE -->
 <section class="quote-strip">
   <blockquote>
-    <p class="quote-text">"None of this was intuitive. And none of it was taught in a <em>clear, practical way.</em>"</p>
-    <footer class="quote-attr">— From the Health Fundamentals Guide</footer>
+    <p class="quote-text">"It's 2026. You don't need to pay someone <em>$200 a month</em> to tell you what to eat and how to lift."</p>
+    <footer class="quote-attr">— Health Fundamentals</footer>
   </blockquote>
 </section>
 
 <!-- TIERS -->
 <section class="tiers" id="tiers">
   <div style="max-width:1100px;margin:0 auto">
-    <div class="section-eyebrow" style="text-align:center">Simple Pricing</div>
-    <h2 class="section-title" style="text-align:center;max-width:620px;margin:14px auto 0">Start Free. Upgrade When You're Ready.</h2>
+    <div class="section-eyebrow" style="text-align:center">Three Tiers. One System.</div>
+    <h2 class="section-title" style="text-align:center;max-width:680px;margin:14px auto 0">Start Free. Get the Trainer Replacement When You're Ready.</h2>
   </div>
   <div class="tier-grid">
 
@@ -447,57 +499,57 @@ footer{border-top:1px solid var(--border);padding:32px 5vw;display:flex;justify-
       <div class="tier-price white">$0</div>
       <div class="tier-period">Forever free · No credit card</div>
       <ul class="tier-features">
-        <li><span class="tf-check g">✓</span>Personalized onboarding (sex + goal)</li>
-        <li><span class="tf-check g">✓</span>3-day sex-specific starter workouts</li>
-        <li><span class="tf-check g">✓</span>Male 💪 or Female 🍑 training track</li>
-        <li><span class="tf-check g">✓</span>4 nutrition foundation lessons</li>
-        <li><span class="tf-check g">✓</span>PDF starter guide included</li>
-        <li><span class="tf-check g">✓</span>No email required</li>
+        <li><span class="tfc g">✓</span>Personalized onboarding (goal + gender)</li>
+        <li><span class="tfc g">✓</span>3-day gender-specific starter workouts</li>
+        <li><span class="tfc g">✓</span>Male 💪 or Female 🍑 training track</li>
+        <li><span class="tfc g">✓</span>4 nutrition foundation lessons</li>
+        <li><span class="tfc g">✓</span>PDF starter guide included</li>
+        <li><span class="tfc g">✓</span>No email required</li>
       </ul>
-      <a class="tier-btn ghost gumroad-button" href="https://rochesterian3.gumroad.com/l/moamazj" target="_blank" rel="noopener">Download Free →</a>
+      <a class="tier-btn ghost gumroad-button" href="https://rochesterian3.gumroad.com/l/moamazj" target="_blank" rel="noopener">Start Free →</a>
     </div>
 
-    <!-- CORE — FEATURED -->
+    <!-- CORE -->
     <div class="tier-card featured">
       <div class="tier-badge lime">Most Popular</div>
       <div class="tier-name">Core Program</div>
-      <div class="tier-title">Full Access</div>
+      <div class="tier-title">Full Training + Nutrition</div>
       <div class="tier-price lime">$29</div>
       <div class="tier-period">One-time · Lifetime access</div>
       <div class="tier-section-label">Training</div>
       <ul class="tier-features" style="margin-bottom:12px">
-        <li><span class="tf-check g">✓</span>4-week progressive program · Beginner & Intermediate</li>
-        <li><span class="tf-check g">✓</span>Male 💪 &amp; Female 🍑 tracks — sex-specific every session</li>
-        <li><span class="tf-check g">✓</span>Cardio integration — adjusts your calories automatically</li>
+        <li><span class="tfc g">✓</span>4-week progressive program · Beginner & Intermediate</li>
+        <li><span class="tfc g">✓</span>Male 💪 & Female 🍑 tracks — gender-specific every session</li>
+        <li><span class="tfc g">✓</span>Animated form guides for every exercise</li>
+        <li><span class="tfc g">✓</span>Cardio integration — auto-adjusts your calories</li>
       </ul>
       <div class="tier-divider"></div>
       <div class="tier-section-label">Nutrition</div>
       <ul class="tier-features" style="margin-bottom:12px">
-        <li><span class="tf-check g">✓</span>Macro calculator — scaled to your exact targets</li>
-        <li><span class="tf-check g">✓</span>68+ rotating meals — salmon, beef, chicken, plant-based</li>
-        <li><span class="tf-check g">✓</span>Meals auto-scale to hit your personal calorie goal</li>
-        <li><span class="tf-check g">✓</span>Swap without pinning · Pin favorites · Food filters</li>
-        <li><span class="tf-check g">✓</span>Daily water target in your meal plan</li>
-        <li><span class="tf-check g">✓</span>Grocery list generator · 8 nutrition lessons</li>
+        <li><span class="tfc g">✓</span>Macro calculator — BMI-adjusted deficit, exact targets</li>
+        <li><span class="tfc g">✓</span>68+ rotating meals scaled to your personal calorie goal</li>
+        <li><span class="tfc g">✓</span>Swap meals · lock in favorites · 16 food filters</li>
+        <li><span class="tfc g">✓</span>Daily water target · grocery list · 8 nutrition lessons</li>
       </ul>
       <a class="tier-btn primary gumroad-button" href="https://rochesterian3.gumroad.com/l/xoizj" target="_blank" rel="noopener">Get Full Access → $29</a>
     </div>
 
     <!-- FULL SYSTEM+ -->
     <div class="tier-card premium">
-      <div class="tier-badge blue">Full System+</div>
-      <div class="tier-name">Complete Program</div>
-      <div class="tier-title">Full System+</div>
+      <div class="tier-badge blue">Trainer Replacement</div>
+      <div class="tier-name">Full System+</div>
+      <div class="tier-title">The Complete System</div>
       <div class="tier-price blue">$69</div>
       <div class="tier-period">One-time · Lifetime access</div>
       <div class="tier-section-label">Everything in Core, plus:</div>
       <ul class="tier-features">
-        <li><span class="tf-check b">✓</span>Weeks 5–12 programming — 12 weeks total</li>
-        <li><span class="tf-check b">✓</span>Body weight progress tracker with trend chart</li>
-        <li><span class="tf-check b">✓</span>Weekly check-in streak system</li>
-        <li><span class="tf-check b">✓</span>Progress share cards — screenshot & post your results</li>
-        <li><span class="tf-check b">✓</span>Cheat meal mode — timing, portions & recovery protocol</li>
-        <li><span class="tf-check b">✓</span>5-meal plans including Pre-Workout slot</li>
+        <li><span class="tfc b">✓</span>Weeks 5–12 programming — 12 full weeks</li>
+        <li><span class="tfc b">✓</span>Daily, weekly & monthly check-in system</li>
+        <li><span class="tfc b">✓</span>Feedback log — track what worked each week</li>
+        <li><span class="tfc b">✓</span>Body weight progress tracker + trend chart</li>
+        <li><span class="tfc b">✓</span>Weekly streak accountability system</li>
+        <li><span class="tfc b">✓</span>Progress share cards — screenshot your results</li>
+        <li><span class="tfc b">✓</span>Cheat meal mode + recovery protocol</li>
       </ul>
       <a class="tier-btn blue-btn gumroad-button" href="https://rochesterian3.gumroad.com/l/ejrii" target="_blank" rel="noopener">Get Full System+ → $69</a>
     </div>
@@ -508,17 +560,20 @@ footer{border-top:1px solid var(--border);padding:32px 5vw;display:flex;justify-
 <!-- FINAL CTA -->
 <section class="cta-final">
   <div class="cta-inner">
-    <h2 class="cta-title">You Don't Need to<br/><em>Figure This Out Alone.</em></h2>
-    <p class="cta-sub">Everything you need to train consistently, eat well, and understand your own body — in one simple system built for real people with real schedules.</p>
-    <a class="btn-main gumroad-button" href="https://rochesterian3.gumroad.com/l/xoizj" style="font-size:1rem;padding:18px 40px;margin:0 auto">Start Today for $29 →</a>
-    <div class="cta-fine">One-time payment. Lifetime access. No subscriptions.</div>
+    <h2 class="cta-title">Fire Your Trainer.<br/><em>Keep the Results.</em></h2>
+    <p class="cta-sub">Everything a personal trainer gives you — workouts, nutrition, check-ins, accountability, and adjustments — built into an app that costs less than a single session. One-time payment. Yours forever.</p>
+    <div class="cta-actions">
+      <a class="btn-main blue gumroad-button" href="https://rochesterian3.gumroad.com/l/ejrii" style="font-size:1rem;padding:18px 40px">Get Full System+ — $69 →</a>
+      <a class="btn-ghost gumroad-button" href="https://rochesterian3.gumroad.com/l/xoizj" style="font-size:1rem;padding:18px 32px">Core Program — $29</a>
+    </div>
+    <div class="cta-fine">One-time payment. Lifetime access. No subscriptions. No monthly fees.</div>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
   <div class="footer-brand">Health<em>Fund</em></div>
-  <div class="footer-copy">© 2025 Health Fundamentals · One-time purchase · No subscription</div>
+  <div class="footer-copy">© 2026 Health Fundamentals · One-time purchase · No subscription</div>
 </footer>
 
 </body>

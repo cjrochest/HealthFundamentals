@@ -402,32 +402,42 @@ const WGER_GIF_MAP = {
 };
 
 function ExerciseGif({ gifKey, name }) {
+  const GITHUB_BASE = "https://cjrochest.github.io/HealthFundamentals/assets/exercises/";
+  // Try gif first, then jpg, then png — script may have saved any extension
+  const EXTENSIONS = ["gif", "jpg", "jpeg", "png", "webp"];
+  const [extIdx, setExtIdx] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const [error, setError]   = useState(false);
-  const wgerId = WGER_GIF_MAP[gifKey];
-  if (!wgerId) return null;
-  // Primary: self-hosted on GitHub Pages (fast, reliable)
-  // Fallback: Wger CDN (used until you run download_exercise_gifs.sh and push)
-  const GITHUB_BASE = "https://cjrochest.github.io/HealthFundamentals/assets/exercises/";
-  const WGER_BASE   = "https://wger.de/static/images/exercises/main/";
-  const [src, setSrc] = useState(GITHUB_BASE + gifKey + ".gif");
-  const url = src; // kept for img tag below
+
+  if (!gifKey) return null;
+
+  const currentSrc = GITHUB_BASE + gifKey + "." + EXTENSIONS[extIdx];
+
+  function handleError() {
+    const next = extIdx + 1;
+    if (next < EXTENSIONS.length) {
+      setExtIdx(next);  // try next extension
+      setLoaded(false);
+    } else {
+      setError(true);   // all extensions exhausted
+    }
+  }
 
   return (
     <div style={{
       width:"100%", borderRadius:"var(--r-xs)", overflow:"hidden",
       background:"var(--s1)", border:"1px solid var(--border)",
-      aspectRatio:"16/9", position:"relative", marginTop:8,
+      aspectRatio:"16/9", position:"relative", marginTop:4,
       display:"flex", alignItems:"center", justifyContent:"center",
+      minHeight:160,
     }}>
-      {/* Loading skeleton */}
       {!loaded && !error && (
         <div style={{position:"absolute",inset:0,background:"var(--s2)",display:"flex",
           alignItems:"center",justifyContent:"center",flexDirection:"column",gap:6}}>
-          <div style={{width:32,height:32,border:"3px solid var(--border)",
+          <div style={{width:28,height:28,border:"3px solid var(--border)",
             borderTopColor:"var(--accent)",borderRadius:"50%",
             animation:"spin 0.8s linear infinite"}}/>
-          <div style={{fontSize:"0.62rem",color:"var(--muted)"}}>Loading...</div>
+          <div style={{fontSize:"0.6rem",color:"var(--muted)"}}>Loading visual...</div>
         </div>
       )}
       {error ? (
@@ -436,21 +446,14 @@ function ExerciseGif({ gifKey, name }) {
         </div>
       ) : (
         <img
-          src={url}
-          alt={name + " exercise demonstration"}
+          src={currentSrc}
+          alt={name + " demonstration"}
           onLoad={()=>setLoaded(true)}
-          onError={()=>{
-            // If GitHub Pages fails, try Wger directly
-            if (src.includes("github.io")) {
-              setSrc(WGER_BASE + wgerId + ".gif");
-            } else {
-              setError(true);
-            }
-          }}
+          onError={handleError}
           style={{
             width:"100%", height:"100%", objectFit:"contain",
             display:loaded?"block":"none",
-            background:"#fff", // Wger GIFs have white backgrounds
+            background:"#fff",
           }}
         />
       )}
@@ -1541,6 +1544,56 @@ function PlanBuilder({ onGenerate }) {
 }
 
 // ─── WORKOUT TAB ──────────────────────────────────────────────────────────────
+function ExerciseRow({ ex, displayEx, onSwap }) {
+  const [showVisual, setShowVisual] = useState(false);
+
+  return (
+    <div style={{paddingBottom:10,marginBottom:2}}>
+      {/* Name + sets + swap row */}
+      <div style={{display:"flex",alignItems:"flex-start",gap:8,marginBottom:4}}>
+        <div style={{flex:1}}>
+          <div className="ex-name">{displayEx.name}</div>
+          <div className="ex-tip">{displayEx.tip}</div>
+        </div>
+        <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:4,flexShrink:0}}>
+          <div className="ex-sets">{ex.sets}</div>
+          <button
+            onClick={e=>{e.stopPropagation();onSwap();setShowVisual(false);}}
+            style={{fontSize:"0.62rem",fontWeight:700,color:"var(--muted)",background:"var(--s2)",
+              border:"1px solid var(--border)",borderRadius:"var(--r-xs)",
+              padding:"3px 8px",cursor:"pointer",whiteSpace:"nowrap"}}>
+            🔄 Swap
+          </button>
+        </div>
+      </div>
+
+      {/* Show/hide visual toggle */}
+      <button
+        onClick={e=>{e.stopPropagation();setShowVisual(v=>!v);}}
+        style={{
+          width:"100%",display:"flex",alignItems:"center",justifyContent:"center",
+          gap:6,background:"var(--s1)",border:"1px solid var(--border)",
+          borderRadius:"var(--r-xs)",padding:"5px 10px",cursor:"pointer",
+          fontSize:"0.65rem",fontWeight:700,letterSpacing:"0.06em",
+          color:"var(--muted)",marginBottom: showVisual ? 0 : 0,
+          transition:"border-color 0.15s",
+        }}
+        onMouseEnter={e=>e.currentTarget.style.borderColor="var(--aborder)"}
+        onMouseLeave={e=>e.currentTarget.style.borderColor="var(--border)"}
+      >
+        <span style={{fontSize:"0.75rem"}}>{showVisual ? "▲" : "▼"}</span>
+        {showVisual ? "Hide Visual" : "Show Visual"}
+      </button>
+
+      {/* GIF — only mounted when visible, key=gifKey forces fresh load after swap */}
+      {showVisual && (
+        <ExerciseGif key={displayEx.gif} gifKey={displayEx.gif} name={displayEx.name}/>
+      )}
+    </div>
+  );
+}
+
+
 function getMuscleEmoji(muscle) {
   const map = {chest:"💪",back:"🏋️",legs:"🦵",shoulders:"🙆",arms:"💪",core:"🔥",glutes:"🍑"};
   return map[muscle] || "💪";
@@ -1626,23 +1679,8 @@ function WorkoutTab({ prefs, setPrefs, onRebuild }) {
                   {w.exercises.map((ex,i)=>{
                     const displayEx = getExercise(w.id, i, ex, prefs.gender);
                     return (
-                      <div key={i} className="ex-row" style={{flexDirection:"column",gap:6}}>
-                        <div style={{display:"flex",alignItems:"flex-start",gap:8}}>
-                          <div style={{flex:1}}>
-                            <div className="ex-name">{displayEx.name}</div>
-                            <div className="ex-tip">{displayEx.tip}</div>
-                          </div>
-                          <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:4,flexShrink:0}}>
-                            <div className="ex-sets">{ex.sets}</div>
-                            <button onClick={e=>{e.stopPropagation();swapExercise(w.id,i,ex.muscle,prefs.gender);}}
-                              style={{fontSize:"0.62rem",fontWeight:700,color:"var(--muted)",background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"var(--r-xs)",padding:"3px 8px",cursor:"pointer",whiteSpace:"nowrap"}}>
-                              🔄 Swap
-                            </button>
-                          </div>
-                        </div>
-                        {/* Exercise GIF visual */}
-                        <ExerciseGif gifKey={displayEx.gif} name={displayEx.name}/>
-                      </div>
+                      <ExerciseRow key={w.id+"-"+i} ex={ex} displayEx={displayEx}
+                        onSwap={()=>{swapExercise(w.id,i,ex.muscle,prefs.gender);}}/>
                     );
                   })}
                   {prefs.cardioEnabled && ct && (
@@ -3318,13 +3356,231 @@ function ProgressTeaserTab() {
   );
 }
 
+// ─── WEEK TRACKING ────────────────────────────────────────────────────────────
+// Auto-advances week based on real calendar days since install.
+// Stores installDate in prefs (set once on first launch).
+function getAutoWeek(installDateStr, maxWeeks) {
+  if (!installDateStr) return 1;
+  const installed = new Date(installDateStr);
+  const now = new Date();
+  const daysSince = Math.floor((now - installed) / (1000 * 60 * 60 * 24));
+  const week = Math.min(Math.floor(daysSince / 7) + 1, maxWeeks || 4);
+  return Math.max(1, week);
+}
+
+// Weekly messages — tone: motivating, personal, real
+const WEEK_MESSAGES = {
+  1: {
+    title: "Welcome to Week 1.",
+    subtitle: "You showed up. That already puts you ahead.",
+    body: "Purchasing this app wasn't an accident — it means you're serious about your health. Not everyone takes that step. Health is wealth, and you just invested in yours. This week is about building the foundation. Don't try to be perfect. Just be consistent.",
+    focus: "Foundation — light weight, perfect form, learn the patterns.",
+    emoji: "🌱",
+  },
+  2: {
+    title: "Week 2. You came back.",
+    subtitle: "That's how habits are built.",
+    body: "Most people quit before week 2. You didn't. This week, the goal is simple: do everything you did last week, but add a little more — 5 more pounds, 1 more rep, 1 more meal tracked. Small compounding wins.",
+    focus: "Consistency — add 5 lbs or 2 reps to anything that felt easy last week.",
+    emoji: "🔥",
+  },
+  3: {
+    title: "Week 3. Now it gets real.",
+    subtitle: "Four sets. Heavier weight. This is where progress actually happens.",
+    body: "The first two weeks were about learning the movement. This week you push. You should be feeling stronger and your meals should be feeling more automatic. Trust the process — the body adapts on a delay.",
+    focus: "Progression — 4 sets this week. Add a drop set to your last exercise each session.",
+    emoji: "💪",
+  },
+  4: {
+    title: "Week 4. Peak week.",
+    subtitle: "Your heaviest lifts of the month. Leave nothing behind.",
+    body: "This is the week you find out what you're made of. Heaviest weights, lowest rep ranges, longest rest. Your body has been building to this. Go earn it. And after this week — reflect on where you started.",
+    focus: "Breakthrough — heaviest weights of the program. Push every set to within 1 rep of failure.",
+    emoji: "🏆",
+  },
+  5: {
+    title: "Week 5. New territory.",
+    subtitle: "Most people never make it here. You did.",
+    body: "You've finished a full month. That's not nothing — that's a real, measurable change in your habits and your body. Now we build on it. Weeks 5–8 increase in volume and complexity. You're ready for this.",
+    focus: "Volume — more total sets this week. Embrace the challenge.",
+    emoji: "🚀",
+  },
+  6: {
+    title: "Week 6. Six weeks in.",
+    subtitle: "Check your progress. The data doesn't lie.",
+    body: "Six weeks is the point where physical changes start becoming visible — to you and others. Log your weight today if you haven't. Look at your trend line. The compound effect of six weeks of consistency is real.",
+    focus: "Intensity — keep adding load. Your strength is noticeably higher than week 1.",
+    emoji: "📈",
+  },
+  7: {
+    title: "Week 7. Keep the momentum.",
+    subtitle: "Seven weeks of showing up. That's a different person.",
+    body: "You've built something real over the last seven weeks. A routine, a baseline of strength, a relationship with food that makes sense. This week, focus on quality — every rep, every meal, every check-in.",
+    focus: "Quality — perfect every movement. No rushed reps.",
+    emoji: "⚡",
+  },
+  8: {
+    title: "Week 8. Halfway through the full system.",
+    subtitle: "You're stronger, leaner, and more consistent than when you started.",
+    body: "Twelve weeks felt like a long time when you started. Eight weeks in, you understand it now. The program works because you work it. Four more weeks — finish what you started.",
+    focus: "Endurance — your body is adapted. Push past comfortable.",
+    emoji: "🎯",
+  },
+};
+
+// For weeks 9-12 we generate dynamically
+function getWeekMessage(week) {
+  if (WEEK_MESSAGES[week]) return WEEK_MESSAGES[week];
+  const finals = {
+    9:  { title:"Week 9. Final stretch begins.", subtitle:"Three weeks left to make it count.", emoji:"💎" },
+    10: { title:"Week 10. Ten weeks of discipline.", subtitle:"You've built something most people never will.", emoji:"🔑" },
+    11: { title:"Week 11. One week from the finish.", subtitle:"Don't let up now.", emoji:"⚔️" },
+    12: { title:"Week 12. Final week.", subtitle:"You started this. Now finish it.", emoji:"🏅" },
+  };
+  const base = finals[week] || { title:`Week ${week}.`, subtitle:"Keep going.", emoji:"💪" };
+  return {
+    ...base,
+    body: `Week ${week} — you've built the discipline to get here. Every rep this week is proof of who you've become. Finish strong.`,
+    focus: "Peak performance — leave everything you have in these sessions.",
+  };
+}
+
+// ─── WEEKLY BRIEFING MODAL ────────────────────────────────────────────────────
+function WeeklyBriefing({ prefs, onDismiss, setTab, currentLesson }) {
+  const week = prefs.week || 1;
+  const msg  = getWeekMessage(week);
+  const dayOfWeek = new Date().toLocaleDateString("en-US", { weekday:"long" });
+
+  // First lesson for this tier
+  const firstLesson = currentLesson || { icon:"🔥", number:"01", title:"What Is a Calorie?" };
+
+  return (
+    <div className="week-modal-bg" onClick={onDismiss}>
+      <div className="week-modal" style={{maxWidth:380,maxHeight:"90vh",overflowY:"auto"}} onClick={e=>e.stopPropagation()}>
+
+        {/* Header */}
+        <div style={{textAlign:"center",marginBottom:20}}>
+          <div style={{fontSize:"2.8rem",marginBottom:8}}>{msg.emoji}</div>
+          <div style={{fontFamily:"'Syne',sans-serif",fontSize:"1.3rem",fontWeight:800,color:"var(--text)",marginBottom:4,lineHeight:1.1}}>
+            {msg.title}
+          </div>
+          <div style={{fontSize:"0.82rem",color:"var(--accent)",fontWeight:700}}>{msg.subtitle}</div>
+        </div>
+
+        {/* Message */}
+        <div style={{background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"var(--r-sm)",padding:"14px 16px",marginBottom:16,fontSize:"0.82rem",color:"var(--muted)",lineHeight:1.65}}>
+          {msg.body}
+        </div>
+
+        {/* This Week's Focus */}
+        <div style={{background:"var(--adim)",border:"1px solid var(--aborder)",borderRadius:"var(--r-sm)",padding:"12px 14px",marginBottom:20}}>
+          <div style={{fontSize:"0.58rem",fontWeight:700,letterSpacing:"0.12em",textTransform:"uppercase",color:"var(--accent)",marginBottom:4}}>This Week's Focus</div>
+          <div style={{fontSize:"0.82rem",color:"var(--text)",lineHeight:1.5}}>{msg.focus}</div>
+        </div>
+
+        {/* Priorities */}
+        <div style={{fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.12em",textTransform:"uppercase",color:"var(--muted)",marginBottom:10}}>
+          Week {week} Priorities
+        </div>
+
+        {/* Priority 1 — Nutrition lesson */}
+        <div style={{background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"var(--r-sm)",padding:"12px 14px",marginBottom:8,display:"flex",alignItems:"center",gap:12,cursor:"pointer"}}
+          onClick={()=>{ onDismiss(); setTab("learn"); }}>
+          <div style={{width:36,height:36,borderRadius:8,background:"var(--adim)",border:"1px solid var(--aborder)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1rem",flexShrink:0}}>{firstLesson.icon}</div>
+          <div style={{flex:1}}>
+            <div style={{fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:"var(--accent)",marginBottom:2}}>Read First · Lesson {firstLesson.number}</div>
+            <div style={{fontSize:"0.82rem",fontWeight:700,color:"var(--text)"}}>{firstLesson.title}</div>
+          </div>
+          <span style={{color:"var(--muted)",fontSize:"0.8rem"}}>→</span>
+        </div>
+
+        {/* Priority 2 — Workouts */}
+        <div style={{background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"var(--r-sm)",padding:"12px 14px",marginBottom:8,display:"flex",alignItems:"center",gap:12,cursor:"pointer"}}
+          onClick={()=>{ onDismiss(); setTab("workout"); }}>
+          <div style={{width:36,height:36,borderRadius:8,background:"var(--odim)",border:"1px solid var(--oborder)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1rem",flexShrink:0}}>🏋️</div>
+          <div style={{flex:1}}>
+            <div style={{fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:"var(--orange)",marginBottom:2}}>Week {week} Workouts</div>
+            <div style={{fontSize:"0.82rem",fontWeight:700,color:"var(--text)"}}>See This Week's Training</div>
+          </div>
+          <span style={{color:"var(--muted)",fontSize:"0.8rem"}}>→</span>
+        </div>
+
+        {/* Priority 3 — Meal Prep */}
+        <div style={{background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"var(--r-sm)",padding:"12px 14px",marginBottom:20,display:"flex",alignItems:"center",gap:12,cursor:"pointer"}}
+          onClick={()=>{ onDismiss(); setTab("meals"); }}>
+          <div style={{width:36,height:36,borderRadius:8,background:"var(--bdim)",border:"1px solid var(--bborder)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1rem",flexShrink:0}}>🍽️</div>
+          <div style={{flex:1}}>
+            <div style={{fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:"var(--blue)",marginBottom:2}}>Meal Prep</div>
+            <div style={{fontSize:"0.82rem",fontWeight:700,color:"var(--text)"}}>This Week's Meal Plan</div>
+          </div>
+          <span style={{color:"var(--muted)",fontSize:"0.8rem"}}>→</span>
+        </div>
+
+        <button className="action-btn btn-primary" onClick={onDismiss}>
+          Let's Go — Week {week} 💪
+        </button>
+      </div>
+    </div>
+  );
+}
+
+
 function HomeTab({ prefs, setPrefs, setTab }) {
-  const weekInfo = WEEK_PROGRESSIONS[prefs.week-1];
+  const weekInfo = WEEK_PROGRESSIONS[prefs.week-1] || WEEK_PROGRESSIONS[0];
   const ct = CARDIO_TYPES.find(c=>c.id===prefs.cardioType);
   const [cardioOpen, setCardioOpen] = useState(false);
+  const [showBriefing, setShowBriefing] = useState(false);
   function p(k,v){ setPrefs(prev=>({...prev,[k]:v})); }
+
+  // On mount: set installDate if not set, auto-advance week, show briefing if new week
+  const initRef = useRef(false);
+  if (!initRef.current) {
+    initRef.current = true;
+    const maxWeeks = 12; // pro-plus has 12 weeks
+    const now = new Date().toISOString().split("T")[0];
+    let needsUpdate = {};
+
+    // Set install date on first ever launch
+    if (!prefs.installDate) {
+      needsUpdate.installDate = now;
+      needsUpdate.lastBriefingWeek = 0; // force briefing to show
+    }
+
+    // Auto-advance week based on real days
+    const autoWeek = getAutoWeek(prefs.installDate || now, maxWeeks);
+    if (autoWeek !== prefs.week) {
+      needsUpdate.week = autoWeek;
+    }
+
+    // Determine if we should show briefing (new week not yet seen)
+    const effectiveWeek = autoWeek || prefs.week || 1;
+    const shouldShow = effectiveWeek !== prefs.lastBriefingWeek;
+
+    if (Object.keys(needsUpdate).length > 0) {
+      setTimeout(() => setPrefs(p => ({...p, ...needsUpdate})), 0);
+    }
+    if (shouldShow) {
+      setTimeout(() => {
+        setShowBriefing(true);
+        setPrefs(p => ({...p, lastBriefingWeek: effectiveWeek}));
+      }, 400);
+    }
+  }
+
+  // Get the first lesson for this week's briefing priority
+  // Get first lesson from LearnTab data if available
+  const LEARN_LESSONS_REF = typeof LEARN_CONTENT !== "undefined" ? LEARN_CONTENT : null;
+  const firstLesson = (LEARN_LESSONS_REF && LEARN_LESSONS_REF[0]) ? {icon: LEARN_LESSONS_REF[0].icon||"🔥", number:"01", title:LEARN_LESSONS_REF[0].title||"What Is a Calorie?"} : { icon:"🔥", number:"01", title:"What Is a Calorie?" };
   return (
     <div>
+      {showBriefing && (
+        <WeeklyBriefing
+          prefs={prefs}
+          onDismiss={()=>setShowBriefing(false)}
+          setTab={setTab}
+          currentLesson={firstLesson}
+        />
+      )}
       <div className="hero">
         <div className="hero-eyebrow">Week {prefs.week} · {weekInfo.name} · {prefs.level.charAt(0).toUpperCase()+prefs.level.slice(1)}</div>
         <div className="hero-title">{prefs.goal==="cut"?"Burn Fat. Keep Muscle.":prefs.goal==="build"?"Build. Eat. Repeat.":"Train Smart. Stay Consistent."}</div>
@@ -3349,6 +3605,10 @@ function HomeTab({ prefs, setPrefs, setTab }) {
           <div style={{fontSize:"0.78rem",fontWeight:700,color:prefs.cardioEnabled?"var(--orange)":"var(--text)",lineHeight:1.3}}>
             {prefs.cardioEnabled&&ct?`${ct.label} · ${prefs.cardioFreq}×/wk`:"Add Cardio"}
           </div>
+        </div>
+        <div style={{background:"var(--adim)",border:"1px solid var(--aborder)",borderRadius:"var(--r)",padding:"16px 14px",cursor:"pointer",gridColumn:"span 2"}} onClick={()=>setShowBriefing(true)}>
+          <div style={{fontSize:"1.4rem",marginBottom:6}}>📋</div>
+          <div style={{fontSize:"0.78rem",fontWeight:700,color:"var(--accent)",lineHeight:1.3}}>Week {prefs.week} Briefing & Priorities</div>
         </div>
       </div>
       <div className="section-head" style={{paddingBottom:6}}><span className="section-title">This Week</span></div>
@@ -3441,7 +3701,7 @@ function App() {
             <div className="brand">Health<em>Fund</em></div>
             <div className="access-badge">Full System+</div>
           </div>
-          <PlanBuilder onGenerate={(p)=>{ setPrefs(p); setTab("workout"); }} />
+          <PlanBuilder onGenerate={(p)=>{ setPrefs(p); setTab("home"); }} />
         </div>
       </>
     );
