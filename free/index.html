@@ -381,14 +381,25 @@ function Onboarding({ onDone }) {
 // ─── UPGRADE BANNER ───────────────────────────────────────────────────────────
 function UpgradeBanner() {
   return (
-    <a className="upgrade-banner" href={GUMROAD_URL} target="_blank" rel="noopener">
-      <span className="ub-icon">⚡</span>
-      <div>
-        <div className="ub-eyebrow">Unlock Full Access · $29</div>
-        <div className="ub-title">Weeks 1–4 + Macros + Meals</div>
-        <div className="ub-sub">Personalized plan, macro calculator & weekly meal rotation</div>
+    <a className="upgrade-banner" href={GUMROAD_URL} target="_blank" rel="noopener"
+      style={{flexDirection:"column",alignItems:"stretch",gap:10,padding:"16px"}}>
+      <div style={{display:"flex",alignItems:"center",gap:10}}>
+        <span className="ub-icon">🚀</span>
+        <div style={{flex:1}}>
+          <div className="ub-eyebrow">Finished the starter week? Level up.</div>
+          <div className="ub-title">Core Program — $29 One-Time</div>
+        </div>
+        <span className="ub-arrow">→</span>
       </div>
-      <span className="ub-arrow">→</span>
+      <div style={{fontSize:"0.75rem",color:"var(--muted)",lineHeight:1.55,borderTop:"1px solid var(--border)",paddingTop:10}}>
+        4 weeks of progressive training, your personal macro calculator, 68+ meal plans scaled to your exact calorie target, animated form guides, and 8 nutrition lessons. Everything you need to keep going — built on the foundation you just created.
+      </div>
+      <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+        <span style={{background:"var(--adim)",border:"1px solid var(--aborder)",borderRadius:99,padding:"3px 10px",fontSize:"0.65rem",fontWeight:700,color:"var(--accent)"}}>4-Week Program</span>
+        <span style={{background:"var(--adim)",border:"1px solid var(--aborder)",borderRadius:99,padding:"3px 10px",fontSize:"0.65rem",fontWeight:700,color:"var(--accent)"}}>Macro Calculator</span>
+        <span style={{background:"var(--adim)",border:"1px solid var(--aborder)",borderRadius:99,padding:"3px 10px",fontSize:"0.65rem",fontWeight:700,color:"var(--accent)"}}>68+ Meals</span>
+        <span style={{background:"var(--adim)",border:"1px solid var(--aborder)",borderRadius:99,padding:"3px 10px",fontSize:"0.65rem",fontWeight:700,color:"var(--accent)"}}>One-Time Payment</span>
+      </div>
     </a>
   );
 }
@@ -645,9 +656,110 @@ function LearnTab() {
 }
 
 // ─── HOME TAB ────────────────────────────────────────────────────────────────
-function HomeTab({ gender, goal, setTab }) {
+// ─── FREE WELCOME BRIEFING ────────────────────────────────────────────────────
+function FreeWelcomeBriefing({ gender, goal, onDismiss, setTab }) {
+  const goalLabel = goal === "cut" ? "Lose Fat 🔥" : goal === "build" ? "Build Muscle 💪" : "Get Consistent ⚖️";
+  return (
+    <div className="week-modal-bg" onClick={onDismiss}>
+      <div className="week-modal" style={{maxWidth:360,maxHeight:"90vh",overflowY:"auto"}} onClick={e=>e.stopPropagation()}>
+
+        {/* Header */}
+        <div style={{textAlign:"center",marginBottom:20}}>
+          <div style={{fontSize:"2.8rem",marginBottom:8}}>🌱</div>
+          <div style={{fontFamily:"'Syne',sans-serif",fontSize:"1.25rem",fontWeight:800,color:"var(--text)",marginBottom:4,lineHeight:1.1}}>
+            Welcome. You showed up.
+          </div>
+          <div style={{fontSize:"0.82rem",color:"var(--accent)",fontWeight:700}}>
+            That already puts you ahead.
+          </div>
+        </div>
+
+        {/* Message */}
+        <div style={{background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"var(--r-xs)",padding:"14px 16px",marginBottom:14,fontSize:"0.82rem",color:"var(--muted)",lineHeight:1.65}}>
+          Most people think about getting started. You actually did. This starter week is designed to introduce you to the movements and build your first real fitness habit. Three sessions. Light weight. Form first. That's all you need to do this week.
+        </div>
+
+        {/* Goal pill */}
+        <div style={{background:"var(--adim)",border:"1px solid var(--aborder)",borderRadius:"var(--r-xs)",padding:"10px 14px",marginBottom:16,display:"flex",alignItems:"center",gap:10}}>
+          <span style={{fontSize:"1rem"}}>🎯</span>
+          <div>
+            <div style={{fontSize:"0.58rem",fontWeight:700,letterSpacing:"0.12em",textTransform:"uppercase",color:"var(--accent)",marginBottom:2}}>Your Goal This Week</div>
+            <div style={{fontSize:"0.82rem",fontWeight:700,color:"var(--text)"}}>{goalLabel} — Learn the patterns. Be consistent.</div>
+          </div>
+        </div>
+
+        {/* This week priorities */}
+        <div style={{fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.12em",textTransform:"uppercase",color:"var(--muted)",marginBottom:10}}>
+          Starter Week Priorities
+        </div>
+
+        <div style={{background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"var(--r-xs)",padding:"12px 14px",marginBottom:8,display:"flex",alignItems:"center",gap:12,cursor:"pointer"}}
+          onClick={()=>{ onDismiss(); setTab("learn"); }}>
+          <div style={{width:36,height:36,borderRadius:8,background:"var(--adim)",border:"1px solid var(--aborder)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1rem",flexShrink:0}}>🔥</div>
+          <div style={{flex:1}}>
+            <div style={{fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:"var(--accent)",marginBottom:2}}>Read First · Lesson 01</div>
+            <div style={{fontSize:"0.82rem",fontWeight:700,color:"var(--text)"}}>What Is a Calorie?</div>
+          </div>
+          <span style={{color:"var(--muted)",fontSize:"0.8rem"}}>→</span>
+        </div>
+
+        <div style={{background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"var(--r-xs)",padding:"12px 14px",marginBottom:8,display:"flex",alignItems:"center",gap:12,cursor:"pointer"}}
+          onClick={()=>{ onDismiss(); setTab("workout"); }}>
+          <div style={{width:36,height:36,borderRadius:8,background:"var(--odim)",border:"1px solid var(--oborder)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1rem",flexShrink:0}}>🏋️</div>
+          <div style={{flex:1}}>
+            <div style={{fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:"var(--orange)",marginBottom:2}}>Starter Workouts</div>
+            <div style={{fontSize:"0.82rem",fontWeight:700,color:"var(--text)"}}>See This Week's Training</div>
+          </div>
+          <span style={{color:"var(--muted)",fontSize:"0.8rem"}}>→</span>
+        </div>
+
+        <div style={{background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"var(--r-xs)",padding:"12px 14px",marginBottom:20,display:"flex",alignItems:"center",gap:12,cursor:"pointer"}}
+          onClick={()=>{ onDismiss(); setTab("meals"); }}>
+          <div style={{width:36,height:36,borderRadius:8,background:"var(--bdim)",border:"1px solid var(--bborder)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1rem",flexShrink:0}}>🍽️</div>
+          <div style={{flex:1}}>
+            <div style={{fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:"var(--blue)",marginBottom:2}}>Nutrition Preview</div>
+            <div style={{fontSize:"0.82rem",fontWeight:700,color:"var(--text)"}}>See Sample Meal Plan</div>
+          </div>
+          <span style={{color:"var(--muted)",fontSize:"0.8rem"}}>→</span>
+        </div>
+
+        {/* What's next teaser */}
+        <div style={{background:"rgba(200,241,53,0.04)",border:"1px solid var(--aborder)",borderRadius:"var(--r-xs)",padding:"12px 14px",marginBottom:16}}>
+          <div style={{fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:"var(--accent)",marginBottom:6}}>🚀 After This Week</div>
+          <div style={{fontSize:"0.78rem",color:"var(--muted)",lineHeight:1.6}}>
+            Complete the starter week and you'll have the foundation. The Core Program ($29) picks up from here — 4 full weeks, your personal macro calculator, 68+ meal plans scaled to your body, and the full nutrition system. One-time payment.
+          </div>
+        </div>
+
+        <button className="action-btn btn-primary" onClick={onDismiss}>
+          Let's Get Started 💪
+        </button>
+      </div>
+    </div>
+  );
+}
+
+
+function HomeTab({ gender, goal, setTab, isNewSession, onBriefingShown }) {
+  const { useState: useStateH, useEffect: useEffectH } = React;
+  // Show welcome immediately when this is a fresh onboarding session
+  const [showWelcome, setShowWelcome] = useStateH(!!isNewSession);
+  useEffectH(() => {
+    if (isNewSession) {
+      setShowWelcome(true);
+      if (onBriefingShown) onBriefingShown();
+    }
+  }, [isNewSession]);
   return (
     <div>
+      {showWelcome && (
+        <FreeWelcomeBriefing
+          gender={gender}
+          goal={goal}
+          onDismiss={()=>setShowWelcome(false)}
+          setTab={setTab}
+        />
+      )}
       <div className="hero">
         <div className="hero-eyebrow">Starter Week · Beginner · Free</div>
         <div className="hero-title">{gender==="female"?"Build The Foundation.":"Build The Foundation."}</div>
@@ -705,6 +817,7 @@ function HomeTab({ gender, goal, setTab }) {
 function App() {
   const [tab,    setTab]  = useState("onboard");
   const [profile,setProfile] = useState(null); // { gender, goal }
+  const [isNewSession, setIsNewSession] = useState(false); // true right after onboarding
 
   const NAV = [
     {id:"home",    icon:"🏠",label:"Home",   locked:false},
@@ -723,7 +836,7 @@ function App() {
             <div className="brand">Health<em>Fund</em></div>
             <div className="free-badge">Free Tier</div>
           </div>
-          <Onboarding onDone={p=>{ setProfile(p); setTab("home"); }}/>
+          <Onboarding onDone={p=>{ setProfile(p); setIsNewSession(true); setTab("home"); }}/>
         </div>
       </>
     );
@@ -738,7 +851,7 @@ function App() {
           <div className="free-badge">Free Tier</div>
         </div>
 
-        {tab==="home"    && <HomeTab gender={profile.gender} goal={profile.goal} setTab={setTab}/>}
+        {tab==="home"    && <HomeTab gender={profile.gender} goal={profile.goal} setTab={setTab} isNewSession={isNewSession} onBriefingShown={()=>setIsNewSession(false)}/>}
         {tab==="workout" && <WorkoutTab gender={profile.gender}/>}
         {tab==="learn"   && <LearnTab/>}
         {tab==="meals"   && <MealsPreviewTab gender={profile.gender} goal={profile.goal}/>}
