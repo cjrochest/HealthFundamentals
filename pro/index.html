@@ -1639,6 +1639,56 @@ function WorkoutTab({ prefs, setPrefs, onRebuild }) {
 
   return (
     <div>
+      {/* Next workout / today is your day banner */}
+      {(()=>{
+        const DAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+        const todayIdx = new Date().getDay();
+        const todayShort = DAYS[todayIdx];
+        const gymDays = prefs.selectedDays || [];
+        const isToday = gymDays.includes(todayShort);
+
+        // Find next workout day
+        let nextDay = null;
+        let daysAway = 0;
+        for (let i=1; i<=7; i++) {
+          const check = DAYS[(todayIdx+i)%7];
+          if (gymDays.includes(check)) { nextDay = check; daysAway = i; break; }
+        }
+
+        if (isToday) {
+          return (
+            <div style={{margin:"14px 16px 0",background:"var(--adim)",border:"1px solid var(--aborder)",
+              borderRadius:"var(--r)",padding:"14px 16px",display:"flex",alignItems:"center",gap:12}}>
+              <span style={{fontSize:"1.6rem"}}>💪</span>
+              <div>
+                <div style={{fontFamily:"var(--ff-display)",fontSize:"0.95rem",fontWeight:800,color:"var(--accent)",marginBottom:3}}>
+                  Today is your day to train. Let's get to it.
+                </div>
+                <div style={{fontSize:"0.75rem",color:"var(--muted)"}}>
+                  Your workout is below — tap any session to expand it.
+                </div>
+              </div>
+            </div>
+          );
+        } else if (nextDay) {
+          return (
+            <div style={{margin:"14px 16px 0",background:"var(--s1)",border:"1px solid var(--border)",
+              borderRadius:"var(--r)",padding:"12px 16px",display:"flex",alignItems:"center",gap:12}}>
+              <span style={{fontSize:"1.3rem"}}>📅</span>
+              <div>
+                <div style={{fontFamily:"var(--ff-display)",fontSize:"0.85rem",fontWeight:800,color:"var(--text)",marginBottom:2}}>
+                  Next workout: {nextDay} {daysAway === 1 ? "— tomorrow" : "in "+daysAway+" days"}
+                </div>
+                <div style={{fontSize:"0.72rem",color:"var(--muted)"}}>
+                  Use today to recover. Eat well, sleep well, show up ready.
+                </div>
+              </div>
+            </div>
+          );
+        }
+        return null;
+      })()}
+
       {/* Plan summary strip */}
       <div style={{padding:"14px 16px 0",display:"flex",flexWrap:"wrap",gap:8,alignItems:"center"}}>
         <span className="ps-chip green">{prefs.gender === "female" ? "Female 🍑" : "Male 💪"}</span>
@@ -1911,7 +1961,7 @@ function PlanTab({ prefs, setPrefs, mealState, setMealState, setTab }) {
     setManual(newManual);
     // Persist so macros survive tab switching
     setPrefs(p => ({...p, goal, savedMacros: { result: newResult, manual: newManual, goal, activity }}));
-    setTimeout(() => { if (resultRef.current) resultRef.current.scrollIntoView({ behavior:"smooth", block:"start" }); }, 80);
+    setTab("meals");
   }
 
   const dm = manual;
@@ -2988,6 +3038,90 @@ function LearnTab() {
 // ─────────────────────────────────────────────────────────────────────────────
 const PROGRESS_KEY = "hf_progress_v1";
 
+// ─── PERSISTENCE KEYS ────────────────────────────────────────────────────────
+const PREFS_KEY   = "hf_pro_prefs_v2";
+const MEAL_KEY    = "hf_pro_meal_v2";
+const DAILY_KEY   = "hf_pro_daily_v2";
+
+function loadPrefs() {
+  try {
+    const raw = localStorage.getItem(PREFS_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch { return null; }
+}
+function savePrefs(prefs) {
+  try { localStorage.setItem(PREFS_KEY, JSON.stringify(prefs)); } catch {}
+}
+function loadMealState() {
+  try {
+    const raw = localStorage.getItem(MEAL_KEY);
+    return raw ? JSON.parse(raw) : { mealCount:4, pinned:{}, avoidTags:[] };
+  } catch { return { mealCount:4, pinned:{}, avoidTags:[] }; }
+}
+function saveMealState(ms) {
+  try { localStorage.setItem(MEAL_KEY, JSON.stringify(ms)); } catch {}
+}
+function loadDailyData() {
+  try {
+    const raw = localStorage.getItem(DAILY_KEY);
+    return raw ? JSON.parse(raw) : { lastOpen: null, streak: 0, totalDays: 0, lastMsgIdx: -1 };
+  } catch { return { lastOpen: null, streak: 0, totalDays: 0, lastMsgIdx: -1 }; }
+}
+function saveDailyData(d) {
+  try { localStorage.setItem(DAILY_KEY, JSON.stringify(d)); } catch {}
+}
+
+// ─── DAILY MOTIVATIONAL MESSAGES ─────────────────────────────────────────────
+const DAILY_MESSAGES = [
+  { emoji:"🌅", msg:"New day. New reps. You don't need motivation — you need momentum. Start." },
+  { emoji:"💧", msg:"Hit your water target today. Hydration affects everything — energy, recovery, hunger. Don't skip it." },
+  { emoji:"🥩", msg:"Protein first. Every meal today, make sure there's a protein source. That single habit moves the needle." },
+  { emoji:"😴", msg:"Recovery is training. If you slept well last night, your body built muscle while you rested. Protect your sleep." },
+  { emoji:"🔥", msg:"Consistency beats intensity every time. You don't need a perfect session — you need to show up." },
+  { emoji:"📊", msg:"Log your weight this week if you haven't. The scale is just data — it tells you what to adjust, not how to feel." },
+  { emoji:"🧠", msg:"You understand your body better than most people ever will. That knowledge compounds — keep learning." },
+  { emoji:"⚡", msg:"Pre-workout meal 60–90 min before training. Carbs fuel the session. Don't train fasted unless you have to." },
+  { emoji:"🎯", msg:"One rep more than last time. That's progressive overload. That's how muscle gets built. One rep." },
+  { emoji:"🌱", msg:"Every expert was once a beginner. Every person you admire in the gym started exactly where you did." },
+  { emoji:"💪", msg:"Your body adapts to what you consistently do. Be consistent with the right things." },
+  { emoji:"🍽️", msg:"Meal prep for the week today if you can. Convenience is the enemy of good nutrition — remove the friction." },
+  { emoji:"🏃", msg:"Even a 15-minute walk counts. Movement is movement. Don't let perfection be the enemy of progress." },
+  { emoji:"📈", msg:"Progress isn't always visible in the mirror. It's in the weights you're lifting, the energy you have, the habits you've built." },
+  { emoji:"🛒", msg:"Check your grocery list. Running out of your go-to protein source is how good weeks fall apart." },
+  { emoji:"🧘", msg:"Stress raises cortisol. Cortisol holds body fat, especially around the midsection. Manage your stress as seriously as your macros." },
+  { emoji:"⏰", msg:"You don't need 2 hours. A focused 45-minute session beats a distracted 90-minute one every time." },
+  { emoji:"🔄", msg:"Deload isn't weakness — it's strategy. Planned rest allows your joints, tendons, and CNS to catch up to your muscles." },
+  { emoji:"🎖️", msg:"Every session you complete is proof of who you're becoming. That's not nothing. That's everything." },
+  { emoji:"🌙", msg:"Wind down tonight. Put the phone down an hour before bed. Your next workout depends on tonight's sleep." },
+  { emoji:"🥗", msg:"Vegetables aren't optional. Micronutrients and fiber affect recovery, digestion, and energy in ways that macros alone don't cover." },
+  { emoji:"💬", msg:"The people who change their bodies don't have better genetics or more time. They just stop stopping." },
+];
+
+function getTodayMessage(daily) {
+  const today = new Date().toISOString().split("T")[0];
+  // If already shown today, return the same message
+  if (daily.lastOpen === today && daily.lastMsgIdx >= 0) {
+    return DAILY_MESSAGES[daily.lastMsgIdx % DAILY_MESSAGES.length];
+  }
+  // Pick next in sequence
+  const nextIdx = (daily.lastMsgIdx + 1) % DAILY_MESSAGES.length;
+  return { ...DAILY_MESSAGES[nextIdx], nextIdx };
+}
+
+function updateDailyTracking(daily) {
+  const today = new Date().toISOString().split("T")[0];
+  if (daily.lastOpen === today) return daily; // already updated today
+  const yesterday = new Date(Date.now() - 86400000).toISOString().split("T")[0];
+  const streak = daily.lastOpen === yesterday ? (daily.streak || 0) + 1 : 1;
+  const nextIdx = (daily.lastMsgIdx + 1) % DAILY_MESSAGES.length;
+  return {
+    lastOpen: today,
+    streak,
+    totalDays: (daily.totalDays || 0) + 1,
+    lastMsgIdx: nextIdx,
+  };
+}
+
 function loadProgress() {
   try {
     const raw = localStorage.getItem(PROGRESS_KEY);
@@ -3077,6 +3211,7 @@ const CHEAT_OPTIONS = {
     desc: "You choose the ingredients — highest control.",
     tips: [
       "Use real ingredients — burger, pasta, fries, whatever you want.",
+      "Air fryer or oven is your best friend here — same great taste, significantly less oil and calories than frying.",
       "Don't track it. The point is to enjoy it guilt-free.",
       "Cook extra protein alongside it to stay closer to your targets.",
     ],
@@ -3287,14 +3422,94 @@ function CheatMealModal({ onClose }) {
 }
 
 
+const CHECKIN_KEY = "hf_daily_checkins_v1";
+
+function loadCheckins() {
+  try {
+    const raw = localStorage.getItem(CHECKIN_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch { return {}; }
+}
+function saveCheckins(data) {
+  try { localStorage.setItem(CHECKIN_KEY, JSON.stringify(data)); } catch {}
+}
+
+// Response messages
+const WORKOUT_YES_MSGS = [
+  "That's what separates you from everyone who stayed on the couch. Keep stacking days.",
+  "Another session in the books. Your future self is already thanking you.",
+  "Consistency is how bodies change. You just proved you have it.",
+  "Done. That's one more session than most people got today.",
+  "Every rep you put in today is an investment with compounding returns.",
+];
+const WORKOUT_NO_MSGS = [
+  "Rest days happen. What matters is that you show up tomorrow. Don't let one missed session become two.",
+  "Missing a workout isn't failure — quitting is. Tomorrow's session is more important than today's. Show up.",
+  "Bodies sometimes need the break more than the workout. Recover well and come back stronger.",
+  "One missed session changes nothing about your long-term progress. Stay consistent overall.",
+];
+const MEAL_YES_MSGS = [
+  "Fueling right is half the battle. Your body has everything it needs to perform and recover today.",
+  "Dialed in nutrition. That's how you protect your muscle and hit your goals.",
+  "Solid. Every meal tracked is another brick in the foundation.",
+  "You gave your body the right fuel. It will give you results in return.",
+];
+const MEAL_PARTIAL_MSGS = [
+  "Partial credit is still progress. Getting most meals right is the difference-maker — not perfection.",
+  "Most people don't even get half. You're doing better than you think.",
+  "Consistency over perfection. A few good meals today is still a good day.",
+];
+const MEAL_NO_MSGS = [
+  "Nutrition off today — that's okay. Tomorrow is a clean slate. One thing: make sure protein is at every meal.",
+  "One off day doesn't undo your progress. Get back on track with your next meal — not tomorrow, your next meal.",
+  "It happens. What you do in the next 24 hours matters more than what happened today.",
+];
+
+function getRandMsg(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+
 function ProgressTab({ prefs }) {
   const startWeight   = (prefs && prefs.weight) ? prefs.weight : 0;
   const [data, setData]             = useState(loadProgress);
+  const [checkins, setCheckins]     = useState(loadCheckins);
   const [inputVal, setInputVal]     = useState("");
   const [view, setView]             = useState("month");
   const [showShare, setShowShare]   = useState(false);
   const [showCheat, setShowCheat]   = useState(false);
   const [toast, setToast]           = useState({ show: false, msg: "" });
+  const [feedbackMsg, setFeedbackMsg] = useState(null); // { text, positive }
+
+  const todayName = new Date().toLocaleDateString("en-US", { weekday:"short" }); // "Mon", "Tue" etc
+  const isWorkoutDay = prefs && prefs.selectedDays && prefs.selectedDays.includes(todayName);
+  const mealCount = 4; // default, could read from mealState
+
+  const todayCheckin = checkins[today] || {};
+
+  function saveCheckin(update) {
+    const updated = { ...checkins, [today]: { ...todayCheckin, ...update } };
+    setCheckins(updated);
+    saveCheckins(updated);
+  }
+
+  function handleWorkout(didIt) {
+    saveCheckin({ workout: didIt });
+    const msg = didIt ? getRandMsg(WORKOUT_YES_MSGS) : getRandMsg(WORKOUT_NO_MSGS);
+    setFeedbackMsg({ text: msg, positive: didIt });
+    setTimeout(() => setFeedbackMsg(null), 4500);
+  }
+
+  function handleMeals(count) {
+    saveCheckin({ meals: count });
+    const total = prefs && prefs.mealCount ? prefs.mealCount : 4;
+    let msg;
+    if (count >= total)      msg = getRandMsg(MEAL_YES_MSGS);
+    else if (count >= total * 0.5) msg = getRandMsg(MEAL_PARTIAL_MSGS);
+    else                     msg = getRandMsg(MEAL_NO_MSGS);
+    setFeedbackMsg({ text: msg, positive: count >= total * 0.5 });
+    setTimeout(() => setFeedbackMsg(null), 4500);
+  }
 
   const today = formatDate(new Date());
   const entries        = (data && data.entries) ? data.entries : [];
@@ -3350,6 +3565,21 @@ function ProgressTab({ prefs }) {
     setTimeout(function(){ setToast({ show: false, msg: "" }); }, 2500);
   }
 
+  // Build weekly checkin heatmap — last 7 days
+  const last7 = Array.from({length:7}, (_,i) => {
+    const d = new Date(Date.now() - (6-i)*86400000);
+    const key = formatDate(d);
+    const dayLabel = d.toLocaleDateString("en-US", {weekday:"short"});
+    const isWod = prefs && prefs.selectedDays && prefs.selectedDays.includes(dayLabel);
+    const ci = checkins[key] || {};
+    return { key, dayLabel, isWod, workout: ci.workout, meals: ci.meals, isToday: key === today };
+  });
+
+  // Completion stats this week
+  const wodDays = last7.filter(d => d.isWod);
+  const completedWorkouts = wodDays.filter(d => d.workout === true).length;
+  const mealsLogged = last7.filter(d => d.meals !== undefined).length;
+
   return (
     <div className="tab-content">
       {toast.show && (
@@ -3359,6 +3589,162 @@ function ProgressTab({ prefs }) {
           {toast.msg}
         </div>
       )}
+
+      {/* Feedback popup */}
+      {feedbackMsg && (
+        <div style={{
+          position:"fixed",bottom:90,left:"50%",transform:"translateX(-50%)",
+          background: feedbackMsg.positive ? "var(--s2)" : "var(--s2)",
+          border: "1px solid " + (feedbackMsg.positive ? "var(--aborder)" : "var(--oborder)"),
+          borderRadius:"var(--r-sm)",padding:"12px 18px",zIndex:999,
+          maxWidth:"calc(100% - 32px)",width:340,boxShadow:"0 8px 32px rgba(0,0,0,0.5)"
+        }}>
+          <div style={{fontSize:"0.7rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",
+            color: feedbackMsg.positive ? "var(--accent)" : "var(--orange)",marginBottom:5}}>
+            {feedbackMsg.positive ? "✓ Logged" : "Noted"}
+          </div>
+          <div style={{fontSize:"0.82rem",color:"var(--text)",lineHeight:1.6}}>{feedbackMsg.text}</div>
+        </div>
+      )}
+
+      {/* ── DAILY CHECK-IN ── */}
+      <div style={{padding:"0 0 4px"}}>
+        <div style={{fontSize:"0.65rem",fontWeight:700,letterSpacing:"0.14em",textTransform:"uppercase",
+          color:"var(--muted)",padding:"14px 16px 8px"}}>Today's Check-In</div>
+
+        {/* Workout check-in */}
+        <div style={{margin:"0 16px 10px",background:"var(--s1)",border:"1px solid var(--border)",borderRadius:"var(--r)",padding:"14px 16px"}}>
+          <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
+            <span style={{fontSize:"1.2rem"}}>🏋️</span>
+            <div style={{flex:1}}>
+              <div style={{fontSize:"0.85rem",fontWeight:800,color:"var(--text)",fontFamily:"var(--ff-display)"}}>
+                Did you work out today?
+              </div>
+              <div style={{fontSize:"0.68rem",color:"var(--muted)",marginTop:2}}>
+                {isWorkoutDay ? "Today is a scheduled workout day 💪" : "Rest day — but you can still log if you trained"}
+              </div>
+            </div>
+            {todayCheckin.workout !== undefined && (
+              <span style={{fontSize:"1.1rem"}}>{todayCheckin.workout ? "✅" : "❌"}</span>
+            )}
+          </div>
+          {todayCheckin.workout === undefined ? (
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+              <button onClick={()=>handleWorkout(true)}
+                style={{background:"var(--adim)",border:"1px solid var(--aborder)",borderRadius:"var(--r-sm)",
+                  padding:"10px",fontWeight:800,fontSize:"0.82rem",color:"var(--accent)",cursor:"pointer",
+                  fontFamily:"var(--ff-display)"}}>
+                ✓ Yes, I trained
+              </button>
+              <button onClick={()=>handleWorkout(false)}
+                style={{background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"var(--r-sm)",
+                  padding:"10px",fontWeight:800,fontSize:"0.82rem",color:"var(--muted)",cursor:"pointer",
+                  fontFamily:"var(--ff-display)"}}>
+                ✗ Not today
+              </button>
+            </div>
+          ) : (
+            <div style={{fontSize:"0.75rem",color:"var(--muted)",textAlign:"center"}}>
+              {todayCheckin.workout ? "Workout logged ✓" : "Rest day logged"} ·&nbsp;
+              <span style={{color:"var(--accent)",cursor:"pointer",fontWeight:700}}
+                onClick={()=>saveCheckin({workout:undefined})}>Change</span>
+            </div>
+          )}
+        </div>
+
+        {/* Meal check-in */}
+        <div style={{margin:"0 16px 10px",background:"var(--s1)",border:"1px solid var(--border)",borderRadius:"var(--r)",padding:"14px 16px"}}>
+          <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
+            <span style={{fontSize:"1.2rem"}}>🍽️</span>
+            <div style={{flex:1}}>
+              <div style={{fontSize:"0.85rem",fontWeight:800,color:"var(--text)",fontFamily:"var(--ff-display)"}}>
+                How many meals did you follow?
+              </div>
+              <div style={{fontSize:"0.68rem",color:"var(--muted)",marginTop:2}}>
+                Out of your {prefs && prefs.mealCount ? prefs.mealCount : 4} planned meals today
+              </div>
+            </div>
+            {todayCheckin.meals !== undefined && (
+              <span style={{fontSize:"0.9rem",fontWeight:800,color:"var(--accent)"}}>{todayCheckin.meals}/{prefs && prefs.mealCount ? prefs.mealCount : 4}</span>
+            )}
+          </div>
+          {todayCheckin.meals === undefined ? (
+            <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:6}}>
+              {Array.from({length:(prefs && prefs.mealCount ? prefs.mealCount : 4)+1},(_,i)=>i).map(n=>(
+                <button key={n} onClick={()=>handleMeals(n)}
+                  style={{background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"var(--r-sm)",
+                    padding:"9px 4px",fontWeight:800,fontSize:"0.9rem",color:n>0?"var(--text)":"var(--muted)",
+                    cursor:"pointer",fontFamily:"var(--ff-mono)",transition:"border-color 0.15s"}}
+                  onMouseEnter={e=>e.currentTarget.style.borderColor="var(--aborder)"}
+                  onMouseLeave={e=>e.currentTarget.style.borderColor="var(--border)"}>
+                  {n}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div style={{fontSize:"0.75rem",color:"var(--muted)",textAlign:"center"}}>
+              {todayCheckin.meals} meals logged ✓ ·&nbsp;
+              <span style={{color:"var(--accent)",cursor:"pointer",fontWeight:700}}
+                onClick={()=>saveCheckin({meals:undefined})}>Change</span>
+            </div>
+          )}
+        </div>
+
+        {/* Weekly heatmap */}
+        <div style={{margin:"0 16px 16px",background:"var(--s1)",border:"1px solid var(--border)",borderRadius:"var(--r)",padding:"14px 16px"}}>
+          <div style={{fontSize:"0.65rem",fontWeight:700,letterSpacing:"0.12em",textTransform:"uppercase",
+            color:"var(--muted)",marginBottom:10}}>This Week · {completedWorkouts}/{wodDays.length} Workouts · {mealsLogged}/7 Days Logged</div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:5}}>
+            {last7.map(d=>{
+              const hasWorkout = d.workout === true;
+              const missedWorkout = d.workout === false;
+              const hasMeals = d.meals !== undefined;
+              const mealTotal = prefs && prefs.mealCount ? prefs.mealCount : 4;
+              const mealPct = hasMeals ? d.meals / mealTotal : 0;
+              return (
+                <div key={d.key} style={{textAlign:"center"}}>
+                  <div style={{fontSize:"0.55rem",color: d.isToday ? "var(--accent)" : "var(--muted)",
+                    fontWeight: d.isToday ? 800 : 400, marginBottom:4, textTransform:"uppercase"}}>
+                    {d.dayLabel}
+                  </div>
+                  {/* Workout dot */}
+                  <div style={{
+                    width:"100%",aspectRatio:"1",borderRadius:6,marginBottom:3,
+                    background: d.isWod
+                      ? (hasWorkout ? "var(--accent)" : missedWorkout ? "var(--rdim)" : d.isToday ? "var(--adim)" : "var(--s2)")
+                      : "var(--s2)",
+                    border: "1px solid " + (d.isToday ? "var(--aborder)" : "var(--border)"),
+                    display:"flex",alignItems:"center",justifyContent:"center",
+                    fontSize:"0.65rem"
+                  }}>
+                    {d.isWod && hasWorkout && "✓"}
+                    {d.isWod && missedWorkout && "✗"}
+                    {!d.isWod && <span style={{color:"var(--muted2)",fontSize:"0.5rem"}}>—</span>}
+                  </div>
+                  {/* Meal bar */}
+                  <div style={{width:"100%",height:4,background:"var(--s2)",borderRadius:99,overflow:"hidden"}}>
+                    <div style={{height:"100%",width:(mealPct*100)+"%",
+                      background: mealPct>=1?"var(--accent)":mealPct>=0.5?"var(--orange)":"var(--blue)",
+                      borderRadius:99,transition:"width 0.3s"}}/>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <div style={{display:"flex",gap:14,marginTop:10,flexWrap:"wrap"}}>
+            {[["var(--accent)","Workout done"],["var(--rdim)","Missed"],["var(--s2)","Rest/unlogged"]].map(([c,l])=>(
+              <div key={l} style={{display:"flex",alignItems:"center",gap:5,fontSize:"0.6rem",color:"var(--muted)"}}>
+                <div style={{width:8,height:8,borderRadius:2,background:c,border:"1px solid var(--border)"}}/>
+                {l}
+              </div>
+            ))}
+            <div style={{display:"flex",alignItems:"center",gap:5,fontSize:"0.6rem",color:"var(--muted)"}}>
+              <div style={{width:16,height:4,borderRadius:99,background:"linear-gradient(90deg,var(--blue),var(--orange),var(--accent))"}}/>
+              Meals followed
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:16}}>
         {[
@@ -3763,7 +4149,7 @@ function WeeklyBriefing({ prefs, onDismiss, setTab, currentLesson }) {
 }
 
 
-function HomeTab({ prefs, setPrefs, setTab }) {
+function HomeTab({ prefs, setPrefs, setTab, daily }) {
   const weekInfo = WEEK_PROGRESSIONS[prefs.week-1] || WEEK_PROGRESSIONS[0];
   const ct = CARDIO_TYPES.find(c=>c.id===prefs.cardioType);
   const [cardioOpen, setCardioOpen] = useState(false);
@@ -3824,6 +4210,23 @@ function HomeTab({ prefs, setPrefs, setTab }) {
         <div className="hero-title">{prefs.goal==="cut"?"Burn Fat. Keep Muscle.":prefs.goal==="build"?"Build. Eat. Repeat.":"Train Smart. Stay Consistent."}</div>
         <div className="hero-sub">{weekInfo.intensityNote}</div>
       </div>
+      {/* Daily Message Card */}
+      {daily && (() => {
+        const msg = DAILY_MESSAGES[(daily.lastMsgIdx || 0) % DAILY_MESSAGES.length];
+        return (
+          <div style={{margin:"0 16px 14px"}}>
+            <div style={{background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"var(--r)",padding:"14px 16px",display:"flex",alignItems:"flex-start",gap:12}}>
+              <span style={{fontSize:"1.6rem",flexShrink:0,marginTop:2}}>{msg.emoji}</span>
+              <div style={{flex:1}}>
+                <div style={{fontSize:"0.58rem",fontWeight:700,letterSpacing:"0.12em",textTransform:"uppercase",color:"var(--accent)",marginBottom:5}}>
+                  Today · Day {daily.totalDays || 1} · {daily.streak || 1}-Day Streak 🔥
+                </div>
+                <div style={{fontSize:"0.82rem",color:"var(--text)",lineHeight:1.6}}>{msg.msg}</div>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
       <div className="section-head" style={{paddingBottom:6}}><span className="section-title">Your Plan</span></div>
       <div style={{padding:"0 16px",display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:14}}>
         {[
@@ -3916,10 +4319,36 @@ function HomeTab({ prefs, setPrefs, setTab }) {
 // ─── ROOT ─────────────────────────────────────────────────────────────────────
 function App() {
   const [tab, setTab] = useState("home");
-  const [prefs, setPrefs] = useState(null); // null = not yet built
 
-  // Shared meal state — lifted so GroceryTab can read what MealsTab has selected
-  const [mealState, setMealState] = useState({ mealCount:4, pinned:{}, avoidTags:[] });
+  // Load persisted prefs on first render — null means onboarding needed
+  const [prefs, setPrefsRaw] = useState(() => loadPrefs());
+
+  // Load persisted meal state
+  const [mealState, setMealStateRaw] = useState(() => loadMealState());
+
+  // Daily tracking — update on app open
+  const [daily, setDaily] = useState(() => {
+    const d = loadDailyData();
+    const updated = updateDailyTracking(d);
+    if (updated !== d) saveDailyData(updated);
+    return updated;
+  });
+
+  // Wrapped setters that also persist to localStorage
+  function setPrefs(updater) {
+    setPrefsRaw(prev => {
+      const next = typeof updater === "function" ? updater(prev) : updater;
+      savePrefs(next);
+      return next;
+    });
+  }
+  function setMealState(updater) {
+    setMealStateRaw(prev => {
+      const next = typeof updater === "function" ? updater(prev) : updater;
+      saveMealState(next);
+      return next;
+    });
+  }
 
   const NAV = [
     {id:"home",     icon:"🏠", label:"Home"},
@@ -3961,7 +4390,7 @@ function App() {
           )}
         </div>
 
-        {tab==="home"    && <HomeTab prefs={prefs} setPrefs={setPrefs} setTab={setTab}/>}
+        {tab==="home"    && <HomeTab prefs={prefs} setPrefs={setPrefs} setTab={setTab} daily={daily}/>}
         {tab==="workout" && <WorkoutTab prefs={prefs} setPrefs={setPrefs} onRebuild={()=>setPrefs(null)}/>}
         {tab==="plan"    && <PlanTab prefs={prefs} setPrefs={setPrefs} mealState={mealState} setMealState={setMealState} setTab={setTab}/>}
         {tab==="meals"   && <MealsTab prefs={prefs} mealState={mealState} setMealState={setMealState} goal={prefs.goal||"maintain"} setTab={setTab}/>}

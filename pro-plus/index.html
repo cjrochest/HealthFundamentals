@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0a0b08"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-  <title>Health Fundamentals — Full Access</title>
+  <title>Health Fundamentals — Full System+</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Lato:wght@400;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <style>*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html,body{height:100%;background:#0a0b08;-webkit-font-smoothing:antialiased;}</style>
@@ -17,9 +17,9 @@
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script>
-    const CODE_HASHES=["2355a5ac039f6c9c7700ae34798dc18535b0c7104225d7bdd64533e1c5303ba1", "d70a097fc2ed326edde69999d16d2b1cd6fb188085d44a3c450f0e8065fbc475", "1a80a74e7f1d5bf039237a326bedcba7fee9022cdc05d8f1e20c34e7e4e557ae"];
+    const CODE_HASHES=["1042084c1897ab386b629e2cb78ee2e9888a0d51d1425fd1705207e24a352502", "f3cf32d062cc5d20c2a44ca90ee8bb60547c161d5a1808732ebf128ef6b347ac", "1499ac46bb59234ebba5bd7efff98ce50c031a391f0e6f5fb9ababcedbc4552f"];
     async function sha256(m){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(m));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');}
-    const STORAGE_KEY='hf_pro_access_v1';
+    const STORAGE_KEY='hf_proplus_access_v1';
     let _root=null;
     function mountApp(){if(!_root)_root=ReactDOM.createRoot(document.getElementById('app-root'));_root.render(React.createElement(App));}
     function UnlockScreen(){
@@ -30,7 +30,7 @@
       return React.createElement('div',{style:{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',background:'#0a0b08',padding:'24px'}},
         React.createElement('div',{style:{width:'100%',maxWidth:360,textAlign:'center'}},
           React.createElement('div',{style:{fontFamily:"'Syne',sans-serif",fontSize:'1.6rem',fontWeight:800,color:'#e9ead6',marginBottom:6}},'Health',React.createElement('em',{style:{color:'#c8f135'}},'Fund')),
-          React.createElement('div',{style:{fontSize:'0.78rem',color:'#656857',marginBottom:28}},'Full Access — $29'),
+          React.createElement('div',{style:{fontSize:'0.78rem',color:'#656857',marginBottom:28}},'Full System+ — $69'),
           React.createElement('input',{type:'text',placeholder:'Enter access code',value:code,onChange:e=>setCode(e.target.value),onKeyDown:e=>e.key==='Enter'&&attempt(),style:{width:'100%',background:'#1a1c15',border:'1px solid #2e3028',borderRadius:10,padding:'13px 16px',color:'#e9ead6',fontSize:'0.95rem',outline:'none',marginBottom:10,fontFamily:"'Lato',sans-serif",letterSpacing:'0.08em',textAlign:'center'}}),
           React.createElement('button',{onClick:attempt,disabled:busy||!code.trim(),style:{width:'100%',background:'#c8f135',color:'#0a0b08',border:'none',borderRadius:10,padding:'13px',fontFamily:"'Syne',sans-serif",fontSize:'0.95rem',fontWeight:800,cursor:busy||!code.trim()?'not-allowed':'pointer',opacity:busy||!code.trim()?0.5:1}},busy?'Checking…':'Unlock Access'),
           err&&React.createElement('div',{style:{marginTop:10,color:'#ff6b6b',fontSize:'0.8rem'}},err),
@@ -595,10 +595,18 @@ const SPLIT_TEMPLATES = {
 };
 
 const WEEK_PROGRESSIONS = [
-  { num:1, name:"Foundation",   setsBase:3, repsBase:"10–12", restBase:"60s",  intensityNote:"Light weight. Form first. Leave 2–3 reps in reserve." },
-  { num:2, name:"Consistency",  setsBase:3, repsBase:"10–12", restBase:"60s",  intensityNote:"Add 5 lbs or 2 reps to anything that felt easy Week 1." },
-  { num:3, name:"Progression",  setsBase:4, repsBase:"8–10",  restBase:"75s",  intensityNote:"4 sets. Heavier weight. Add a drop set to your last set." },
-  { num:4, name:"Breakthrough", setsBase:4, repsBase:"6–8",   restBase:"90s",  intensityNote:"Peak week. Heaviest weights of the program. Push hard." },
+  { num:1,  name:"Foundation",     setsBase:3, repsBase:"10–12", restBase:"60s",  intensityNote:"Light weight. Form first. Leave 2–3 reps in reserve." },
+  { num:2,  name:"Consistency",    setsBase:3, repsBase:"10–12", restBase:"60s",  intensityNote:"Add 5 lbs or 2 reps to anything that felt easy Week 1." },
+  { num:3,  name:"Volume",         setsBase:3, repsBase:"10–12", restBase:"60s",  intensityNote:"Full 3 sets on every exercise. Push RPE 7–8 across the board." },
+  { num:4,  name:"Progression",    setsBase:4, repsBase:"8–10",  restBase:"75s",  intensityNote:"4 sets. Heavier weight. Add a drop set to your last set." },
+  { num:5,  name:"Loading",        setsBase:4, repsBase:"8–10",  restBase:"75s",  intensityNote:"Increase weight 5–10% on main lifts from Week 4. Keep form tight." },
+  { num:6,  name:"Accumulation",   setsBase:4, repsBase:"8–10",  restBase:"75s",  intensityNote:"Push to RPE 8–9. Rest exactly 75s. You should feel this one." },
+  { num:7,  name:"Intensification",setsBase:4, repsBase:"6–8",   restBase:"90s",  intensityNote:"Heavier loads. 6–8 reps per set. Add a back-off set on compounds." },
+  { num:8,  name:"Strength",       setsBase:4, repsBase:"6–8",   restBase:"90s",  intensityNote:"Heaviest loads yet. Chase rep PRs on every compound lift." },
+  { num:9,  name:"Peak Loading",   setsBase:4, repsBase:"5–7",   restBase:"90s",  intensityNote:"Your strongest training week yet. Prioritize sleep and recovery." },
+  { num:10, name:"Breakthrough",   setsBase:5, repsBase:"4–6",   restBase:"2 min",intensityNote:"5 sets on the big lifts. Heaviest weights of the program. Push hard." },
+  { num:11, name:"Peak",           setsBase:4, repsBase:"4–6",   restBase:"2 min",intensityNote:"Top sets on compounds. Track every number — this is your ceiling." },
+  { num:12, name:"Final Test",     setsBase:3, repsBase:"8–10",  restBase:"60s",  intensityNote:"12 weeks done. Test your strength. See how far you've come." },
 ];
 
 const DAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
@@ -888,6 +896,44 @@ const LESSONS = [
       {t:"p",text:"Cardio increases your calorie burn. If you don't compensate with additional food, you deepen your deficit — useful for cutting, problematic for building muscle. This is why the macro calculator adjusts when you add cardio sessions."},
     ],
     checklist:[{c:"co",text:"Add cardio after lifting, or on separate days"},{c:"co",text:"LISS is safest for daily use — low recovery cost"},{c:"co",text:"HIIT 2–3x/week maximum alongside weight training"},{c:"co",text:"Update your calories when cardio volume changes significantly"}]
+  },
+  { id:"l9", icon:"💪", cc:"eg", number:"09", title:"Rep Range Science", preview:"Why the reps you choose matter as much as the weight you lift.",
+    blocks:[
+      {t:"h",c:"cg",text:"The Three Zones"},
+      {t:"p",text:"Strength (1–5 reps): recruits maximum motor units and teaches your nervous system to generate force. Size (6–12 reps): the hypertrophy sweet spot — enough tension and enough volume to stimulate muscle growth. Endurance (13–20+ reps): metabolic stress and muscle damage, less mechanical tension."},
+      {t:"call",c:"cg",label:"Key Insight",text:"All rep ranges build muscle — but 6–12 reps at challenging weights produces the most hypertrophy for most people, most of the time."},
+      {t:"h",c:"cg",text:"How to Apply It"},
+      {t:"p",text:"Big compound movements (squat, deadlift, press): 4–6 reps builds strength. Accessory work (rows, curls, laterals): 8–15 reps maximizes size. The overlap matters — a set of 5 heavy reps still builds muscle. A set of 15 still builds strength. Use both."},
+      {t:"h",c:"cg",text:"Progressive Overload is the Real Driver"},
+      {t:"p",text:"Rep range matters far less than whether you're progressively making the work harder over time. Add reps, add weight, or add sets — whichever rep range you're in. That's the variable that actually drives adaptation."},
+    ],
+    stats:[{val:"6–12",c:"cg",label:"reps — primary hypertrophy zone"},{val:"1–5",c:"cg",label:"reps — max strength focus"}]
+  },
+  { id:"l10", icon:"📐", cc:"eb", number:"10", title:"Weekly Volume by Muscle Group", preview:"How many sets per week does each muscle actually need to grow?",
+    blocks:[
+      {t:"h",c:"cb",text:"Minimum Effective Volume"},
+      {t:"p",text:"Research shows each muscle group has a minimum effective volume (MEV) — the least amount of work required to see growth — and a maximum adaptive volume (MAV) where progress is best. Going above the maximum recoverable volume (MRV) starts working against you."},
+      {t:"call",c:"cb",label:"General Guidelines",text:"10–20 hard sets per muscle group per week. Start at the lower end. Add sets only when progress stalls — not before."},
+      {t:"h",c:"cb",text:"Per Muscle Group"},
+      {t:"p",text:"Chest/Back/Legs: 10–20 sets/week. Shoulders/Arms: 8–16 sets/week. These are working sets — taken close to failure. Three half-effort sets count for less than one honest set."},
+      {t:"h",c:"cb",text:"Distribution Matters"},
+      {t:"p",text:"Spreading volume across 2+ sessions per muscle per week outperforms cramming it all into one. Frequency drives protein synthesis — hitting chest twice a week with 5–6 sets each beats one chest day with 12 sets."},
+    ],
+    checklist:[{c:"cb",text:"Track working sets per muscle per week"},{c:"cb",text:"Start at 10 sets — add 2 sets if no progress after 3 weeks"},{c:"cb",text:"2x/week frequency outperforms 1x for most muscles"},{c:"cb",text:"Quality sets near failure beat high volume at low effort"}]
+  },
+  { id:"l11", icon:"😴", cc:"er", number:"11", title:"Fatigue & Recovery", preview:"You don't grow in the gym. You grow when you recover from it.",
+    blocks:[
+      {t:"h",c:"cr",text:"The Stimulus-Recovery-Adaptation Cycle"},
+      {t:"p",text:"Training is a stress. Your body responds to stress by adapting — getting stronger, bigger, faster. But adaptation only happens during recovery. If you train before you've recovered, you're adding stress to a system still managing the last dose."},
+      {t:"call",c:"cr",label:"Signs of Under-Recovery",text:"Performance declining session to session. Persistent soreness that doesn't resolve. Poor sleep. Low motivation. Resting heart rate elevated. These are signals — not weaknesses."},
+      {t:"h",c:"cr",text:"Managing Fatigue Across the Week"},
+      {t:"p",text:"Compound movements (deadlifts, squats, heavy presses) create the most systemic fatigue. Program them earlier in the week and in earlier sessions. Isolation work creates local fatigue only — easier to recover from."},
+      {t:"h",c:"cr",text:"Deload Weeks"},
+      {t:"p",text:"Every 4–8 weeks, drop volume and/or intensity by 40–50% for one week. Deloads let your joints, tendons, and CNS catch up to the adaptations your muscles have already made. Skipping them leads to injuries that cost you 4–8 weeks — not 1."},
+      {t:"h",c:"cr",text:"Non-Training Recovery Tools"},
+      {t:"p",text:"Sleep (7–9 hrs) is the most powerful recovery tool available. Protein timing (within 2 hrs post-training). Walking and light movement on rest days. Stress management — chronic stress elevates cortisol, which directly impairs recovery and muscle protein synthesis."},
+    ],
+    checklist:[{c:"cr",text:"Sleep 7–9 hours — recovery happens here"},{c:"cr",text:"Program a deload every 4–8 weeks"},{c:"cr",text:"Compound lifts early in sessions, isolation later"},{c:"cr",text:"Light movement on rest days — don't go fully sedentary"}]
   },
 ];
 
@@ -1639,6 +1685,56 @@ function WorkoutTab({ prefs, setPrefs, onRebuild }) {
 
   return (
     <div>
+      {/* Next workout / today is your day banner */}
+      {(()=>{
+        const DAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+        const todayIdx = new Date().getDay();
+        const todayShort = DAYS[todayIdx];
+        const gymDays = prefs.selectedDays || [];
+        const isToday = gymDays.includes(todayShort);
+
+        // Find next workout day
+        let nextDay = null;
+        let daysAway = 0;
+        for (let i=1; i<=7; i++) {
+          const check = DAYS[(todayIdx+i)%7];
+          if (gymDays.includes(check)) { nextDay = check; daysAway = i; break; }
+        }
+
+        if (isToday) {
+          return (
+            <div style={{margin:"14px 16px 0",background:"var(--adim)",border:"1px solid var(--aborder)",
+              borderRadius:"var(--r)",padding:"14px 16px",display:"flex",alignItems:"center",gap:12}}>
+              <span style={{fontSize:"1.6rem"}}>💪</span>
+              <div>
+                <div style={{fontFamily:"var(--ff-display)",fontSize:"0.95rem",fontWeight:800,color:"var(--accent)",marginBottom:3}}>
+                  Today is your day to train. Let's get to it.
+                </div>
+                <div style={{fontSize:"0.75rem",color:"var(--muted)"}}>
+                  Your workout is below — tap any session to expand it.
+                </div>
+              </div>
+            </div>
+          );
+        } else if (nextDay) {
+          return (
+            <div style={{margin:"14px 16px 0",background:"var(--s1)",border:"1px solid var(--border)",
+              borderRadius:"var(--r)",padding:"12px 16px",display:"flex",alignItems:"center",gap:12}}>
+              <span style={{fontSize:"1.3rem"}}>📅</span>
+              <div>
+                <div style={{fontFamily:"var(--ff-display)",fontSize:"0.85rem",fontWeight:800,color:"var(--text)",marginBottom:2}}>
+                  Next workout: {nextDay} {daysAway === 1 ? "— tomorrow" : "in "+daysAway+" days"}
+                </div>
+                <div style={{fontSize:"0.72rem",color:"var(--muted)"}}>
+                  Use today to recover. Eat well, sleep well, show up ready.
+                </div>
+              </div>
+            </div>
+          );
+        }
+        return null;
+      })()}
+
       {/* Plan summary strip */}
       <div style={{padding:"14px 16px 0",display:"flex",flexWrap:"wrap",gap:8,alignItems:"center"}}>
         <span className="ps-chip green">{prefs.gender === "female" ? "Female 🍑" : "Male 💪"}</span>
@@ -1866,6 +1962,8 @@ function PlanTab({ prefs, setPrefs, mealState, setMealState, setTab }) {
 
   // Restore persisted macros on mount
   const [hasMacros, setHasMacros] = useState(!!prefs.savedMacros);
+  // Hide configurator when macros already exist; show only on demand
+  const [showConfigurator, setShowConfigurator] = useState(!prefs.savedMacros);
   // Restore saved macros on mount — only run once
   const restoredRef = useRef(false);
   if (!restoredRef.current && prefs.savedMacros) {
@@ -1909,9 +2007,10 @@ function PlanTab({ prefs, setPrefs, mealState, setMealState, setTab }) {
     const newManual = { protein, carbs, fat };
     setResult(newResult);
     setManual(newManual);
+    setShowConfigurator(false);
     // Persist so macros survive tab switching
     setPrefs(p => ({...p, goal, savedMacros: { result: newResult, manual: newManual, goal, activity }}));
-    setTimeout(() => { if (resultRef.current) resultRef.current.scrollIntoView({ behavior:"smooth", block:"start" }); }, 80);
+    setTab("meals");
   }
 
   const dm = manual;
@@ -2013,47 +2112,78 @@ function PlanTab({ prefs, setPrefs, mealState, setMealState, setTab }) {
         <div className="goal-pills">
           {[["cut","Cut 🔥"],["maintain","Maintain ⚖️"],["build","Build 💪"]].map(([g,l]) => (
             <button key={g} className={"goal-pill" + (goal === g ? " active" : "")}
-              onClick={() => { setGoal(g); setResult(null); setManual(null); setPrefs(p => ({...p, goal: g, savedMacros: p.savedMacros ? {...p.savedMacros, goal: g} : p.savedMacros})); }}>
+              onClick={() => {
+                setGoal(g);
+                setPrefs(p => ({...p, goal: g, savedMacros: p.savedMacros ? {...p.savedMacros, goal: g} : p.savedMacros}));
+                if (!showConfigurator) {
+                  // Auto-recalculate with existing activity level
+                  const tdee = calculateTDEE(prefs.weight, prefs.feet, prefs.inches, prefs.age, prefs.gender, activity);
+                  if (tdee) {
+                    const cutDef = getCutDeficit(prefs.weight, prefs.feet, prefs.inches);
+                    const adj = g === "cut" ? Math.max(1400, tdee - cutDef) : g === "build" ? tdee + 300 : tdee;
+                    const protein = Math.round(adj * 0.3 / 4);
+                    const fat = Math.round(adj * 0.25 / 9);
+                    const carbs = Math.round((adj - protein * 4 - fat * 9) / 4);
+                    const newResult = { tdee, calories: adj, protein, carbs, fat };
+                    const newManual = { protein, carbs, fat };
+                    setResult(newResult);
+                    setManual(newManual);
+                    setPrefs(p => ({...p, goal: g, savedMacros: { result: newResult, manual: newManual, goal: g, activity }}));
+                  }
+                } else {
+                  setResult(null);
+                  setManual(null);
+                }
+              }}>
               {l}
             </button>
           ))}
         </div>
       </div>
 
-      {/* ── Activity Level — FOCAL SELECTOR ── */}
-      <div style={{padding:"0 16px 16px"}}>
-        <div style={{fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.12em",textTransform:"uppercase",color:"var(--muted)",marginBottom:4}}>Activity Level</div>
-        <div style={{fontSize:"0.72rem",color:"var(--orange)",background:"var(--odim)",border:"1px solid var(--oborder)",borderRadius:"var(--r-xs)",padding:"7px 10px",marginBottom:10,lineHeight:1.5}}>⚠️ Choose your <strong>current</strong> level — not your goal. If you don't currently work out, pick Sedentary or Light.</div>
-        <div style={{display:"flex",flexDirection:"column",gap:7}}>
-          {ACTIVITY_OPTIONS.map(opt => (
-            <button key={opt.id}
-              onClick={() => { setActivity(opt.id); setResult(null); setManual(null); }}
-              style={{
-                background: activity === opt.id ? "var(--adim)" : "var(--s1)",
-                border: "1px solid " + (activity === opt.id ? "var(--aborder)" : "var(--border)"),
-                borderRadius:"var(--r-sm)", padding:"11px 14px", cursor:"pointer",
-                textAlign:"left", transition:"border-color 0.15s, background 0.15s",
-              }}>
-              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                <div>
-                  <div style={{fontSize:"0.88rem",fontWeight:700,color: activity === opt.id ? "var(--accent)" : "var(--text)",marginBottom:2}}>{opt.label}</div>
-                  <div style={{fontSize:"0.7rem",color:"var(--muted)",lineHeight:1.4}}>{opt.sub}</div>
-                </div>
-                <div style={{width:18,height:18,borderRadius:"50%",border:"2px solid " + (activity === opt.id ? "var(--accent)" : "var(--border)"),background: activity === opt.id ? "var(--accent)" : "transparent",flexShrink:0,marginLeft:12,display:"flex",alignItems:"center",justifyContent:"center"}}>
-                  {activity === opt.id && <div style={{width:7,height:7,borderRadius:"50%",background:"var(--bg)"}}/>}
-                </div>
-              </div>
+      {/* ── Activity Level — shown only when configuring ── */}
+      {showConfigurator && (
+        <>
+          <div style={{padding:"0 16px 16px"}}>
+            <div style={{fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.12em",textTransform:"uppercase",color:"var(--muted)",marginBottom:4}}>Activity Level</div>
+            <div style={{fontSize:"0.72rem",color:"var(--orange)",background:"var(--odim)",border:"1px solid var(--oborder)",borderRadius:"var(--r-xs)",padding:"7px 10px",marginBottom:10,lineHeight:1.5}}>⚠️ Choose your <strong>current</strong> level — not your goal. If you don't currently work out, pick Sedentary or Light.</div>
+            <div style={{display:"flex",flexDirection:"column",gap:7}}>
+              {ACTIVITY_OPTIONS.map(opt => (
+                <button key={opt.id}
+                  onClick={() => { setActivity(opt.id); setResult(null); setManual(null); }}
+                  style={{
+                    background: activity === opt.id ? "var(--adim)" : "var(--s1)",
+                    border: "1px solid " + (activity === opt.id ? "var(--aborder)" : "var(--border)"),
+                    borderRadius:"var(--r-sm)", padding:"11px 14px", cursor:"pointer",
+                    textAlign:"left", transition:"border-color 0.15s, background 0.15s",
+                  }}>
+                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                    <div>
+                      <div style={{fontSize:"0.88rem",fontWeight:700,color: activity === opt.id ? "var(--accent)" : "var(--text)",marginBottom:2}}>{opt.label}</div>
+                      <div style={{fontSize:"0.7rem",color:"var(--muted)",lineHeight:1.4}}>{opt.sub}</div>
+                    </div>
+                    <div style={{width:18,height:18,borderRadius:"50%",border:"2px solid " + (activity === opt.id ? "var(--accent)" : "var(--border)"),background: activity === opt.id ? "var(--accent)" : "transparent",flexShrink:0,marginLeft:12,display:"flex",alignItems:"center",justifyContent:"center"}}>
+                      {activity === opt.id && <div style={{width:7,height:7,borderRadius:"50%",background:"var(--bg)"}}/>}
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+          <div style={{padding:"0 16px 4px"}}>
+            <button className="action-btn btn-primary" style={{marginTop:0}} onClick={calculate}>
+              Calculate My Macros
             </button>
-          ))}
-        </div>
-      </div>
-
-      {/* ── Calculate button ── */}
-      <div style={{padding:"0 16px 4px"}}>
-        <button className="action-btn btn-primary" style={{marginTop:0}} onClick={calculate}>
-          Calculate My Macros
-        </button>
-      </div>
+            {prefs.savedMacros && (
+              <button onClick={() => setShowConfigurator(false)}
+                style={{display:"block",width:"100%",marginTop:8,background:"none",border:"none",
+                  color:"var(--muted)",fontSize:"0.75rem",cursor:"pointer",padding:"4px 0",fontWeight:700}}>
+                ← Back to my plan
+              </button>
+            )}
+          </div>
+        </>
+      )}
 
       {/* ── Results ── */}
       {result && dm && (
@@ -2172,6 +2302,12 @@ function PlanTab({ prefs, setPrefs, mealState, setMealState, setTab }) {
             </button>
 
             <div className="calc-note">Starting points — not rigid rules. Adjust ±50 cal after 2 weeks. Macro fields above are editable.</div>
+
+            <button onClick={() => { setShowConfigurator(true); setResult(null); setManual(null); }}
+              style={{display:"block",width:"100%",marginTop:6,background:"none",border:"none",
+                color:"var(--muted)",fontSize:"0.72rem",cursor:"pointer",padding:"4px 0",fontWeight:700,textAlign:"center"}}>
+              ⚙ Change activity level
+            </button>
           </div>
         </div>
       )}
@@ -2392,10 +2528,20 @@ function MealsTab({ prefs, mealState, setMealState, goal, setTab }) {
         <div style={{fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.12em",textTransform:"uppercase",color:"var(--muted)",marginBottom:8}}>
           Week — rotates automatically unless pinned ❤️
         </div>
-        <div style={{display:"flex",gap:6}}>
-          {[1,2,3,4].map(w => (
-            <button key={w} className={"day-tab" + (week === w ? " active" : "")} onClick={() => { setWeek(w); setOpenId(null); }}>Wk {w}</button>
-          ))}
+        <div style={{display:"flex",alignItems:"center",gap:6}}>
+          <button onClick={()=>{ setWeek(w=>Math.max(1,w-1)); setOpenId(null); }}
+            style={{background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"var(--r-xs)",
+              width:30,height:30,cursor:"pointer",fontSize:"1rem",color:"var(--muted)",fontWeight:700,
+              display:"flex",alignItems:"center",justifyContent:"center"}}
+            disabled={week<=1}>‹</button>
+          <div style={{minWidth:54,textAlign:"center",fontSize:"0.78rem",fontWeight:700,color:"var(--accent)"}}>
+            Wk {week} / 12
+          </div>
+          <button onClick={()=>{ setWeek(w=>Math.min(12,w+1)); setOpenId(null); }}
+            style={{background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"var(--r-xs)",
+              width:30,height:30,cursor:"pointer",fontSize:"1rem",color:"var(--muted)",fontWeight:700,
+              display:"flex",alignItems:"center",justifyContent:"center"}}
+            disabled={week>=12}>›</button>
         </div>
       </div>
 
@@ -2768,14 +2914,20 @@ function GroceryTab({ prefs, mealState }) {
           <div style={{fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.12em",textTransform:"uppercase",color:"var(--muted)",marginBottom:8}}>
             Shopping for which week?
           </div>
-          <div style={{display:"flex",gap:6}}>
-            {[1,2,3,4].map(w=>(
-              <button key={w}
-                onClick={()=>{ setShopWeek(w); setChecked({}); setGenerated(false); }}
-                className={`day-tab${shopWeek===w?" active":""}`}>
-                Wk {w}
-              </button>
-            ))}
+          <div style={{display:"flex",alignItems:"center",gap:6}}>
+            <button onClick={()=>{ setShopWeek(w=>Math.max(1,w-1)); setChecked({}); setGenerated(false); }}
+              style={{background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"var(--r-xs)",
+                width:30,height:30,cursor:"pointer",fontSize:"1rem",color:"var(--muted)",fontWeight:700,
+                display:"flex",alignItems:"center",justifyContent:"center"}}
+              disabled={shopWeek<=1}>‹</button>
+            <div style={{minWidth:54,textAlign:"center",fontSize:"0.78rem",fontWeight:700,color:"var(--accent)"}}>
+              Wk {shopWeek} / 12
+            </div>
+            <button onClick={()=>{ setShopWeek(w=>Math.min(12,w+1)); setChecked({}); setGenerated(false); }}
+              style={{background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"var(--r-xs)",
+                width:30,height:30,cursor:"pointer",fontSize:"1rem",color:"var(--muted)",fontWeight:700,
+                display:"flex",alignItems:"center",justifyContent:"center"}}
+              disabled={shopWeek>=12}>›</button>
           </div>
         </div>
 
@@ -2905,78 +3057,6 @@ function LearnTab() {
         })}
       </div>
 
-      {/* ── Locked Pro-Plus Lessons ── */}
-      <div style={{marginTop:8}}>
-        <div style={{padding:"10px 16px 8px",display:"flex",alignItems:"center",gap:8}}>
-          <div style={{flex:1,height:1,background:"var(--border)"}}/>
-          <span style={{fontSize:"0.65rem",fontWeight:700,letterSpacing:"0.1em",
-            textTransform:"uppercase",color:"var(--muted)",whiteSpace:"nowrap"}}>Full System+ Lessons</span>
-          <div style={{flex:1,height:1,background:"var(--border)"}}/>
-        </div>
-
-        <div className="card-stack">
-          {[
-            {
-              num:"09", icon:"💪", title:"Rep Range Science",
-              preview:"Why the reps you choose matter as much as the weight you lift.",
-              desc:"Low reps build max strength, moderate reps build size, high reps build endurance — but the overlap is where the real gains happen. Learn exactly which rep ranges to use for your goal and why most people get this completely wrong."
-            },
-            {
-              num:"10", icon:"📐", title:"Weekly Volume by Muscle Group",
-              preview:"How many sets per week does each muscle actually need to grow?",
-              desc:"Research shows each muscle group needs a minimum effective volume to grow — and a maximum recoverable volume before you start going backwards. This lesson gives you the exact set ranges for every major muscle group in your program."
-            },
-            {
-              num:"11", icon:"😴", title:"Fatigue & Recovery",
-              preview:"You don't grow in the gym. You grow when you recover from it.",
-              desc:"Training creates the stimulus. Sleep, nutrition, and rest create the adaptation. Learn the signs of under-recovery, how to manage fatigue across a training week, and the simple daily habits that determine whether your program works."
-            },
-          ].map(function(l) { return (
-            <div key={l.num} style={{
-              background:"var(--s1)",border:"1px solid var(--border)",
-              borderRadius:"var(--r)",padding:"16px",marginBottom:8,
-              position:"relative",opacity:0.88
-            }}>
-              <div style={{position:"absolute",top:12,right:12,
-                background:"var(--s2)",border:"1px solid var(--border)",
-                borderRadius:99,padding:"3px 10px",
-                fontSize:"0.65rem",fontWeight:700,color:"var(--muted)"}}>
-                🔒 Full System+
-              </div>
-              <div style={{display:"flex",gap:12,alignItems:"flex-start"}}>
-                <span style={{fontSize:"1.6rem",lineHeight:1}}>{l.icon}</span>
-                <div style={{flex:1}}>
-                  <div style={{fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.1em",
-                    textTransform:"uppercase",color:"var(--muted)",marginBottom:2}}>Lesson {l.num}</div>
-                  <div style={{fontFamily:"var(--ff-display)",fontWeight:800,fontSize:"0.95rem",
-                    color:"var(--text)",marginBottom:4,paddingRight:64}}>{l.title}</div>
-                  <div style={{fontSize:"0.78rem",color:"var(--muted)",lineHeight:1.5,marginBottom:8,
-                    fontStyle:"italic"}}>{l.preview}</div>
-                  <div style={{fontSize:"0.76rem",color:"var(--text)",lineHeight:1.65,
-                    filter:"blur(3px)",userSelect:"none",pointerEvents:"none"}}>
-                    {l.desc}
-                  </div>
-                </div>
-              </div>
-            </div>
-          ); })}
-        </div>
-
-        <div style={{padding:"4px 16px 8px"}}>
-          <a href="https://rochesterian3.gumroad.com/l/fullsystemplus"
-            target="_blank" rel="noopener"
-            style={{display:"block",background:"var(--accent)",color:"#0a0b08",
-              borderRadius:"var(--r)",padding:"14px",fontWeight:800,
-              fontSize:"0.9rem",fontFamily:"var(--ff-display)",
-              textAlign:"center",textDecoration:"none",letterSpacing:"0.02em"}}>
-            Unlock Full System+ — $69 →
-          </a>
-          <div style={{fontSize:"0.7rem",color:"var(--muted)",textAlign:"center",marginTop:8}}>
-            One-time payment · Lifetime access · 3 more lessons included
-          </div>
-        </div>
-      </div>
-
     </div>
   );
 }
@@ -2987,6 +3067,90 @@ function LearnTab() {
 // PROGRESS TAB
 // ─────────────────────────────────────────────────────────────────────────────
 const PROGRESS_KEY = "hf_progress_v1";
+
+// ─── PERSISTENCE KEYS ────────────────────────────────────────────────────────
+const PREFS_KEY   = "hf_pro_prefs_v2";
+const MEAL_KEY    = "hf_pro_meal_v2";
+const DAILY_KEY   = "hf_pro_daily_v2";
+
+function loadPrefs() {
+  try {
+    const raw = localStorage.getItem(PREFS_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch { return null; }
+}
+function savePrefs(prefs) {
+  try { localStorage.setItem(PREFS_KEY, JSON.stringify(prefs)); } catch {}
+}
+function loadMealState() {
+  try {
+    const raw = localStorage.getItem(MEAL_KEY);
+    return raw ? JSON.parse(raw) : { mealCount:4, pinned:{}, avoidTags:[] };
+  } catch { return { mealCount:4, pinned:{}, avoidTags:[] }; }
+}
+function saveMealState(ms) {
+  try { localStorage.setItem(MEAL_KEY, JSON.stringify(ms)); } catch {}
+}
+function loadDailyData() {
+  try {
+    const raw = localStorage.getItem(DAILY_KEY);
+    return raw ? JSON.parse(raw) : { lastOpen: null, streak: 0, totalDays: 0, lastMsgIdx: -1 };
+  } catch { return { lastOpen: null, streak: 0, totalDays: 0, lastMsgIdx: -1 }; }
+}
+function saveDailyData(d) {
+  try { localStorage.setItem(DAILY_KEY, JSON.stringify(d)); } catch {}
+}
+
+// ─── DAILY MOTIVATIONAL MESSAGES ─────────────────────────────────────────────
+const DAILY_MESSAGES = [
+  { emoji:"🌅", msg:"New day. New reps. You don't need motivation — you need momentum. Start." },
+  { emoji:"💧", msg:"Hit your water target today. Hydration affects everything — energy, recovery, hunger. Don't skip it." },
+  { emoji:"🥩", msg:"Protein first. Every meal today, make sure there's a protein source. That single habit moves the needle." },
+  { emoji:"😴", msg:"Recovery is training. If you slept well last night, your body built muscle while you rested. Protect your sleep." },
+  { emoji:"🔥", msg:"Consistency beats intensity every time. You don't need a perfect session — you need to show up." },
+  { emoji:"📊", msg:"Log your weight this week if you haven't. The scale is just data — it tells you what to adjust, not how to feel." },
+  { emoji:"🧠", msg:"You understand your body better than most people ever will. That knowledge compounds — keep learning." },
+  { emoji:"⚡", msg:"Pre-workout meal 60–90 min before training. Carbs fuel the session. Don't train fasted unless you have to." },
+  { emoji:"🎯", msg:"One rep more than last time. That's progressive overload. That's how muscle gets built. One rep." },
+  { emoji:"🌱", msg:"Every expert was once a beginner. Every person you admire in the gym started exactly where you did." },
+  { emoji:"💪", msg:"Your body adapts to what you consistently do. Be consistent with the right things." },
+  { emoji:"🍽️", msg:"Meal prep for the week today if you can. Convenience is the enemy of good nutrition — remove the friction." },
+  { emoji:"🏃", msg:"Even a 15-minute walk counts. Movement is movement. Don't let perfection be the enemy of progress." },
+  { emoji:"📈", msg:"Progress isn't always visible in the mirror. It's in the weights you're lifting, the energy you have, the habits you've built." },
+  { emoji:"🛒", msg:"Check your grocery list. Running out of your go-to protein source is how good weeks fall apart." },
+  { emoji:"🧘", msg:"Stress raises cortisol. Cortisol holds body fat, especially around the midsection. Manage your stress as seriously as your macros." },
+  { emoji:"⏰", msg:"You don't need 2 hours. A focused 45-minute session beats a distracted 90-minute one every time." },
+  { emoji:"🔄", msg:"Deload isn't weakness — it's strategy. Planned rest allows your joints, tendons, and CNS to catch up to your muscles." },
+  { emoji:"🎖️", msg:"Every session you complete is proof of who you're becoming. That's not nothing. That's everything." },
+  { emoji:"🌙", msg:"Wind down tonight. Put the phone down an hour before bed. Your next workout depends on tonight's sleep." },
+  { emoji:"🥗", msg:"Vegetables aren't optional. Micronutrients and fiber affect recovery, digestion, and energy in ways that macros alone don't cover." },
+  { emoji:"💬", msg:"The people who change their bodies don't have better genetics or more time. They just stop stopping." },
+];
+
+function getTodayMessage(daily) {
+  const today = new Date().toISOString().split("T")[0];
+  // If already shown today, return the same message
+  if (daily.lastOpen === today && daily.lastMsgIdx >= 0) {
+    return DAILY_MESSAGES[daily.lastMsgIdx % DAILY_MESSAGES.length];
+  }
+  // Pick next in sequence
+  const nextIdx = (daily.lastMsgIdx + 1) % DAILY_MESSAGES.length;
+  return { ...DAILY_MESSAGES[nextIdx], nextIdx };
+}
+
+function updateDailyTracking(daily) {
+  const today = new Date().toISOString().split("T")[0];
+  if (daily.lastOpen === today) return daily; // already updated today
+  const yesterday = new Date(Date.now() - 86400000).toISOString().split("T")[0];
+  const streak = daily.lastOpen === yesterday ? (daily.streak || 0) + 1 : 1;
+  const nextIdx = (daily.lastMsgIdx + 1) % DAILY_MESSAGES.length;
+  return {
+    lastOpen: today,
+    streak,
+    totalDays: (daily.totalDays || 0) + 1,
+    lastMsgIdx: nextIdx,
+  };
+}
 
 function loadProgress() {
   try {
@@ -3026,49 +3190,331 @@ function ProgressSparkline({ points, minW, maxW, startWeight }) {
   );
 }
 
-// ── Top-level ShareCard (not nested) ────────────────────────────────────────
-function ProgressShareCard({ lastW, totalChange, daysLogged, checkinStreak, today, shareUrl }) {
+// ── Share card motivational phrases (20 rotating) ────────────────────────────
+const SHARE_PHRASES = [
+  "Results don't lie. Neither does the work.",
+  "Every rep. Every meal. Every day. This is what it looks like.",
+  "While everyone else was talking about it — you were doing it.",
+  "Discipline is just doing the right thing when no one's watching. You did.",
+  "The body keeps the score. So does this card.",
+  "One day you'll look back and be glad you didn't quit.",
+  "Progress is proof. Here's mine.",
+  "Small wins stack into big changes. I'm stacking.",
+  "The only bad workout is the one that didn't happen.",
+  "Earned. Not given.",
+  "This is what showing up looks like.",
+  "Consistency is the most underrated skill in fitness. I'm building it.",
+  "No shortcuts. No excuses. Just results.",
+  "The work is quiet. The progress speaks.",
+  "Built different — one session at a time.",
+  "Health is wealth. I'm investing.",
+  "Week by week. Meal by meal. Rep by rep.",
+  "I started. I showed up. I'm not stopping.",
+  "Progress over perfection — every single time.",
+  "The version of me that started this would be proud.",
+];
+
+function ProgressShareCard({ lastW, totalChange, daysConsistent, workoutsCompleted, cheatFreeDays, week, today, shareUrl, phraseIdx }) {
   const change    = totalChange != null ? Math.abs(totalChange).toFixed(1) : null;
-  const direction = totalChange != null && totalChange < 0 ? "-" : totalChange != null && totalChange > 0 ? "+" : "";
+  const direction = totalChange != null && totalChange < 0 ? "−" : totalChange != null && totalChange > 0 ? "+" : "";
   const changeStr = change ? direction + change + " lbs" : "—";
-  const changeColor = totalChange != null && totalChange < 0 ? "var(--accent)" : totalChange != null && totalChange > 0 ? "var(--orange)" : "var(--text)";
+  const changeColor = totalChange != null && totalChange < 0 ? "#c8f135" : totalChange != null && totalChange > 0 ? "#f5a623" : "#e8ead4";
+  const phrase = SHARE_PHRASES[(phraseIdx || 0) % SHARE_PHRASES.length];
+  const shortDate = today ? new Date(today+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}) : "—";
+
   return (
     <div style={{
-      background:"#0d1a05",
-      border:"1px solid var(--aborder)",
-      borderRadius:"16px",
-      padding:"28px 24px",
-      maxWidth:"340px",
+      background:"#000",
+      borderRadius:20,
+      padding:"28px 22px",
+      maxWidth:340,
       margin:"0 auto",
+      fontFamily:"'Lato','Helvetica Neue',Arial,sans-serif",
+      boxShadow:"0 0 0 1px rgba(200,241,53,0.2), 0 24px 60px rgba(0,0,0,0.8)",
+      position:"relative",
+      overflow:"hidden",
     }}>
-      <div style={{fontSize:"0.6rem",fontWeight:700,letterSpacing:"0.15em",color:"var(--muted)",marginBottom:6,textTransform:"uppercase"}}>
-        Health Fundamentals
+      {/* Background glow */}
+      <div style={{position:"absolute",top:-60,right:-60,width:200,height:200,
+        background:"radial-gradient(circle,rgba(200,241,53,0.12) 0%,transparent 65%)",pointerEvents:"none"}}/>
+      <div style={{position:"absolute",bottom:-40,left:-40,width:160,height:160,
+        background:"radial-gradient(circle,rgba(93,184,254,0.07) 0%,transparent 65%)",pointerEvents:"none"}}/>
+
+      {/* Header */}
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:20,position:"relative"}}>
+        <div>
+          <div style={{fontSize:"0.55rem",fontWeight:700,letterSpacing:"0.18em",color:"rgba(200,241,53,0.6)",textTransform:"uppercase",marginBottom:4}}>
+            Health Fundamentals
+          </div>
+          <div style={{fontSize:"1.5rem",fontWeight:800,color:"#fff",lineHeight:1,letterSpacing:"-0.02em"}}>
+            My Progress
+          </div>
+        </div>
+        <div style={{width:40,height:40,borderRadius:"50%",background:"rgba(200,241,53,0.12)",
+          border:"1px solid rgba(200,241,53,0.3)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1.2rem"}}>
+          💪
+        </div>
       </div>
-      <div style={{fontSize:"1.6rem",fontWeight:800,color:"var(--accent)",lineHeight:1.1,marginBottom:4}}>
-        My Progress
-      </div>
-      <div style={{fontSize:"0.8rem",color:"var(--muted)",marginBottom:20}}>{today}</div>
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:20}}>
+
+      {/* Stats grid */}
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:16,position:"relative"}}>
         {[
-          {label:"Current weight", value: lastW ? lastW+" lbs" : "—",         color:"var(--text)"},
-          {label:"Change",         value: changeStr,                           color: changeColor},
-          {label:"Days logged",    value: String(daysLogged),                  color:"var(--text)"},
-          {label:"Streak",         value: checkinStreak+" days",               color:"var(--accent)"},
-        ].map(function(item) {
+          {label:"Current Weight", value: lastW ? lastW+" lbs" : "—", color:"#fff"},
+          {label:"Total Change",   value: changeStr,                   color: changeColor},
+          {label:"Days Consistent",  value: String(daysConsistent||0),      color:"#c8f135"},
+          {label:"Workouts Completed",value: String(workoutsCompleted||0),  color:"#5db8fe"},
+          {label:"Cheat-Free Days",value: String(cheatFreeDays||0),    color:"#f5a623"},
+          {label:"Week",           value: "Week "+(week||1),           color:"#b97cf3"},
+        ].map(function(item){
           return (
-            <div key={item.label} style={{background:"rgba(200,241,53,0.06)",borderRadius:10,padding:"12px 10px"}}>
-              <div style={{fontSize:"0.6rem",color:"var(--muted)",fontWeight:700,letterSpacing:"0.08em",textTransform:"uppercase",marginBottom:4}}>{item.label}</div>
-              <div style={{fontSize:"1.1rem",fontWeight:800,color:item.color}}>{item.value}</div>
+            <div key={item.label} style={{
+              background:"rgba(255,255,255,0.04)",
+              border:"1px solid rgba(255,255,255,0.08)",
+              borderRadius:12,padding:"12px 10px",
+            }}>
+              <div style={{fontSize:"0.5rem",color:"rgba(255,255,255,0.35)",fontWeight:700,
+                letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:6}}>{item.label}</div>
+              <div style={{fontSize:"1.05rem",fontWeight:800,color:item.color,letterSpacing:"-0.01em"}}>{item.value}</div>
             </div>
           );
         })}
       </div>
-      <div style={{fontSize:"0.65rem",color:"var(--muted)",textAlign:"center",opacity:0.6}}>{shareUrl}</div>
+
+      {/* Divider */}
+      <div style={{height:1,background:"rgba(255,255,255,0.07)",marginBottom:14,position:"relative"}}/>
+
+      {/* Phrase */}
+      <div style={{fontSize:"0.82rem",color:"rgba(255,255,255,0.75)",lineHeight:1.6,
+        fontStyle:"italic",textAlign:"center",marginBottom:16,position:"relative"}}>
+        "{phrase}"
+      </div>
+
+      {/* Footer */}
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",position:"relative"}}>
+        <div style={{fontSize:"0.55rem",color:"rgba(255,255,255,0.2)",letterSpacing:"0.1em",textTransform:"uppercase"}}>{shareUrl}</div>
+        <div style={{fontSize:"0.55rem",color:"rgba(200,241,53,0.4)",fontWeight:700,letterSpacing:"0.06em"}}>{shortDate}</div>
+      </div>
     </div>
   );
 }
 
 // ── Main ProgressTab ─────────────────────────────────────────────────────────
+
+// ─── WEEK 12 SHARE CARD ───────────────────────────────────────────────────────
+function Week12ShareCard({ totalChange, daysConsistent, checkinStreak, today }) {
+  const change = totalChange != null ? Math.abs(totalChange).toFixed(1) : null;
+  const changeStr = change ? (totalChange<0?"−":"+")+change+" lbs" : "—";
+  return (
+    <div style={{background:"#000",borderRadius:20,padding:"28px 22px",maxWidth:340,margin:"0 auto",
+      boxShadow:"0 0 0 1px rgba(200,241,53,0.4),0 0 60px rgba(200,241,53,0.12)",position:"relative",overflow:"hidden"}}>
+      <div style={{position:"absolute",top:-60,left:"50%",transform:"translateX(-50%)",width:300,height:200,
+        background:"radial-gradient(ellipse,rgba(200,241,53,0.18) 0%,transparent 70%)",pointerEvents:"none"}}/>
+      <div style={{textAlign:"center",marginBottom:20,position:"relative"}}>
+        <div style={{fontSize:"3rem",marginBottom:6}}>👑</div>
+        <div style={{fontSize:"0.52rem",fontWeight:700,letterSpacing:"0.2em",color:"rgba(200,241,53,0.55)",textTransform:"uppercase",marginBottom:5}}>Health Fundamentals</div>
+        <div style={{fontSize:"1.55rem",fontWeight:800,color:"#c8f135",lineHeight:1,letterSpacing:"-0.02em",marginBottom:3}}>12 Weeks Complete</div>
+        <div style={{fontSize:"0.72rem",color:"rgba(255,255,255,0.35)"}}>You finished what you started.</div>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:14,position:"relative"}}>
+        {[
+          {label:"Total Change",    value:changeStr,                     color:"#c8f135"},
+          {label:"Days Consistent", value:String(daysConsistent||0),     color:"#fff"},
+          {label:"Best Streak",     value:(checkinStreak||0)+" days",    color:"#5db8fe"},
+          {label:"Program",         value:"12 / 12 wks",                 color:"#f5a623"},
+        ].map(s=>(
+          <div key={s.label} style={{background:"rgba(200,241,53,0.05)",border:"1px solid rgba(200,241,53,0.14)",borderRadius:12,padding:"12px 10px"}}>
+            <div style={{fontSize:"0.48rem",color:"rgba(255,255,255,0.28)",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:5}}>{s.label}</div>
+            <div style={{fontSize:"1.05rem",fontWeight:800,color:s.color}}>{s.value}</div>
+          </div>
+        ))}
+      </div>
+      <div style={{height:1,background:"rgba(200,241,53,0.14)",marginBottom:12}}/>
+      <div style={{fontSize:"0.78rem",color:"rgba(255,255,255,0.65)",lineHeight:1.65,textAlign:"center",fontStyle:"italic",marginBottom:10,position:"relative"}}>
+        "12 weeks ago you made a decision. Every session, every meal, every check-in — it built something real."
+      </div>
+      <div style={{textAlign:"center",fontSize:"0.48rem",color:"rgba(200,241,53,0.28)",letterSpacing:"0.1em",textTransform:"uppercase"}}>
+        cjrochest.github.io/HealthFundamentals · {today}
+      </div>
+    </div>
+  );
+}
+
+// ─── WEEKLY CHECKIN MODAL ─────────────────────────────────────────────────────
+const WEEKLY_KEEP_GOING_MSGS = [
+  "One more week builds what last week started. Keep going.",
+  "The people who change their bodies don't stop here. Neither do you.",
+  "Week done. That's consistency in action. See you next week.",
+  "Every week you complete is a week most people skipped.",
+  "You're building something real. Don't stop now.",
+  "Progress compounds. Every week you add to it.",
+  "You showed up this week. That's the whole game. Do it again.",
+  "The finish line is further than one week. Stay in it.",
+];
+
+function WeeklyCheckinModal({ week, onClose, onSave, prefs }) {
+  const [step, setStep] = useState(0);
+  const [answers, setAnswers] = useState({ enjoy:null, hardest:null, disliked:null, favMeal:null, hardMeal:null });
+  const keepMsg = WEEKLY_KEEP_GOING_MSGS[(week||1) % WEEKLY_KEEP_GOING_MSGS.length];
+  function setAns(key, val) { setAnswers(prev=>({...prev,[key]:val})); }
+  const DAYS_LIST = (prefs && prefs.selectedDays && prefs.selectedDays.length > 0) ? prefs.selectedDays : ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  const MEAL_LIST = ["Breakfast","Lunch","Dinner","Pre-workout","Post-workout","Didn't follow plan"];
+  const steps = [
+    { key:"enjoy",    emoji:"🏋️", q:"Did you enjoy this week's workouts?",         opts:["Loved them","Pretty good","Mixed","Tough but done","Not really"] },
+    { key:"hardest",  emoji:"🔥", q:"Which workout did you feel the strongest?",    opts:[...DAYS_LIST,"All felt strong"] },
+    { key:"disliked", emoji:"😤", q:"Any workout you didn't enjoy?",               opts:[...DAYS_LIST,"Liked them all"] },
+    { key:"favMeal",  emoji:"🍽️", q:"Which meal slot did you enjoy most?",         opts:MEAL_LIST },
+    { key:"hardMeal", emoji:"😬", q:"Which meal was hardest to stay on track with?", opts:[...MEAL_LIST,"All felt fine"] },
+  ];
+  const cur = steps[step];
+  const isLast = step === steps.length-1;
+  const done = step >= steps.length;
+  return (
+    <div className="week-modal-bg" onClick={onClose}>
+      <div className="week-modal" style={{maxHeight:"88vh",overflowY:"auto"}} onClick={e=>e.stopPropagation()}>
+        {!done ? (
+          <>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
+              <div style={{fontFamily:"var(--ff-display)",fontWeight:800,fontSize:"1rem",color:"var(--text)"}}>Week {week} Check-In</div>
+              <div style={{fontSize:"0.65rem",color:"var(--muted)",fontWeight:700}}>{step+1} / {steps.length}</div>
+            </div>
+            <div style={{height:3,background:"var(--s2)",borderRadius:99,marginBottom:18,overflow:"hidden"}}>
+              <div style={{height:"100%",width:((step+1)/steps.length*100)+"%",background:"var(--accent)",borderRadius:99,transition:"width 0.3s"}}/>
+            </div>
+            <div style={{textAlign:"center",fontSize:"2rem",marginBottom:10}}>{cur.emoji}</div>
+            <div style={{fontFamily:"var(--ff-display)",fontSize:"1rem",fontWeight:800,color:"var(--text)",textAlign:"center",marginBottom:16,lineHeight:1.3}}>{cur.q}</div>
+            <div style={{display:"flex",flexDirection:"column",gap:8,marginBottom:18}}>
+              {cur.opts.map(opt=>(
+                <button key={opt} onClick={()=>setAns(cur.key,opt)}
+                  style={{background:answers[cur.key]===opt?"var(--adim)":"var(--s2)",
+                    border:"1px solid "+(answers[cur.key]===opt?"var(--aborder)":"var(--border)"),
+                    borderRadius:"var(--r-sm)",padding:"11px 14px",cursor:"pointer",textAlign:"left",
+                    fontSize:"0.82rem",color:answers[cur.key]===opt?"var(--accent)":"var(--text)",
+                    fontWeight:answers[cur.key]===opt?700:400,transition:"all 0.15s"}}>
+                  {opt}
+                </button>
+              ))}
+            </div>
+            <div style={{display:"flex",gap:10}}>
+              {step>0 && <button onClick={()=>setStep(s=>s-1)}
+                style={{flex:1,background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"var(--r-sm)",
+                  padding:"11px",fontWeight:700,fontSize:"0.82rem",color:"var(--muted)",cursor:"pointer"}}>← Back</button>}
+              <button onClick={()=>{ if(isLast){setStep(steps.length); if(onSave)onSave(answers);} else setStep(s=>s+1); }}
+                disabled={!answers[cur.key]}
+                style={{flex:2,background:answers[cur.key]?"var(--accent)":"var(--s2)",border:"none",
+                  borderRadius:"var(--r-sm)",padding:"11px",fontWeight:800,fontSize:"0.82rem",
+                  color:answers[cur.key]?"#0a0b08":"var(--muted)",cursor:answers[cur.key]?"pointer":"not-allowed",
+                  fontFamily:"var(--ff-display)",transition:"all 0.15s"}}>
+                {isLast?"Finish ✓":"Next →"}
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <div style={{textAlign:"center",marginBottom:18}}>
+              <div style={{fontSize:"2.4rem",marginBottom:8}}>⭐</div>
+              <div style={{fontFamily:"var(--ff-display)",fontSize:"1.2rem",fontWeight:800,color:"var(--accent)",marginBottom:6}}>Week {week} logged.</div>
+              <div style={{fontSize:"0.85rem",color:"var(--text)",lineHeight:1.65}}>{keepMsg}</div>
+            </div>
+            <div style={{background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"var(--r-sm)",padding:"12px 14px",marginBottom:18}}>
+              {steps.map(s=>answers[s.key]&&(
+                <div key={s.key} style={{display:"flex",gap:10,padding:"6px 0",borderBottom:"1px solid var(--border)"}}>
+                  <span style={{fontSize:"0.9rem",flexShrink:0}}>{s.emoji}</span>
+                  <div>
+                    <div style={{fontSize:"0.58rem",color:"var(--muted)",marginBottom:1}}>{s.q}</div>
+                    <div style={{fontSize:"0.78rem",fontWeight:700,color:"var(--text)"}}>{answers[s.key]}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button className="action-btn btn-primary" onClick={onClose}>Start Week {(week||1)+1} 💪</button>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── DELOAD MODAL ─────────────────────────────────────────────────────────────
+function DeloadModal({ week, onStartDeload, onDismiss }) {
+  return (
+    <div className="week-modal-bg" onClick={onDismiss}>
+      <div className="week-modal" onClick={e=>e.stopPropagation()}>
+        <div style={{textAlign:"center",marginBottom:18}}>
+          <div style={{fontSize:"2.4rem",marginBottom:8}}>🔄</div>
+          <div style={{fontFamily:"var(--ff-display)",fontSize:"1.2rem",fontWeight:800,color:"var(--text)",marginBottom:4}}>You've earned a Deload Week</div>
+          <div style={{fontSize:"0.82rem",color:"var(--accent)",fontWeight:700}}>{week} consistent weeks of training</div>
+        </div>
+        <div style={{background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"var(--r-sm)",padding:"14px",marginBottom:14,fontSize:"0.82rem",color:"var(--muted)",lineHeight:1.7}}>
+          A deload is planned recovery — not weakness. After several hard weeks, your joints, tendons, and central nervous system need to catch up to your muscles. It prevents injury and sets you up for a stronger next block.
+        </div>
+        <div style={{background:"var(--adim)",border:"1px solid var(--aborder)",borderRadius:"var(--r-sm)",padding:"12px 14px",marginBottom:20}}>
+          <div style={{fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:"var(--accent)",marginBottom:8}}>During Deload Week</div>
+          {["Reduce all weights by 40–50%","Keep same exercises and rep ranges","Focus on form and mind-muscle connection","Nutrition stays the same — hit your macros","Active recovery — not a full rest week"].map((t,i)=>(
+            <div key={i} style={{display:"flex",gap:8,marginBottom:5}}>
+              <span style={{color:"var(--accent)",fontWeight:700,fontSize:"0.75rem",flexShrink:0}}>✓</span>
+              <span style={{fontSize:"0.78rem",color:"var(--text)",lineHeight:1.5}}>{t}</span>
+            </div>
+          ))}
+        </div>
+        <button className="action-btn btn-primary" style={{marginBottom:10}} onClick={onStartDeload}>Start Deload Week 🔄</button>
+        <button onClick={onDismiss} style={{background:"none",border:"none",color:"var(--muted)",fontSize:"0.78rem",
+          cursor:"pointer",display:"block",width:"100%",textAlign:"center",padding:"4px 0",fontWeight:700}}>
+          Keep pushing — skip for now
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ─── WEEK 12 COMPLETION MODAL ─────────────────────────────────────────────────
+function Week12Modal({ totalChange, daysConsistent, checkinStreak, week, today, onRestart, onClose }) {
+  const [showCard, setShowCard] = useState(false);
+  return (
+    <div className="week-modal-bg" onClick={onClose}>
+      <div className="week-modal" style={{maxHeight:"90vh",overflowY:"auto"}} onClick={e=>e.stopPropagation()}>
+        <div style={{textAlign:"center",marginBottom:18}}>
+          <div style={{fontSize:"3rem",marginBottom:8}}>👑</div>
+          <div style={{fontFamily:"var(--ff-display)",fontSize:"1.3rem",fontWeight:800,color:"var(--accent)",lineHeight:1.1,marginBottom:6}}>12 Weeks Complete.</div>
+          <div style={{fontSize:"0.88rem",color:"var(--text)",lineHeight:1.6}}>You started this. You finished it. That's rare.</div>
+        </div>
+        <div style={{background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"var(--r-sm)",padding:"14px",marginBottom:14,fontSize:"0.82rem",color:"var(--muted)",lineHeight:1.7}}>
+          Most people never complete a 12-week program. Every session you showed up when you didn't feel like it, every meal tracked, every check-in logged — it built something real. Look at the numbers.
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:14}}>
+          {[
+            {label:"Total Change",    value:totalChange!=null?(totalChange<0?"−":"+")+Math.abs(totalChange).toFixed(1)+" lbs":"—", color:"var(--accent)"},
+            {label:"Days Consistent", value:String(daysConsistent||0),  color:"var(--text)"},
+            {label:"Best Streak",     value:(checkinStreak||0)+" days", color:"var(--blue)"},
+            {label:"Weeks Done",      value:"12 / 12",                  color:"var(--orange)"},
+          ].map(s=>(
+            <div key={s.label} style={{background:"var(--s1)",border:"1px solid var(--border)",borderRadius:"var(--r-sm)",padding:"12px 10px"}}>
+              <div style={{fontSize:"0.52rem",color:"var(--muted)",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:4}}>{s.label}</div>
+              <div style={{fontSize:"1.05rem",fontWeight:800,color:s.color}}>{s.value}</div>
+            </div>
+          ))}
+        </div>
+        <button onClick={()=>setShowCard(v=>!v)}
+          style={{width:"100%",background:"var(--s2)",border:"1px solid var(--aborder)",borderRadius:"var(--r-sm)",
+            padding:"11px",fontWeight:700,fontSize:"0.82rem",color:"var(--accent)",cursor:"pointer",marginBottom:10}}>
+          {showCard?"Hide Share Card":"Generate Share Card 📸"}
+        </button>
+        {showCard && (
+          <div style={{marginBottom:14}}>
+            <Week12ShareCard totalChange={totalChange} daysConsistent={daysConsistent}
+              checkinStreak={checkinStreak} today={today}/>
+            <div style={{fontSize:"0.7rem",color:"var(--muted)",textAlign:"center",marginTop:8}}>Screenshot to share 📸</div>
+          </div>
+        )}
+        <button className="action-btn btn-primary" style={{marginBottom:10}} onClick={onRestart}>Restart Week 1 — Keep the Momentum 🔄</button>
+        <button onClick={onClose} style={{background:"none",border:"none",color:"var(--muted)",fontSize:"0.78rem",
+          cursor:"pointer",display:"block",width:"100%",textAlign:"center",padding:"4px 0",fontWeight:700}}>
+          I'll decide later
+        </button>
+      </div>
+    </div>
+  );
+}
+
 // ─── CHEAT MEAL MODE ──────────────────────────────────────────────────────────
 const CHEAT_OPTIONS = {
   cook: {
@@ -3288,16 +3734,106 @@ function CheatMealModal({ onClose }) {
 }
 
 
+const CHECKIN_KEY = "hf_daily_checkins_v1";
+
+function loadCheckins() {
+  try {
+    const raw = localStorage.getItem(CHECKIN_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch { return {}; }
+}
+function saveCheckins(data) {
+  try { localStorage.setItem(CHECKIN_KEY, JSON.stringify(data)); } catch {}
+}
+
+// Response messages
+const WORKOUT_YES_MSGS = [
+  "That's what separates you from everyone who stayed on the couch. Keep stacking days.",
+  "Another session in the books. Your future self is already thanking you.",
+  "Consistency is how bodies change. You just proved you have it.",
+  "Done. That's one more session than most people got today.",
+  "Every rep you put in today is an investment with compounding returns.",
+];
+const WORKOUT_NO_MSGS = [
+  "Rest days happen. What matters is that you show up tomorrow. Don't let one missed session become two.",
+  "Missing a workout isn't failure — quitting is. Tomorrow's session is more important than today's. Show up.",
+  "Bodies sometimes need the break more than the workout. Recover well and come back stronger.",
+  "One missed session changes nothing about your long-term progress. Stay consistent overall.",
+];
+const MEAL_YES_MSGS = [
+  "Fueling right is half the battle. Your body has everything it needs to perform and recover today.",
+  "Dialed in nutrition. That's how you protect your muscle and hit your goals.",
+  "Solid. Every meal tracked is another brick in the foundation.",
+  "You gave your body the right fuel. It will give you results in return.",
+];
+const MEAL_PARTIAL_MSGS = [
+  "Partial credit is still progress. Getting most meals right is the difference-maker — not perfection.",
+  "Most people don't even get half. You're doing better than you think.",
+  "Consistency over perfection. A few good meals today is still a good day.",
+];
+const MEAL_NO_MSGS = [
+  "Nutrition off today — that's okay. Tomorrow is a clean slate. One thing: make sure protein is at every meal.",
+  "One off day doesn't undo your progress. Get back on track with your next meal — not tomorrow, your next meal.",
+  "It happens. What you do in the next 24 hours matters more than what happened today.",
+];
+
+function getRandMsg(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+
 function ProgressTab({ prefs }) {
   const startWeight   = (prefs && prefs.weight) ? prefs.weight : 0;
   const [data, setData]             = useState(loadProgress);
+  const [checkins, setCheckins]     = useState(loadCheckins);
   const [inputVal, setInputVal]     = useState("");
   const [view, setView]             = useState("month");
-  const [showShare, setShowShare]   = useState(false);
-  const [showCheat, setShowCheat]   = useState(false);
+  const [showShare, setShowShare]       = useState(false);
+  const [showWeeklyCheckin, setShowWeeklyCheckin] = useState(false);
+  const [showDeload, setShowDeload]     = useState(false);
+  const [showWeek12, setShowWeek12]     = useState(false);
+  const [phraseIdx, setPhraseIdx]       = useState(() => Math.floor(Math.random()*20));
+  const [deloadActive, setDeloadActive] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("hf_deload_v1")||"false"); } catch { return false; }
+  });
+  const [weeklyCheckinDone, setWeeklyCheckinDone] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("hf_checkin_done_v1")||"{}"); } catch { return {}; }
+  });
   const [toast, setToast]           = useState({ show: false, msg: "" });
+  const [feedbackMsg, setFeedbackMsg] = useState(null); // { text, positive }
 
+  // today must be declared before anything that uses it
   const today = formatDate(new Date());
+  const todayName = new Date().toLocaleDateString("en-US", { weekday:"short" }); // "Mon", "Tue" etc
+  const isWorkoutDay = prefs && prefs.selectedDays && prefs.selectedDays.includes(todayName);
+  const mealCount = 4; // default, could read from mealState
+
+  const todayCheckin = checkins[today] || {};
+
+  function saveCheckin(update) {
+    const updated = { ...checkins, [today]: { ...todayCheckin, ...update } };
+    setCheckins(updated);
+    saveCheckins(updated);
+  }
+
+  function handleWorkout(didIt) {
+    saveCheckin({ workout: didIt });
+    const msg = didIt ? getRandMsg(WORKOUT_YES_MSGS) : getRandMsg(WORKOUT_NO_MSGS);
+    setFeedbackMsg({ text: msg, positive: didIt });
+    setTimeout(() => setFeedbackMsg(null), 4500);
+  }
+
+  function handleMeals(count) {
+    saveCheckin({ meals: count });
+    const total = prefs && prefs.mealCount ? prefs.mealCount : 4;
+    let msg;
+    if (count >= total)      msg = getRandMsg(MEAL_YES_MSGS);
+    else if (count >= total * 0.5) msg = getRandMsg(MEAL_PARTIAL_MSGS);
+    else                     msg = getRandMsg(MEAL_NO_MSGS);
+    setFeedbackMsg({ text: msg, positive: count >= total * 0.5 });
+    setTimeout(() => setFeedbackMsg(null), 4500);
+  }
+
   const entries        = (data && data.entries) ? data.entries : [];
   const todayEntry     = entries.find(function(e){ return e.date === today; });
   const checkinStreak  = (data && data.streaks && data.streaks.checkin) ? data.streaks.checkin : 0;
@@ -3351,8 +3887,25 @@ function ProgressTab({ prefs }) {
     setTimeout(function(){ setToast({ show: false, msg: "" }); }, 2500);
   }
 
+  // Build weekly checkin heatmap — last 7 days
+  const last7 = Array.from({length:7}, (_,i) => {
+    const d = new Date(Date.now() - (6-i)*86400000);
+    const key = formatDate(d);
+    const dayLabel = d.toLocaleDateString("en-US", {weekday:"short"});
+    const isWod = prefs && prefs.selectedDays && prefs.selectedDays.includes(dayLabel);
+    const ci = checkins[key] || {};
+    return { key, dayLabel, isWod, workout: ci.workout, meals: ci.meals, isToday: key === today };
+  });
+
+  // Completion stats this week
+  const wodDays = last7.filter(d => d.isWod);
+  const completedWorkouts = wodDays.filter(d => d.workout === true).length;
+  const mealsLogged = last7.filter(d => d.meals !== undefined).length;
+
   return (
     <div className="tab-content">
+
+      {/* Toast */}
       {toast.show && (
         <div style={{position:"fixed",top:70,left:"50%",transform:"translateX(-50%)",
           background:"var(--accent)",color:"#0a0b08",borderRadius:99,padding:"8px 20px",
@@ -3361,41 +3914,193 @@ function ProgressTab({ prefs }) {
         </div>
       )}
 
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:16}}>
-        {[
-          {label:"Current",   value: lastW ? lastW+" lbs" : "—",  color:"var(--text)"},
-          {label:"Change",    value: totalChange != null ? (totalChange>0?"+":"")+totalChange.toFixed(1)+" lbs" : "—",
-           color: totalChange != null ? (totalChange < 0 ? "var(--accent)" : "var(--orange)") : "var(--text)"},
-          {label:"Streak",    value: checkinStreak+"d", color:"var(--accent)"},
-        ].map(function(s) {
-          return (
-            <div key={s.label} style={{background:"var(--s1)",border:"1px solid var(--border)",
-              borderRadius:"var(--r)",padding:"12px 8px",textAlign:"center"}}>
-              <div style={{fontSize:"0.6rem",color:"var(--muted)",fontWeight:700,letterSpacing:"0.08em",
-                textTransform:"uppercase",marginBottom:4}}>{s.label}</div>
-              <div style={{fontSize:"1.2rem",fontWeight:800,color:s.color}}>{s.value}</div>
+      {/* Feedback popup */}
+      {feedbackMsg && (
+        <div style={{position:"fixed",bottom:90,left:"50%",transform:"translateX(-50%)",
+          background:"var(--s2)",
+          border:"1px solid "+(feedbackMsg.positive?"var(--aborder)":"var(--oborder)"),
+          borderRadius:"var(--r-sm)",padding:"12px 18px",zIndex:999,
+          maxWidth:"calc(100% - 32px)",width:340,boxShadow:"0 8px 32px rgba(0,0,0,0.5)"}}>
+          <div style={{fontSize:"0.7rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",
+            color:feedbackMsg.positive?"var(--accent)":"var(--orange)",marginBottom:5}}>
+            {feedbackMsg.positive?"✓ Logged":"Noted"}
+          </div>
+          <div style={{fontSize:"0.82rem",color:"var(--text)",lineHeight:1.6}}>{feedbackMsg.text}</div>
+        </div>
+      )}
+
+      {/* ── DAILY CHECK-IN ── */}
+      <div style={{fontSize:"0.65rem",fontWeight:700,letterSpacing:"0.14em",textTransform:"uppercase",
+        color:"var(--muted)",padding:"14px 16px 8px"}}>Today's Check-In</div>
+
+      {/* Workout check-in */}
+      <div style={{margin:"0 16px 10px",background:"var(--s1)",border:"1px solid var(--border)",borderRadius:"var(--r)",padding:"14px 16px"}}>
+        <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
+          <span style={{fontSize:"1.2rem"}}>🏋️</span>
+          <div style={{flex:1}}>
+            <div style={{fontSize:"0.85rem",fontWeight:800,color:"var(--text)",fontFamily:"var(--ff-display)"}}>
+              Did you work out today?
             </div>
-          );
-        })}
+            <div style={{fontSize:"0.68rem",color:"var(--muted)",marginTop:2}}>
+              {isWorkoutDay?"Today is a scheduled workout day 💪":"Rest day — but you can still log if you trained"}
+            </div>
+          </div>
+          {todayCheckin.workout !== undefined && (
+            <span style={{fontSize:"1.1rem"}}>{todayCheckin.workout?"✅":"❌"}</span>
+          )}
+        </div>
+        {todayCheckin.workout === undefined ? (
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+            <button onClick={()=>handleWorkout(true)}
+              style={{background:"var(--adim)",border:"1px solid var(--aborder)",borderRadius:"var(--r-sm)",
+                padding:"10px",fontWeight:800,fontSize:"0.82rem",color:"var(--accent)",cursor:"pointer",
+                fontFamily:"var(--ff-display)"}}>
+              ✓ Yes, I trained
+            </button>
+            <button onClick={()=>handleWorkout(false)}
+              style={{background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"var(--r-sm)",
+                padding:"10px",fontWeight:800,fontSize:"0.82rem",color:"var(--muted)",cursor:"pointer",
+                fontFamily:"var(--ff-display)"}}>
+              ✗ Not today
+            </button>
+          </div>
+        ) : (
+          <div style={{fontSize:"0.75rem",color:"var(--muted)",textAlign:"center"}}>
+            <span>{todayCheckin.workout?"Workout logged ✓":"Rest day logged"}</span>
+            <span style={{color:"var(--muted)"}}> · </span>
+            <span style={{color:"var(--accent)",cursor:"pointer",fontWeight:700}}
+              onClick={()=>saveCheckin({workout:undefined})}>Change</span>
+          </div>
+        )}
       </div>
 
+      {/* Meal check-in */}
+      <div style={{margin:"0 16px 10px",background:"var(--s1)",border:"1px solid var(--border)",borderRadius:"var(--r)",padding:"14px 16px"}}>
+        <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
+          <span style={{fontSize:"1.2rem"}}>🍽️</span>
+          <div style={{flex:1}}>
+            <div style={{fontSize:"0.85rem",fontWeight:800,color:"var(--text)",fontFamily:"var(--ff-display)"}}>
+              How many meals did you follow?
+            </div>
+            <div style={{fontSize:"0.68rem",color:"var(--muted)",marginTop:2}}>
+              Out of your {prefs&&prefs.mealCount?prefs.mealCount:4} planned meals today
+            </div>
+          </div>
+          {todayCheckin.meals !== undefined && (
+            <span style={{fontSize:"0.9rem",fontWeight:800,color:"var(--accent)"}}>
+              {todayCheckin.meals}/{prefs&&prefs.mealCount?prefs.mealCount:4}
+            </span>
+          )}
+        </div>
+        {todayCheckin.meals === undefined ? (
+          <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:6}}>
+            {Array.from({length:(prefs&&prefs.mealCount?prefs.mealCount:4)+1},(_,i)=>i).map(n=>(
+              <button key={n} onClick={()=>handleMeals(n)}
+                style={{background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"var(--r-sm)",
+                  padding:"9px 4px",fontWeight:800,fontSize:"0.9rem",
+                  color:n>0?"var(--text)":"var(--muted)",cursor:"pointer",fontFamily:"var(--ff-mono)"}}>
+                {n}
+              </button>
+            ))}
+          </div>
+        ) : (
+          <div style={{fontSize:"0.75rem",color:"var(--muted)",textAlign:"center"}}>
+            <span>{todayCheckin.meals} meals logged</span>
+            <span style={{color:"var(--muted)"}}> · </span>
+            <span style={{color:"var(--accent)",cursor:"pointer",fontWeight:700}}
+              onClick={()=>saveCheckin({meals:undefined})}>Change</span>
+          </div>
+        )}
+      </div>
+
+      {/* Weekly heatmap */}
+      <div style={{margin:"0 16px 16px",background:"var(--s1)",border:"1px solid var(--border)",borderRadius:"var(--r)",padding:"14px 16px"}}>
+        <div style={{fontSize:"0.65rem",fontWeight:700,letterSpacing:"0.12em",textTransform:"uppercase",
+          color:"var(--muted)",marginBottom:10}}>
+          This Week · {completedWorkouts}/{wodDays.length} Workouts · {mealsLogged}/7 Days Logged
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:5}}>
+          {last7.map(d=>{
+            const hasMeals = d.meals !== undefined;
+            const mealTotal = prefs&&prefs.mealCount?prefs.mealCount:4;
+            const mealPct = hasMeals?d.meals/mealTotal:0;
+            return (
+              <div key={d.key} style={{textAlign:"center"}}>
+                <div style={{fontSize:"0.55rem",color:d.isToday?"var(--accent)":"var(--muted)",
+                  fontWeight:d.isToday?800:400,marginBottom:4,textTransform:"uppercase"}}>
+                  {d.dayLabel}
+                </div>
+                <div style={{
+                  width:"100%",aspectRatio:"1",borderRadius:6,marginBottom:3,
+                  background:d.isWod
+                    ?(d.workout===true?"var(--accent)":d.workout===false?"var(--rdim)":d.isToday?"var(--adim)":"var(--s2)")
+                    :"var(--s2)",
+                  border:"1px solid "+(d.isToday?"var(--aborder)":"var(--border)"),
+                  display:"flex",alignItems:"center",justifyContent:"center",fontSize:"0.65rem"
+                }}>
+                  {d.isWod&&d.workout===true&&"✓"}
+                  {d.isWod&&d.workout===false&&"✗"}
+                  {!d.isWod&&<span style={{color:"var(--muted2)",fontSize:"0.5rem"}}>—</span>}
+                </div>
+                <div style={{width:"100%",height:4,background:"var(--s2)",borderRadius:99,overflow:"hidden"}}>
+                  <div style={{height:"100%",width:(mealPct*100)+"%",
+                    background:mealPct>=1?"var(--accent)":mealPct>=0.5?"var(--orange)":"var(--blue)",
+                    borderRadius:99,transition:"width 0.3s"}}/>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div style={{display:"flex",gap:14,marginTop:10,flexWrap:"wrap"}}>
+          {[["var(--accent)","Workout done"],["var(--rdim)","Missed"],["var(--s2)","Rest/unlogged"]].map(function(item){
+            var c=item[0],l=item[1];
+            return (
+              <div key={l} style={{display:"flex",alignItems:"center",gap:5,fontSize:"0.6rem",color:"var(--muted)"}}>
+                <div style={{width:8,height:8,borderRadius:2,background:c,border:"1px solid var(--border)"}}/>
+                {l}
+              </div>
+            );
+          })}
+          <div style={{display:"flex",alignItems:"center",gap:5,fontSize:"0.6rem",color:"var(--muted)"}}>
+            <div style={{width:16,height:4,borderRadius:99,background:"linear-gradient(90deg,var(--blue),var(--orange),var(--accent))"}}/>
+            Meals followed
+          </div>
+        </div>
+      </div>
+
+      {/* ── STATS ROW ── */}
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,margin:"0 16px 16px"}}>
+        {[
+          {label:"Current",  value:lastW?lastW+" lbs":"—",  color:"var(--text)"},
+          {label:"Change",   value:totalChange!=null?(totalChange>0?"+":"")+totalChange.toFixed(1)+" lbs":"—",
+           color:totalChange!=null?(totalChange<0?"var(--accent)":"var(--orange)"):"var(--text)"},
+          {label:"Streak",   value:checkinStreak+"d", color:"var(--accent)"},
+        ].map(function(s){return(
+          <div key={s.label} style={{background:"var(--s1)",border:"1px solid var(--border)",
+            borderRadius:"var(--r)",padding:"12px 8px",textAlign:"center"}}>
+            <div style={{fontSize:"0.6rem",color:"var(--muted)",fontWeight:700,letterSpacing:"0.08em",
+              textTransform:"uppercase",marginBottom:4}}>{s.label}</div>
+            <div style={{fontSize:"1.2rem",fontWeight:800,color:s.color}}>{s.value}</div>
+          </div>
+        );})}
+      </div>
+
+      {/* ── WEIGHT LOG ── */}
       <div style={{background:"var(--s1)",border:"1px solid var(--border)",borderRadius:"var(--r)",
-        padding:"16px",marginBottom:16}}>
+        padding:"16px",margin:"0 16px 16px"}}>
         <div style={{fontSize:"0.7rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",
           color:"var(--accent)",marginBottom:10}}>
-          {todayEntry ? "Today: "+todayEntry.weight+" lbs — update?" : "Log today's weight"}
+          {todayEntry?"Today: "+todayEntry.weight+" lbs — update?":"Log today's weight"}
         </div>
         <div style={{display:"flex",gap:8,alignItems:"center"}}>
-          <input
-            type="number"
-            placeholder={todayEntry ? String(todayEntry.weight) : "lbs"}
+          <input type="number"
+            placeholder={todayEntry?String(todayEntry.weight):"lbs"}
             value={inputVal}
             onChange={function(e){setInputVal(e.target.value);}}
             onKeyDown={function(e){if(e.key==="Enter")logWeight();}}
             style={{flex:1,background:"var(--bg)",border:"1px solid var(--border)",borderRadius:8,
               padding:"10px 12px",color:"var(--text)",fontSize:"1rem",fontFamily:"var(--ff-mono)",
-              fontWeight:700,outline:"none",WebkitAppearance:"none"}}
-          />
+              fontWeight:700,outline:"none",WebkitAppearance:"none"}}/>
           <button onClick={logWeight}
             style={{background:"var(--accent)",color:"#0a0b08",border:"none",borderRadius:8,
               padding:"10px 18px",fontWeight:800,fontSize:"0.85rem",cursor:"pointer",
@@ -3408,138 +4113,204 @@ function ProgressTab({ prefs }) {
         </div>
       </div>
 
-      {filtered.length > 1 ? (
+      {/* ── WEIGHT CHART ── */}
+      {filtered.length > 1 && (
         <div style={{background:"var(--s1)",border:"1px solid var(--border)",borderRadius:"var(--r)",
-          padding:"16px",marginBottom:16}}>
+          padding:"16px",margin:"0 16px 16px"}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
             <div style={{fontSize:"0.7rem",fontWeight:700,letterSpacing:"0.1em",
               textTransform:"uppercase",color:"var(--accent)"}}>Weight trend</div>
             <div style={{display:"flex",gap:6}}>
-              {["week","month","year"].map(function(v){
-                return (
-                  <button key={v} onClick={function(){setView(v);}}
-                    style={{background:view===v?"var(--adim)":"transparent",
-                      border:"1px solid "+(view===v?"var(--aborder)":"var(--border)"),
-                      borderRadius:99,padding:"3px 10px",fontSize:"0.65rem",fontWeight:700,
-                      color:view===v?"var(--accent)":"var(--muted)",cursor:"pointer"}}>
-                    {v.charAt(0).toUpperCase()+v.slice(1)}
-                  </button>
-                );
-              })}
+              {["week","month","year"].map(function(v){return(
+                <button key={v} onClick={function(){setView(v);}}
+                  style={{background:view===v?"var(--adim)":"transparent",
+                    border:"1px solid "+(view===v?"var(--aborder)":"var(--border)"),
+                    borderRadius:99,padding:"3px 10px",fontSize:"0.65rem",fontWeight:700,
+                    color:view===v?"var(--accent)":"var(--muted)",cursor:"pointer"}}>
+                  {v.charAt(0).toUpperCase()+v.slice(1)}
+                </button>
+              );})}
             </div>
           </div>
-          <div style={{display:"flex",gap:8,alignItems:"flex-end"}}>
-            <div style={{display:"flex",flexDirection:"column",justifyContent:"space-between",
-              height:100,minWidth:36,textAlign:"right"}}>
-              <div style={{fontSize:"0.6rem",color:"var(--muted)",fontFamily:"var(--ff-mono)"}}>{maxW.toFixed(0)}</div>
-              <div style={{fontSize:"0.6rem",color:"var(--muted)",fontFamily:"var(--ff-mono)"}}>{((maxW+minW)/2).toFixed(0)}</div>
-              <div style={{fontSize:"0.6rem",color:"var(--muted)",fontFamily:"var(--ff-mono)"}}>{minW.toFixed(0)}</div>
-            </div>
-            <div style={{flex:1}}>
-              <ProgressSparkline points={filtered.map(function(e){return e.weight;})} minW={minW} maxW={maxW} startWeight={startWeight}/>
-            </div>
-          </div>
-          <div style={{display:"flex",justifyContent:"space-between",paddingLeft:44,marginTop:4,fontSize:"0.6rem",color:"var(--muted)"}}>
-            {filtered.length > 0 && [filtered[0],filtered[Math.floor(filtered.length/2)],filtered[filtered.length-1]].map(function(e,i){
-              return e ? <span key={i}>{e.date.slice(5)}</span> : null;
+          <Sparkline data={filtered} minW={minW} maxW={maxW}/>
+          <div style={{display:"flex",justifyContent:"space-between",paddingLeft:44,marginTop:6}}>
+            {filtered.filter((_,i)=>i===0||i===Math.floor(filtered.length/2)||i===filtered.length-1).map(function(e){
+              return <span key={e.date} style={{fontSize:"0.55rem",color:"var(--muted)",fontFamily:"var(--ff-mono)"}}>{e.date.slice(5)}</span>;
             })}
           </div>
           <div style={{display:"flex",gap:16,marginTop:12,paddingTop:12,borderTop:"1px solid var(--border)"}}>
             {[
-              {label:"Avg",     value: avgW ? avgW+" lbs" : "—"},
-              {label:"Low",     value: filtered.length ? minW.toFixed(1)+" lbs" : "—"},
-              {label:"High",    value: filtered.length ? maxW.toFixed(1)+" lbs" : "—"},
-              {label:"Entries", value: String(filtered.length)},
-            ].map(function(s){
-              return (
-                <div key={s.label} style={{flex:1,textAlign:"center"}}>
-                  <div style={{fontSize:"0.55rem",color:"var(--muted)",fontWeight:700,letterSpacing:"0.08em",textTransform:"uppercase"}}>{s.label}</div>
-                  <div style={{fontSize:"0.85rem",fontWeight:700,color:"var(--text)",fontFamily:"var(--ff-mono)"}}>{s.value}</div>
-                </div>
-              );
-            })}
+              {label:"Avg", value:avgW?avgW+" lbs":"—"},
+              {label:"Low", value:minW+" lbs"},
+              {label:"High",value:maxW+" lbs"},
+            ].map(function(s){return(
+              <div key={s.label} style={{flex:1,textAlign:"center"}}>
+                <div style={{fontSize:"0.55rem",color:"var(--muted)",textTransform:"uppercase",letterSpacing:"0.08em",marginBottom:2}}>{s.label}</div>
+                <div style={{fontSize:"0.85rem",fontWeight:700,color:"var(--text)",fontFamily:"var(--ff-mono)"}}>{s.value}</div>
+              </div>
+            );})}
           </div>
-        </div>
-      ) : (
-        <div style={{background:"var(--s1)",border:"1px solid var(--border)",borderRadius:"var(--r)",
-          padding:"20px",textAlign:"center",marginBottom:16,color:"var(--muted)",fontSize:"0.85rem"}}>
-          Log 2+ entries to see your trend chart.
         </div>
       )}
 
-      <div style={{marginBottom:16}}>
+      {/* ── WEEKLY CHECKIN BUTTON ── */}
+      <div style={{margin:"0 16px 10px"}}>
+        <button onClick={()=>setShowWeeklyCheckin(true)}
+          style={{width:"100%",
+            background:weeklyCheckinDone["week_"+(prefs&&prefs.week||1)]?"var(--s1)":"var(--adim)",
+            border:"1px solid "+(weeklyCheckinDone["week_"+(prefs&&prefs.week||1)]?"var(--border)":"var(--aborder)"),
+            borderRadius:"var(--r)",padding:"14px 16px",cursor:"pointer",
+            display:"flex",alignItems:"center",gap:12,textAlign:"left"}}>
+          <span style={{fontSize:"1.4rem",flexShrink:0}}>
+            {weeklyCheckinDone["week_"+(prefs&&prefs.week||1)]?"✅":"📝"}
+          </span>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:"var(--ff-display)",fontSize:"0.9rem",fontWeight:800,
+              color:weeklyCheckinDone["week_"+(prefs&&prefs.week||1)]?"var(--muted)":"var(--accent)",marginBottom:2}}>
+              Week {prefs&&prefs.week||1} Check-In
+            </div>
+            <div style={{fontSize:"0.72rem",color:"var(--muted)"}}>
+              {weeklyCheckinDone["week_"+(prefs&&prefs.week||1)]?"Completed — tap to redo":"5 quick questions about your week"}
+            </div>
+          </div>
+          {!weeklyCheckinDone["week_"+(prefs&&prefs.week||1)]&&(
+            <span style={{color:"var(--accent)",fontWeight:700,fontSize:"0.82rem"}}>Go →</span>
+          )}
+        </button>
+      </div>
+
+      {/* ── DELOAD BUTTON ── */}
+      {prefs&&prefs.week>=3&&(
+        <div style={{margin:"0 16px 10px"}}>
+          <button onClick={()=>setShowDeload(true)}
+            style={{width:"100%",background:deloadActive?"rgba(93,184,254,0.08)":"var(--s1)",
+              border:"1px solid "+(deloadActive?"var(--bborder)":"var(--border)"),
+              borderRadius:"var(--r)",padding:"14px 16px",cursor:"pointer",
+              display:"flex",alignItems:"center",gap:12,textAlign:"left"}}>
+            <span style={{fontSize:"1.4rem",flexShrink:0}}>🔄</span>
+            <div style={{flex:1}}>
+              <div style={{fontFamily:"var(--ff-display)",fontSize:"0.9rem",fontWeight:800,
+                color:deloadActive?"var(--blue)":"var(--text)",marginBottom:2}}>
+                {deloadActive?"Deload Week Active":"Deload Week Available"}
+              </div>
+              <div style={{fontSize:"0.72rem",color:"var(--muted)"}}>
+                {deloadActive?"Workouts at 50% intensity this week — recover smart":"You've earned it after "+((prefs&&prefs.week)||1)+" weeks of training"}
+              </div>
+            </div>
+            <span style={{color:"var(--blue)",fontWeight:700,fontSize:"0.82rem"}}>{deloadActive?"Active":"Start →"}</span>
+          </button>
+        </div>
+      )}
+
+      {/* ── WEEK 12 BUTTON ── */}
+      {prefs&&prefs.week>=12&&(
+        <div style={{margin:"0 16px 10px"}}>
+          <button onClick={()=>setShowWeek12(true)}
+            style={{width:"100%",background:"rgba(200,241,53,0.06)",
+              border:"1px solid var(--aborder)",
+              borderRadius:"var(--r)",padding:"14px 16px",cursor:"pointer",
+              display:"flex",alignItems:"center",gap:12,textAlign:"left"}}>
+            <span style={{fontSize:"1.4rem",flexShrink:0}}>👑</span>
+            <div style={{flex:1}}>
+              <div style={{fontFamily:"var(--ff-display)",fontSize:"0.9rem",fontWeight:800,color:"var(--accent)",marginBottom:2}}>
+                12 Weeks Complete!
+              </div>
+              <div style={{fontSize:"0.72rem",color:"var(--muted)"}}>View your final results and share card</div>
+            </div>
+            <span style={{color:"var(--accent)",fontWeight:700,fontSize:"0.82rem"}}>View →</span>
+          </button>
+        </div>
+      )}
+
+      {/* ── SHARE CARD ── */}
+      <div style={{margin:"0 16px 16px"}}>
         <button onClick={function(){setShowShare(function(v){return !v;});}}
           style={{width:"100%",background:"var(--s1)",border:"1px solid var(--aborder)",
             borderRadius:"var(--r)",padding:"12px",fontWeight:700,fontSize:"0.85rem",
             color:"var(--accent)",cursor:"pointer"}}>
-          {showShare ? "Hide share card" : "Generate share card"}
+          {showShare?"Hide share card":"Generate share card 📸"}
         </button>
-        {/* Cheat Meal Mode Button */}
-      <div style={{padding:"0 16px 16px"}}>
-        <button
-          onClick={()=>setShowCheat(true)}
-          style={{
-            width:"100%",background:"var(--s2)",border:"1px solid var(--border)",
-            borderRadius:"var(--r)",padding:"16px",cursor:"pointer",
-            display:"flex",alignItems:"center",gap:14,textAlign:"left",
-            transition:"border-color 0.15s",
-          }}
-          onMouseEnter={e=>e.currentTarget.style.borderColor="var(--oborder)"}
-          onMouseLeave={e=>e.currentTarget.style.borderColor="var(--border)"}
-        >
-          <span style={{fontSize:"1.8rem",flexShrink:0}}>🍕</span>
-          <div style={{flex:1}}>
-            <div style={{fontFamily:"var(--ff-display)",fontSize:"0.95rem",fontWeight:800,color:"var(--text)",marginBottom:3}}>Cheat Meal Mode</div>
-            <div style={{fontSize:"0.75rem",color:"var(--muted)",lineHeight:1.4}}>Cravings happen. Plan around it — we'll adjust your next workout to offset.</div>
-          </div>
-          <span style={{color:"var(--orange)",fontSize:"0.82rem",fontWeight:700,flexShrink:0}}>Activate →</span>
-        </button>
-      </div>
-
-      {showCheat && <CheatMealModal onClose={()=>setShowCheat(false)}/>}
-
-      {showShare && (
+        {showShare&&(
           <div style={{marginTop:12}}>
             <ProgressShareCard
               lastW={lastW}
               totalChange={totalChange}
-              daysLogged={entries.length}
-              checkinStreak={checkinStreak}
+              daysConsistent={entries.length}
+              workoutsCompleted={Object.values(checkins).filter(function(c){return c.workout===true;}).length}
+              cheatFreeDays={0}
+              week={prefs&&prefs.week}
               today={today}
-              shareUrl="cjrochest.github.io/HealthFundamentals/pro-plus"
+              phraseIdx={phraseIdx}
             />
-            <div style={{fontSize:"0.7rem",color:"var(--muted)",textAlign:"center",marginTop:10}}>
+            <button onClick={()=>setPhraseIdx(i=>(i+1)%20)}
+              style={{display:"block",margin:"8px auto 0",background:"none",border:"1px solid var(--border)",
+                borderRadius:99,padding:"5px 14px",fontSize:"0.68rem",color:"var(--muted)",cursor:"pointer",fontWeight:700}}>
+              Shuffle phrase ↺
+            </button>
+            <div style={{fontSize:"0.7rem",color:"var(--muted)",textAlign:"center",marginTop:8}}>
               Take a screenshot to share your progress.
             </div>
           </div>
         )}
       </div>
 
+      {/* ── HISTORY ── */}
       {entries.length > 0 && (
-        <div style={{background:"var(--s1)",border:"1px solid var(--border)",borderRadius:"var(--r)",padding:"16px"}}>
+        <div style={{background:"var(--s1)",border:"1px solid var(--border)",borderRadius:"var(--r)",
+          padding:"16px",margin:"0 16px 16px"}}>
           <div style={{fontSize:"0.7rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",
             color:"var(--accent)",marginBottom:10}}>History ({entries.length})</div>
           <div style={{maxHeight:200,overflowY:"auto"}}>
-            {entries.slice().reverse().map(function(e) {
-              return (
-                <div key={e.date} style={{display:"flex",justifyContent:"space-between",
-                  alignItems:"center",padding:"8px 0",borderBottom:"1px solid var(--border)"}}>
-                  <span style={{fontSize:"0.8rem",color:"var(--muted)",fontFamily:"var(--ff-mono)"}}>{e.date}</span>
-                  <span style={{fontSize:"0.95rem",fontWeight:700,fontFamily:"var(--ff-mono)",color:"var(--text)"}}>{e.weight} lbs</span>
-                  <button onClick={function(){deleteEntry(e.date);}}
-                    style={{background:"none",border:"none",color:"var(--muted)",cursor:"pointer",fontSize:"0.75rem",padding:"2px 6px"}}>
-                    x
-                  </button>
-                </div>
-              );
-            })}
+            {entries.slice().reverse().map(function(e){return(
+              <div key={e.date} style={{display:"flex",justifyContent:"space-between",
+                alignItems:"center",padding:"8px 0",borderBottom:"1px solid var(--border)"}}>
+                <span style={{fontSize:"0.8rem",color:"var(--muted)",fontFamily:"var(--ff-mono)"}}>{e.date}</span>
+                <span style={{fontSize:"0.95rem",fontWeight:700,fontFamily:"var(--ff-mono)",color:"var(--text)"}}>{e.weight} lbs</span>
+                <button onClick={function(){deleteEntry(e.date);}}
+                  style={{background:"none",border:"none",color:"var(--muted)",cursor:"pointer",fontSize:"0.75rem",padding:"2px 6px"}}>
+                  x
+                </button>
+              </div>
+            );})}
           </div>
         </div>
       )}
+
+      {/* ── MODALS ── */}
+      {showWeeklyCheckin&&(
+        <WeeklyCheckinModal week={prefs&&prefs.week||1} prefs={prefs}
+          onClose={()=>setShowWeeklyCheckin(false)}
+          onSave={(answers)=>{
+            const key="week_"+(prefs&&prefs.week||1);
+            const updated={...weeklyCheckinDone,[key]:true};
+            setWeeklyCheckinDone(updated);
+            try{localStorage.setItem("hf_checkin_done_v1",JSON.stringify(updated));}catch{}
+          }}/>
+      )}
+      {showDeload&&(
+        <DeloadModal week={prefs&&prefs.week||1}
+          onDismiss={()=>setShowDeload(false)}
+          onStartDeload={()=>{
+            setDeloadActive(true);
+            try{localStorage.setItem("hf_deload_v1","true");}catch{}
+            setShowDeload(false);
+          }}/>
+      )}
+      {showWeek12&&(
+        <Week12Modal totalChange={totalChange} daysConsistent={entries.length}
+          checkinStreak={checkinStreak} week={12} today={today}
+          onClose={()=>setShowWeek12(false)}
+          onRestart={()=>{
+            if(typeof setPrefs==="function") setPrefs(p=>({...p,week:1,installDate:new Date().toISOString().split("T")[0],lastBriefingWeek:0}));
+            setDeloadActive(false);
+            try{localStorage.setItem("hf_deload_v1","false");}catch{}
+            setShowWeek12(false);
+          }}/>
+      )}
+
     </div>
   );
 }
-
 
 
 function ProgressTeaserTab() {
@@ -3764,18 +4535,19 @@ function WeeklyBriefing({ prefs, onDismiss, setTab, currentLesson }) {
 }
 
 
-function HomeTab({ prefs, setPrefs, setTab }) {
+function HomeTab({ prefs, setPrefs, setTab, daily }) {
   const weekInfo = WEEK_PROGRESSIONS[prefs.week-1] || WEEK_PROGRESSIONS[0];
   const ct = CARDIO_TYPES.find(c=>c.id===prefs.cardioType);
   const [cardioOpen, setCardioOpen] = useState(false);
   const [showBriefing, setShowBriefing] = useState(false);
+  const [showCheatHome, setShowCheatHome] = useState(false);
   function p(k,v){ setPrefs(prev=>({...prev,[k]:v})); }
 
   // On mount: set installDate if not set, auto-advance week, show briefing if new week
   const initRef = useRef(false);
   if (!initRef.current) {
     initRef.current = true;
-    const maxWeeks = 4; // pro has 4 weeks; pro-plus has 12
+    const maxWeeks = 12; // pro has 4 weeks; pro-plus has 12
     const now = new Date().toISOString().split("T")[0];
     let needsUpdate = {};
 
@@ -3822,9 +4594,27 @@ function HomeTab({ prefs, setPrefs, setTab }) {
       )}
       <div className="hero">
         <div className="hero-eyebrow">Week {prefs.week} · {weekInfo.name} · {prefs.level.charAt(0).toUpperCase()+prefs.level.slice(1)}</div>
+        {(()=>{ try{ if(JSON.parse(localStorage.getItem("hf_deload_v1")||"false")) return <div style={{display:"inline-flex",alignItems:"center",gap:6,background:"rgba(93,184,254,0.1)",border:"1px solid var(--bborder)",borderRadius:99,padding:"4px 12px",fontSize:"0.65rem",fontWeight:700,color:"var(--blue)",marginTop:6}}>🔄 Deload Week — Train at 50% intensity</div>; } catch{} return null; })()}
         <div className="hero-title">{prefs.goal==="cut"?"Burn Fat. Keep Muscle.":prefs.goal==="build"?"Build. Eat. Repeat.":"Train Smart. Stay Consistent."}</div>
         <div className="hero-sub">{weekInfo.intensityNote}</div>
       </div>
+      {/* Daily Message Card */}
+      {daily && (() => {
+        const msg = DAILY_MESSAGES[(daily.lastMsgIdx || 0) % DAILY_MESSAGES.length];
+        return (
+          <div style={{margin:"0 16px 14px"}}>
+            <div style={{background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"var(--r)",padding:"14px 16px",display:"flex",alignItems:"flex-start",gap:12}}>
+              <span style={{fontSize:"1.6rem",flexShrink:0,marginTop:2}}>{msg.emoji}</span>
+              <div style={{flex:1}}>
+                <div style={{fontSize:"0.58rem",fontWeight:700,letterSpacing:"0.12em",textTransform:"uppercase",color:"var(--accent)",marginBottom:5}}>
+                  Today · Day {daily.totalDays || 1} · {daily.streak || 1}-Day Streak 🔥
+                </div>
+                <div style={{fontSize:"0.82rem",color:"var(--text)",lineHeight:1.6}}>{msg.msg}</div>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
       <div className="section-head" style={{paddingBottom:6}}><span className="section-title">Your Plan</span></div>
       <div style={{padding:"0 16px",display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:14}}>
         {[
@@ -3850,6 +4640,24 @@ function HomeTab({ prefs, setPrefs, setTab }) {
           <div style={{fontSize:"0.78rem",fontWeight:700,color:"var(--accent)",lineHeight:1.3}}>Week {prefs.week} Briefing & Priorities</div>
         </div>
       </div>
+      {/* Cheat Meal Mode button */}
+      <div style={{padding:"0 16px 14px"}}>
+        <button onClick={()=>setShowCheatHome(true)}
+          style={{width:"100%",background:"var(--s1)",border:"1px solid var(--border)",borderRadius:"var(--r)",
+            padding:"14px 16px",cursor:"pointer",display:"flex",alignItems:"center",gap:12,textAlign:"left",
+            transition:"border-color 0.15s"}}
+          onMouseEnter={e=>e.currentTarget.style.borderColor="var(--oborder)"}
+          onMouseLeave={e=>e.currentTarget.style.borderColor="var(--border)"}>
+          <span style={{fontSize:"1.4rem",flexShrink:0}}>🍕</span>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:"var(--ff-display)",fontSize:"0.88rem",fontWeight:800,color:"var(--text)",marginBottom:2}}>Cheat Meal Mode</div>
+            <div style={{fontSize:"0.72rem",color:"var(--muted)"}}>Cravings happen. Plan around it.</div>
+          </div>
+          <span style={{color:"var(--orange)",fontSize:"0.78rem",fontWeight:700,flexShrink:0}}>Activate →</span>
+        </button>
+      </div>
+      {showCheatHome && <CheatMealModal onClose={()=>setShowCheatHome(false)}/>}
+
       <div className="section-head" style={{paddingBottom:6}}><span className="section-title">This Week</span></div>
       <div className="card-stack" style={{paddingBottom:16}}>
         {[
@@ -3917,10 +4725,36 @@ function HomeTab({ prefs, setPrefs, setTab }) {
 // ─── ROOT ─────────────────────────────────────────────────────────────────────
 function App() {
   const [tab, setTab] = useState("home");
-  const [prefs, setPrefs] = useState(null); // null = not yet built
 
-  // Shared meal state — lifted so GroceryTab can read what MealsTab has selected
-  const [mealState, setMealState] = useState({ mealCount:4, pinned:{}, avoidTags:[] });
+  // Load persisted prefs on first render — null means onboarding needed
+  const [prefs, setPrefsRaw] = useState(() => loadPrefs());
+
+  // Load persisted meal state
+  const [mealState, setMealStateRaw] = useState(() => loadMealState());
+
+  // Daily tracking — update on app open
+  const [daily, setDaily] = useState(() => {
+    const d = loadDailyData();
+    const updated = updateDailyTracking(d);
+    if (updated !== d) saveDailyData(updated);
+    return updated;
+  });
+
+  // Wrapped setters that also persist to localStorage
+  function setPrefs(updater) {
+    setPrefsRaw(prev => {
+      const next = typeof updater === "function" ? updater(prev) : updater;
+      savePrefs(next);
+      return next;
+    });
+  }
+  function setMealState(updater) {
+    setMealStateRaw(prev => {
+      const next = typeof updater === "function" ? updater(prev) : updater;
+      saveMealState(next);
+      return next;
+    });
+  }
 
   const NAV = [
     {id:"home",     icon:"🏠", label:"Home"},
@@ -3938,7 +4772,7 @@ function App() {
         <div className="app">
           <div className="top-bar">
             <div className="brand">Health<em>Fund</em></div>
-            <div className="access-badge">Full Access</div>
+            <div className="access-badge">Full System+</div>
           </div>
           <PlanBuilder onGenerate={(p)=>{ setPrefs(p); setTab("home"); }} />
         </div>
@@ -3953,7 +4787,7 @@ function App() {
         <div className="top-bar">
           <div className="brand">Health<em>Fund</em></div>
           {(tab==="plan"||tab==="meals"||tab==="grocery"||tab==="learn"||tab==="progress")&&(
-            <div className="access-badge">Full Access</div>
+            <div className="access-badge">Full System+</div>
           )}
           {(tab==="home"||tab==="workout")&&(
             <div style={{fontSize:"0.7rem",color:"var(--muted)",fontWeight:700}}>
@@ -3962,18 +4796,20 @@ function App() {
           )}
         </div>
 
-        {tab==="home"    && <HomeTab prefs={prefs} setPrefs={setPrefs} setTab={setTab}/>}
+        {tab==="home"    && <HomeTab prefs={prefs} setPrefs={setPrefs} setTab={setTab} daily={daily}/>}
         {tab==="workout" && <WorkoutTab prefs={prefs} setPrefs={setPrefs} onRebuild={()=>setPrefs(null)}/>}
         {tab==="plan"    && <PlanTab prefs={prefs} setPrefs={setPrefs} mealState={mealState} setMealState={setMealState} setTab={setTab}/>}
         {tab==="meals"   && <MealsTab prefs={prefs} mealState={mealState} setMealState={setMealState} goal={prefs.goal||"maintain"} setTab={setTab}/>}
         {tab==="grocery" && <GroceryTab prefs={prefs} mealState={mealState}/>}
         {tab==="learn"    && <LearnTab/>}
-        {tab==="progress" && <ProgressTeaserTab/>}
+        {tab==="progress" && <ProgressTab prefs={prefs} setPrefs={setPrefs}/>}
       </div>
 
       <div className="bottom-nav">
         {NAV.map(n=>(
-          <button key={n.id} className={`nav-btn${tab===n.id?" active":""}`} onClick={()=>setTab(n.id)}>
+          <button key={n.id}
+            className={`nav-btn${(tab===n.id||(n.id==="plan"&&tab==="meals"))?" active":""}`}
+            onClick={()=>setTab(n.id==="plan"&&prefs.savedMacros?"meals":n.id)}>
             <span className="nav-icon">{n.icon}</span>
             <span className="nav-label">{n.label}</span>
           </button>
@@ -3982,7 +4818,6 @@ function App() {
     </>
   );
 }
-
 
 window._appReady = true;
 if (window._unlockPending) { mountApp(); }
