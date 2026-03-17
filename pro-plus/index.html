@@ -3934,14 +3934,14 @@ function ProgressTab({ prefs }) {
         color:"var(--muted)",padding:"14px 16px 8px"}}>Today's Check-In</div>
 
       {/* Workout check-in */}
-      <div style={{margin:"0 16px 10px",background:"var(--s1)",border:"1px solid var(--border)",borderRadius:"var(--r)",padding:"14px 16px"}}>
-        <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
-          <span style={{fontSize:"1.2rem"}}>🏋️</span>
+      <div style={{margin:"0 16px 10px",background:"#000",border:"1px solid rgba(255,255,255,0.1)",borderRadius:"var(--r)",padding:"16px"}}>
+        <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:14}}>
+          <span style={{fontSize:"1.4rem"}}>🏋️</span>
           <div style={{flex:1}}>
-            <div style={{fontSize:"0.85rem",fontWeight:800,color:"var(--text)",fontFamily:"var(--ff-display)"}}>
+            <div style={{fontSize:"0.95rem",fontWeight:800,color:"#fff",fontFamily:"var(--ff-display)"}}>
               Did you work out today?
             </div>
-            <div style={{fontSize:"0.68rem",color:"var(--muted)",marginTop:2}}>
+            <div style={{fontSize:"0.72rem",color:"rgba(255,255,255,0.4)",marginTop:3}}>
               {isWorkoutDay?"Today is a scheduled workout day 💪":"Rest day — but you can still log if you trained"}
             </div>
           </div>
@@ -3952,22 +3952,22 @@ function ProgressTab({ prefs }) {
         {todayCheckin.workout === undefined ? (
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
             <button onClick={()=>handleWorkout(true)}
-              style={{background:"var(--adim)",border:"1px solid var(--aborder)",borderRadius:"var(--r-sm)",
-                padding:"10px",fontWeight:800,fontSize:"0.82rem",color:"var(--accent)",cursor:"pointer",
+              style={{background:"rgba(200,241,53,0.12)",border:"1px solid var(--aborder)",borderRadius:"var(--r-sm)",
+                padding:"13px",fontWeight:800,fontSize:"0.9rem",color:"var(--accent)",cursor:"pointer",
                 fontFamily:"var(--ff-display)"}}>
               ✓ Yes, I trained
             </button>
             <button onClick={()=>handleWorkout(false)}
-              style={{background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"var(--r-sm)",
-                padding:"10px",fontWeight:800,fontSize:"0.82rem",color:"var(--muted)",cursor:"pointer",
+              style={{background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:"var(--r-sm)",
+                padding:"13px",fontWeight:800,fontSize:"0.9rem",color:"rgba(255,255,255,0.4)",cursor:"pointer",
                 fontFamily:"var(--ff-display)"}}>
               ✗ Not today
             </button>
           </div>
         ) : (
-          <div style={{fontSize:"0.75rem",color:"var(--muted)",textAlign:"center"}}>
+          <div style={{fontSize:"0.8rem",color:"rgba(255,255,255,0.4)",textAlign:"center"}}>
             <span>{todayCheckin.workout?"Workout logged ✓":"Rest day logged"}</span>
-            <span style={{color:"var(--muted)"}}> · </span>
+            <span> · </span>
             <span style={{color:"var(--accent)",cursor:"pointer",fontWeight:700}}
               onClick={()=>saveCheckin({workout:undefined})}>Change</span>
           </div>
@@ -3975,14 +3975,14 @@ function ProgressTab({ prefs }) {
       </div>
 
       {/* Meal check-in */}
-      <div style={{margin:"0 16px 10px",background:"var(--s1)",border:"1px solid var(--border)",borderRadius:"var(--r)",padding:"14px 16px"}}>
-        <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
-          <span style={{fontSize:"1.2rem"}}>🍽️</span>
+      <div style={{margin:"0 16px 10px",background:"#000",border:"1px solid rgba(255,255,255,0.1)",borderRadius:"var(--r)",padding:"16px"}}>
+        <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:14}}>
+          <span style={{fontSize:"1.4rem"}}>🍽️</span>
           <div style={{flex:1}}>
-            <div style={{fontSize:"0.85rem",fontWeight:800,color:"var(--text)",fontFamily:"var(--ff-display)"}}>
+            <div style={{fontSize:"0.95rem",fontWeight:800,color:"#fff",fontFamily:"var(--ff-display)"}}>
               How many meals did you follow?
             </div>
-            <div style={{fontSize:"0.68rem",color:"var(--muted)",marginTop:2}}>
+            <div style={{fontSize:"0.72rem",color:"rgba(255,255,255,0.4)",marginTop:3}}>
               Out of your {prefs&&prefs.mealCount?prefs.mealCount:4} planned meals today
             </div>
           </div>
@@ -3996,17 +3996,17 @@ function ProgressTab({ prefs }) {
           <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:6}}>
             {Array.from({length:(prefs&&prefs.mealCount?prefs.mealCount:4)+1},(_,i)=>i).map(n=>(
               <button key={n} onClick={()=>handleMeals(n)}
-                style={{background:"var(--s2)",border:"1px solid var(--border)",borderRadius:"var(--r-sm)",
-                  padding:"9px 4px",fontWeight:800,fontSize:"0.9rem",
-                  color:n>0?"var(--text)":"var(--muted)",cursor:"pointer",fontFamily:"var(--ff-mono)"}}>
+                style={{background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:"var(--r-sm)",
+                  padding:"11px 4px",fontWeight:800,fontSize:"1rem",
+                  color:n>0?"#fff":"rgba(255,255,255,0.35)",cursor:"pointer",fontFamily:"var(--ff-mono)"}}>
                 {n}
               </button>
             ))}
           </div>
         ) : (
-          <div style={{fontSize:"0.75rem",color:"var(--muted)",textAlign:"center"}}>
+          <div style={{fontSize:"0.8rem",color:"rgba(255,255,255,0.4)",textAlign:"center"}}>
             <span>{todayCheckin.meals} meals logged</span>
-            <span style={{color:"var(--muted)"}}> · </span>
+            <span> · </span>
             <span style={{color:"var(--accent)",cursor:"pointer",fontWeight:700}}
               onClick={()=>saveCheckin({meals:undefined})}>Change</span>
           </div>
@@ -4014,9 +4014,9 @@ function ProgressTab({ prefs }) {
       </div>
 
       {/* Weekly heatmap */}
-      <div style={{margin:"0 16px 16px",background:"var(--s1)",border:"1px solid var(--border)",borderRadius:"var(--r)",padding:"14px 16px"}}>
-        <div style={{fontSize:"0.65rem",fontWeight:700,letterSpacing:"0.12em",textTransform:"uppercase",
-          color:"var(--muted)",marginBottom:10}}>
+      <div style={{margin:"0 16px 16px",background:"#000",border:"1px solid rgba(255,255,255,0.1)",borderRadius:"var(--r)",padding:"16px"}}>
+        <div style={{fontSize:"0.68rem",fontWeight:800,letterSpacing:"0.12em",textTransform:"uppercase",
+          color:"rgba(255,255,255,0.4)",marginBottom:12}}>
           This Week · {completedWorkouts}/{wodDays.length} Workouts · {mealsLogged}/7 Days Logged
         </div>
         <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:5}}>
@@ -4026,23 +4026,24 @@ function ProgressTab({ prefs }) {
             const mealPct = hasMeals?d.meals/mealTotal:0;
             return (
               <div key={d.key} style={{textAlign:"center"}}>
-                <div style={{fontSize:"0.55rem",color:d.isToday?"var(--accent)":"var(--muted)",
-                  fontWeight:d.isToday?800:400,marginBottom:4,textTransform:"uppercase"}}>
+                <div style={{fontSize:"0.58rem",color:d.isToday?"var(--accent)":"rgba(255,255,255,0.3)",
+                  fontWeight:d.isToday?800:500,marginBottom:5,textTransform:"uppercase"}}>
                   {d.dayLabel}
                 </div>
                 <div style={{
-                  width:"100%",aspectRatio:"1",borderRadius:6,marginBottom:3,
+                  width:"100%",aspectRatio:"1",borderRadius:8,marginBottom:4,
                   background:d.isWod
-                    ?(d.workout===true?"var(--accent)":d.workout===false?"var(--rdim)":d.isToday?"var(--adim)":"var(--s2)")
-                    :"var(--s2)",
-                  border:"1px solid "+(d.isToday?"var(--aborder)":"var(--border)"),
-                  display:"flex",alignItems:"center",justifyContent:"center",fontSize:"0.65rem"
+                    ?(d.workout===true?"var(--accent)":d.workout===false?"rgba(255,80,80,0.25)":d.isToday?"rgba(200,241,53,0.12)":"rgba(255,255,255,0.05)")
+                    :"rgba(255,255,255,0.04)",
+                  border:"1px solid "+(d.isToday?"var(--aborder)":"rgba(255,255,255,0.08)"),
+                  display:"flex",alignItems:"center",justifyContent:"center",fontSize:"0.75rem",fontWeight:800,
+                  color:d.workout===true?"#0a0b08":"rgba(255,255,255,0.4)"
                 }}>
                   {d.isWod&&d.workout===true&&"✓"}
                   {d.isWod&&d.workout===false&&"✗"}
-                  {!d.isWod&&<span style={{color:"var(--muted2)",fontSize:"0.5rem"}}>—</span>}
+                  {!d.isWod&&<span style={{color:"rgba(255,255,255,0.15)",fontSize:"0.55rem"}}>—</span>}
                 </div>
-                <div style={{width:"100%",height:4,background:"var(--s2)",borderRadius:99,overflow:"hidden"}}>
+                <div style={{width:"100%",height:4,background:"rgba(255,255,255,0.07)",borderRadius:99,overflow:"hidden"}}>
                   <div style={{height:"100%",width:(mealPct*100)+"%",
                     background:mealPct>=1?"var(--accent)":mealPct>=0.5?"var(--orange)":"var(--blue)",
                     borderRadius:99,transition:"width 0.3s"}}/>
@@ -4051,18 +4052,18 @@ function ProgressTab({ prefs }) {
             );
           })}
         </div>
-        <div style={{display:"flex",gap:14,marginTop:10,flexWrap:"wrap"}}>
-          {[["var(--accent)","Workout done"],["var(--rdim)","Missed"],["var(--s2)","Rest/unlogged"]].map(function(item){
+        <div style={{display:"flex",gap:14,marginTop:12,flexWrap:"wrap"}}>
+          {[["var(--accent)","Workout done"],["rgba(255,80,80,0.25)","Missed"],["rgba(255,255,255,0.05)","Rest/unlogged"]].map(function(item){
             var c=item[0],l=item[1];
             return (
-              <div key={l} style={{display:"flex",alignItems:"center",gap:5,fontSize:"0.6rem",color:"var(--muted)"}}>
-                <div style={{width:8,height:8,borderRadius:2,background:c,border:"1px solid var(--border)"}}/>
+              <div key={l} style={{display:"flex",alignItems:"center",gap:5,fontSize:"0.62rem",color:"rgba(255,255,255,0.35)"}}>
+                <div style={{width:9,height:9,borderRadius:3,background:c,border:"1px solid rgba(255,255,255,0.1)"}}/>
                 {l}
               </div>
             );
           })}
-          <div style={{display:"flex",alignItems:"center",gap:5,fontSize:"0.6rem",color:"var(--muted)"}}>
-            <div style={{width:16,height:4,borderRadius:99,background:"linear-gradient(90deg,var(--blue),var(--orange),var(--accent))"}}/>
+          <div style={{display:"flex",alignItems:"center",gap:5,fontSize:"0.62rem",color:"rgba(255,255,255,0.35)"}}>
+            <div style={{width:18,height:4,borderRadius:99,background:"linear-gradient(90deg,var(--blue),var(--orange),var(--accent))"}}/>
             Meals followed
           </div>
         </div>
@@ -4071,26 +4072,26 @@ function ProgressTab({ prefs }) {
       {/* ── STATS ROW ── */}
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,margin:"0 16px 16px"}}>
         {[
-          {label:"Current",  value:lastW?lastW+" lbs":"—",  color:"var(--text)"},
+          {label:"Current",  value:lastW?lastW+" lbs":"—",  color:"#fff"},
           {label:"Change",   value:totalChange!=null?(totalChange>0?"+":"")+totalChange.toFixed(1)+" lbs":"—",
-           color:totalChange!=null?(totalChange<0?"var(--accent)":"var(--orange)"):"var(--text)"},
+           color:totalChange!=null?(totalChange<0?"var(--accent)":"var(--orange)"):"rgba(255,255,255,0.5)"},
           {label:"Streak",   value:checkinStreak+"d", color:"var(--accent)"},
         ].map(function(s){return(
-          <div key={s.label} style={{background:"var(--s1)",border:"1px solid var(--border)",
-            borderRadius:"var(--r)",padding:"12px 8px",textAlign:"center"}}>
-            <div style={{fontSize:"0.6rem",color:"var(--muted)",fontWeight:700,letterSpacing:"0.08em",
-              textTransform:"uppercase",marginBottom:4}}>{s.label}</div>
-            <div style={{fontSize:"1.2rem",fontWeight:800,color:s.color}}>{s.value}</div>
+          <div key={s.label} style={{background:"#000",border:"1px solid rgba(255,255,255,0.1)",
+            borderRadius:"var(--r)",padding:"14px 8px",textAlign:"center"}}>
+            <div style={{fontSize:"0.62rem",color:"rgba(255,255,255,0.35)",fontWeight:700,letterSpacing:"0.1em",
+              textTransform:"uppercase",marginBottom:6}}>{s.label}</div>
+            <div style={{fontSize:"1.4rem",fontWeight:800,color:s.color,lineHeight:1}}>{s.value}</div>
           </div>
         );})}
       </div>
 
       {/* ── WEIGHT LOG ── */}
-      <div style={{background:"var(--s1)",border:"1px solid var(--border)",borderRadius:"var(--r)",
-        padding:"16px",margin:"0 16px 16px"}}>
-        <div style={{fontSize:"0.7rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",
-          color:"var(--accent)",marginBottom:10}}>
-          {todayEntry?"Today: "+todayEntry.weight+" lbs — update?":"Log today's weight"}
+      <div style={{background:"#000",border:"1px solid rgba(200,241,53,0.22)",borderRadius:"var(--r)",
+        padding:"18px 16px",margin:"0 16px 16px"}}>
+        <div style={{fontSize:"0.72rem",fontWeight:800,letterSpacing:"0.12em",textTransform:"uppercase",
+          color:"var(--accent)",marginBottom:12}}>
+          {todayEntry?"Today: "+todayEntry.weight+" lbs — update?":"Log Today's Weight"}
         </div>
         <div style={{display:"flex",gap:8,alignItems:"center"}}>
           <input type="number"
@@ -4098,55 +4099,55 @@ function ProgressTab({ prefs }) {
             value={inputVal}
             onChange={function(e){setInputVal(e.target.value);}}
             onKeyDown={function(e){if(e.key==="Enter")logWeight();}}
-            style={{flex:1,background:"var(--bg)",border:"1px solid var(--border)",borderRadius:8,
-              padding:"10px 12px",color:"var(--text)",fontSize:"1rem",fontFamily:"var(--ff-mono)",
-              fontWeight:700,outline:"none",WebkitAppearance:"none"}}/>
+            style={{flex:1,background:"#111",border:"1px solid rgba(255,255,255,0.12)",borderRadius:10,
+              padding:"13px 14px",color:"#fff",fontSize:"1.2rem",fontFamily:"var(--ff-mono)",
+              fontWeight:800,outline:"none",WebkitAppearance:"none"}}/>
           <button onClick={logWeight}
-            style={{background:"var(--accent)",color:"#0a0b08",border:"none",borderRadius:8,
-              padding:"10px 18px",fontWeight:800,fontSize:"0.85rem",cursor:"pointer",
+            style={{background:"var(--accent)",color:"#0a0b08",border:"none",borderRadius:10,
+              padding:"13px 22px",fontWeight:800,fontSize:"0.95rem",cursor:"pointer",
               fontFamily:"var(--ff-display)",whiteSpace:"nowrap"}}>
             Log
           </button>
         </div>
-        <div style={{fontSize:"0.65rem",color:"var(--muted)",marginTop:6}}>
+        <div style={{fontSize:"0.67rem",color:"rgba(255,255,255,0.3)",marginTop:8}}>
           Tip: weigh first thing in the morning, after using the bathroom.
         </div>
       </div>
 
       {/* ── WEIGHT CHART ── */}
       {filtered.length > 1 && (
-        <div style={{background:"var(--s1)",border:"1px solid var(--border)",borderRadius:"var(--r)",
-          padding:"16px",margin:"0 16px 16px"}}>
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
-            <div style={{fontSize:"0.7rem",fontWeight:700,letterSpacing:"0.1em",
-              textTransform:"uppercase",color:"var(--accent)"}}>Weight trend</div>
+        <div style={{background:"#000",border:"1px solid rgba(200,241,53,0.18)",borderRadius:"var(--r)",
+          padding:"18px 16px",margin:"0 16px 16px"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
+            <div style={{fontSize:"0.75rem",fontWeight:800,letterSpacing:"0.12em",
+              textTransform:"uppercase",color:"var(--accent)"}}>Weight Trend</div>
             <div style={{display:"flex",gap:6}}>
               {["week","month","year"].map(function(v){return(
                 <button key={v} onClick={function(){setView(v);}}
                   style={{background:view===v?"var(--adim)":"transparent",
-                    border:"1px solid "+(view===v?"var(--aborder)":"var(--border)"),
-                    borderRadius:99,padding:"3px 10px",fontSize:"0.65rem",fontWeight:700,
-                    color:view===v?"var(--accent)":"var(--muted)",cursor:"pointer"}}>
+                    border:"1px solid "+(view===v?"var(--aborder)":"rgba(255,255,255,0.12)"),
+                    borderRadius:99,padding:"4px 12px",fontSize:"0.68rem",fontWeight:700,
+                    color:view===v?"var(--accent)":"rgba(255,255,255,0.4)",cursor:"pointer"}}>
                   {v.charAt(0).toUpperCase()+v.slice(1)}
                 </button>
               );})}
             </div>
           </div>
-          <Sparkline data={filtered} minW={minW} maxW={maxW}/>
-          <div style={{display:"flex",justifyContent:"space-between",paddingLeft:44,marginTop:6}}>
-            {filtered.filter((_,i)=>i===0||i===Math.floor(filtered.length/2)||i===filtered.length-1).map(function(e){
-              return <span key={e.date} style={{fontSize:"0.55rem",color:"var(--muted)",fontFamily:"var(--ff-mono)"}}>{e.date.slice(5)}</span>;
+          <ProgressSparkline points={filtered.map(function(e){return e.weight;})} minW={minW} maxW={maxW} startWeight={startWeight}/>
+          <div style={{display:"flex",justifyContent:"space-between",paddingLeft:8,marginTop:6}}>
+            {filtered.filter(function(_,i){return i===0||i===Math.floor(filtered.length/2)||i===filtered.length-1;}).map(function(e){
+              return <span key={e.date} style={{fontSize:"0.6rem",color:"rgba(255,255,255,0.3)",fontFamily:"var(--ff-mono)"}}>{e.date.slice(5)}</span>;
             })}
           </div>
-          <div style={{display:"flex",gap:16,marginTop:12,paddingTop:12,borderTop:"1px solid var(--border)"}}>
+          <div style={{display:"flex",gap:8,marginTop:14,paddingTop:14,borderTop:"1px solid rgba(255,255,255,0.07)"}}>
             {[
               {label:"Avg", value:avgW?avgW+" lbs":"—"},
               {label:"Low", value:minW+" lbs"},
               {label:"High",value:maxW+" lbs"},
             ].map(function(s){return(
-              <div key={s.label} style={{flex:1,textAlign:"center"}}>
-                <div style={{fontSize:"0.55rem",color:"var(--muted)",textTransform:"uppercase",letterSpacing:"0.08em",marginBottom:2}}>{s.label}</div>
-                <div style={{fontSize:"0.85rem",fontWeight:700,color:"var(--text)",fontFamily:"var(--ff-mono)"}}>{s.value}</div>
+              <div key={s.label} style={{flex:1,textAlign:"center",background:"rgba(255,255,255,0.04)",borderRadius:10,padding:"10px 6px"}}>
+                <div style={{fontSize:"0.58rem",color:"rgba(255,255,255,0.35)",textTransform:"uppercase",letterSpacing:"0.1em",marginBottom:4}}>{s.label}</div>
+                <div style={{fontSize:"1rem",fontWeight:800,color:"#fff",fontFamily:"var(--ff-mono)"}}>{s.value}</div>
               </div>
             );})}
           </div>
@@ -4256,19 +4257,19 @@ function ProgressTab({ prefs }) {
 
       {/* ── HISTORY ── */}
       {entries.length > 0 && (
-        <div style={{background:"var(--s1)",border:"1px solid var(--border)",borderRadius:"var(--r)",
-          padding:"16px",margin:"0 16px 16px"}}>
-          <div style={{fontSize:"0.7rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",
-            color:"var(--accent)",marginBottom:10}}>History ({entries.length})</div>
-          <div style={{maxHeight:200,overflowY:"auto"}}>
+        <div style={{background:"#000",border:"1px solid rgba(255,255,255,0.1)",borderRadius:"var(--r)",
+          padding:"18px 16px",margin:"0 16px 16px"}}>
+          <div style={{fontSize:"0.72rem",fontWeight:800,letterSpacing:"0.12em",textTransform:"uppercase",
+            color:"var(--accent)",marginBottom:12}}>Weight History ({entries.length})</div>
+          <div style={{maxHeight:220,overflowY:"auto"}}>
             {entries.slice().reverse().map(function(e){return(
               <div key={e.date} style={{display:"flex",justifyContent:"space-between",
-                alignItems:"center",padding:"8px 0",borderBottom:"1px solid var(--border)"}}>
-                <span style={{fontSize:"0.8rem",color:"var(--muted)",fontFamily:"var(--ff-mono)"}}>{e.date}</span>
-                <span style={{fontSize:"0.95rem",fontWeight:700,fontFamily:"var(--ff-mono)",color:"var(--text)"}}>{e.weight} lbs</span>
+                alignItems:"center",padding:"10px 0",borderBottom:"1px solid rgba(255,255,255,0.07)"}}>
+                <span style={{fontSize:"0.85rem",color:"rgba(255,255,255,0.4)",fontFamily:"var(--ff-mono)"}}>{e.date}</span>
+                <span style={{fontSize:"1.05rem",fontWeight:800,fontFamily:"var(--ff-mono)",color:"#fff"}}>{e.weight} lbs</span>
                 <button onClick={function(){deleteEntry(e.date);}}
-                  style={{background:"none",border:"none",color:"var(--muted)",cursor:"pointer",fontSize:"0.75rem",padding:"2px 6px"}}>
-                  x
+                  style={{background:"none",border:"1px solid rgba(255,255,255,0.1)",borderRadius:6,color:"rgba(255,255,255,0.3)",cursor:"pointer",fontSize:"0.75rem",padding:"3px 8px"}}>
+                  ✕
                 </button>
               </div>
             );})}
