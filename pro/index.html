@@ -17,7 +17,7 @@
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script>
-    const CODE_HASHES=["2355a5ac039f6c9c7700ae34798dc18535b0c7104225d7bdd64533e1c5303ba1", "d70a097fc2ed326edde69999d16d2b1cd6fb188085d44a3c450f0e8065fbc475", "1a80a74e7f1d5bf039237a326bedcba7fee9022cdc05d8f1e20c34e7e4e557ae"];
+    const CODE_HASHES=["0878e8aee914ca4b1cd3e9a804973abb314832640ab14d7c8017d1ec8d7d22cb", "c62dcd28663cfebdf74b4b638e436c428e73ac3db5274f469932a2ea731c3bbc", "79be689b0188d42f37849d872f9156ec825a3864b89c763512bfd41b70f38bf5"];
     async function sha256(m){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(m));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');}
     const STORAGE_KEY='hf_pro_access_v1';
     let _root=null;
