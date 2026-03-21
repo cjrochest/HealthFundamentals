@@ -144,12 +144,19 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 5vw;height:64px;di
 
 /* EDU */
 .edu-strip{padding:100px 5vw;background:var(--s1);border-top:1px solid var(--border)}
-.edu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:48px;max-width:1100px;margin-left:auto;margin-right:auto}
-.edu-card{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:24px;transition:border-color 0.18s}
-.edu-card:hover{border-color:var(--aborder)}
-.edu-num{font-family:'Space Grotesk',sans-serif;font-size:2.5rem;font-weight:800;color:var(--muted2);line-height:1;margin-bottom:10px}
-.edu-title{font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:var(--text);margin-bottom:6px}
-.edu-text{font-size:0.78rem;color:var(--muted);line-height:1.55}
+.edu-accordion{margin-top:40px;max-width:780px;display:flex;flex-direction:column;gap:8px}
+.edu-item{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:border-color 0.2s,box-shadow 0.2s;cursor:pointer}
+.edu-item:hover{border-color:var(--aborder);box-shadow:0 0 0 1px rgba(200,241,53,0.08)}
+.edu-item.open{border-color:var(--aborder);box-shadow:0 0 24px rgba(200,241,53,0.08)}
+.edu-header{display:flex;align-items:center;gap:16px;padding:18px 22px;user-select:none}
+.edu-num{font-family:'DM Mono',monospace;font-size:0.72rem;font-weight:500;color:var(--accent);min-width:18px;opacity:0.7}
+.edu-item.open .edu-num{opacity:1}
+.edu-title{font-family:'Space Grotesk',sans-serif;font-size:0.98rem;font-weight:700;color:var(--text);flex:1}
+.edu-arrow{font-size:0.7rem;color:var(--muted);transition:transform 0.22s,color 0.2s;margin-left:auto}
+.edu-item.open .edu-arrow{transform:rotate(180deg);color:var(--accent)}
+.edu-body{max-height:0;overflow:hidden;transition:max-height 0.3s ease,padding 0.25s ease}
+.edu-item.open .edu-body{max-height:200px}
+.edu-body-inner{padding:0 22px 18px 56px;font-size:0.85rem;color:var(--muted);line-height:1.65;border-top:1px solid var(--border)}
 
 /* QUOTE */
 .quote-strip{background:var(--s2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:80px 5vw;text-align:center}
@@ -186,6 +193,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 5vw;height:64px;di
 .tier-btn.blue-btn:hover{opacity:0.88}
 .tier-btn.ghost{background:var(--s3);color:var(--text);border:1px solid var(--border)}
 .tier-btn.ghost:hover{border-color:var(--aborder);color:var(--accent)}
+.tier-btn.free-btn,.tier-btn.free-btn:visited,.tier-btn.free-btn:link{background:var(--accent)!important;color:#0a0b08!important;box-shadow:0 4px 20px rgba(200,241,53,0.35)!important}
+.tier-btn.free-btn:hover{opacity:0.9;transform:translateY(-1px)}
 .tier-divider{height:1px;background:var(--border);margin:16px 0}
 .tier-section-label{font-size:0.58rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted2);margin-bottom:8px}
 
@@ -466,19 +475,52 @@ footer{border-top:1px solid var(--border);padding:32px 5vw;display:flex;justify-
   <div class="section-inner">
     <div class="section-eyebrow">Built-In Education</div>
     <h2 class="section-title">Know the Principles. Own Them Forever.</h2>
-    <p class="section-body">A good trainer teaches you, not just tells you. Health Fundamentals includes 8 lessons covering everything your trainer should have explained on day one — calories, macros, protein, fiber, meal timing, sleep, supplements, and cardio. No fluff. No upsells. Just the knowledge that actually changes your results.</p>
-    <div style="margin-top:32px;display:flex;flex-wrap:wrap;gap:10px;">
-      <span style="background:var(--s2);border:1px solid var(--border);border-radius:99px;padding:8px 16px;font-size:0.78rem;font-weight:700;color:var(--muted);">01 — What Is a Calorie?</span>
-      <span style="background:var(--s2);border:1px solid var(--border);border-radius:99px;padding:8px 16px;font-size:0.78rem;font-weight:700;color:var(--muted);">02 — Macronutrients</span>
-      <span style="background:var(--s2);border:1px solid var(--border);border-radius:99px;padding:8px 16px;font-size:0.78rem;font-weight:700;color:var(--muted);">03 — How Much Protein?</span>
-      <span style="background:var(--s2);border:1px solid var(--border);border-radius:99px;padding:8px 16px;font-size:0.78rem;font-weight:700;color:var(--muted);">04 — Fiber</span>
-      <span style="background:var(--s2);border:1px solid var(--border);border-radius:99px;padding:8px 16px;font-size:0.78rem;font-weight:700;color:var(--muted);">05 — Meal Timing</span>
-      <span style="background:var(--s2);border:1px solid var(--border);border-radius:99px;padding:8px 16px;font-size:0.78rem;font-weight:700;color:var(--muted);">06 — Sleep & Recovery</span>
-      <span style="background:var(--s2);border:1px solid var(--border);border-radius:99px;padding:8px 16px;font-size:0.78rem;font-weight:700;color:var(--muted);">07 — Supplements</span>
-      <span style="background:var(--s2);border:1px solid var(--border);border-radius:99px;padding:8px 16px;font-size:0.78rem;font-weight:700;color:var(--muted);">08 — Cardio & Composition</span>
+    <p class="section-body">A good trainer teaches you, not just tells you. Health Fundamentals includes 8 lessons covering everything your trainer should have explained on day one. No fluff. No upsells. Just the knowledge that actually changes your results.</p>
+    <div class="edu-accordion">
+      <div class="edu-item">
+        <div class="edu-header"><span class="edu-num">1</span><span class="edu-title">What Is a Calorie?</span><span class="edu-arrow">▼</span></div>
+        <div class="edu-body"><div class="edu-body-inner">Energy in vs. energy out — why it matters, how your body uses fuel, and how to find your personal calorie target without guessing.</div></div>
+      </div>
+      <div class="edu-item">
+        <div class="edu-header"><span class="edu-num">2</span><span class="edu-title">Macronutrients</span><span class="edu-arrow">▼</span></div>
+        <div class="edu-body"><div class="edu-body-inner">Carbs, fats, and protein — what they actually do, how to balance them for your goal, and why cutting out entire food groups is almost never the answer.</div></div>
+      </div>
+      <div class="edu-item">
+        <div class="edu-header"><span class="edu-num">3</span><span class="edu-title">How Much Protein?</span><span class="edu-arrow">▼</span></div>
+        <div class="edu-body"><div class="edu-body-inner">The most important macro for body composition. Learn your daily target, how to hit it without supplements, and how to spread it across meals for maximum effect.</div></div>
+      </div>
+      <div class="edu-item">
+        <div class="edu-header"><span class="edu-num">4</span><span class="edu-title">Fiber</span><span class="edu-arrow">▼</span></div>
+        <div class="edu-body"><div class="edu-body-inner">Most people are chronically under-eating fiber. Learn why it's critical for satiety, gut health, and body composition — and exactly how much you need per day.</div></div>
+      </div>
+      <div class="edu-item">
+        <div class="edu-header"><span class="edu-num">5</span><span class="edu-title">Meal Timing</span><span class="edu-arrow">▼</span></div>
+        <div class="edu-body"><div class="edu-body-inner">Does when you eat actually matter? We cut through the noise on pre/post-workout nutrition, meal frequency, and intermittent fasting — with the evidence to back it up.</div></div>
+      </div>
+      <div class="edu-item">
+        <div class="edu-header"><span class="edu-num">6</span><span class="edu-title">Sleep & Recovery</span><span class="edu-arrow">▼</span></div>
+        <div class="edu-body"><div class="edu-body-inner">Muscle is built while you sleep, not while you train. Learn how poor sleep tanks your results, spikes cortisol, and what you can do tonight to start recovering like an athlete.</div></div>
+      </div>
+      <div class="edu-item">
+        <div class="edu-header"><span class="edu-num">7</span><span class="edu-title">Supplements</span><span class="edu-arrow">▼</span></div>
+        <div class="edu-body"><div class="edu-body-inner">The supplement industry is a multi-billion dollar machine. We tell you exactly what has real evidence behind it, what's a waste of money, and what order to prioritize if you want to spend anything at all.</div></div>
+      </div>
+      <div class="edu-item">
+        <div class="edu-header"><span class="edu-num">8</span><span class="edu-title">Cardio & Body Composition</span><span class="edu-arrow">▼</span></div>
+        <div class="edu-body"><div class="edu-body-inner">How much cardio, what type, and when — without killing your muscle gains. Learn to use cardio as a precision tool for fat loss rather than punishment.</div></div>
+      </div>
     </div>
   </div>
 </section>
+<script>
+  document.querySelectorAll('.edu-item').forEach(function(item){
+    item.querySelector('.edu-header').addEventListener('click', function(){
+      var isOpen = item.classList.contains('open');
+      document.querySelectorAll('.edu-item.open').forEach(function(o){ o.classList.remove('open'); });
+      if(!isOpen) item.classList.add('open');
+    });
+  });
+</script>
 
 <!-- QUOTE -->
 <section class="quote-strip">
@@ -515,7 +557,7 @@ footer{border-top:1px solid var(--border);padding:32px 5vw;display:flex;justify-
         <li><span class="tfc g">✓</span>4 nutrition foundation lessons</li>
         <li><span class="tfc g">✓</span>PDF starter guide included</li>
       </ul>
-      <a class="tier-btn primary gumroad-button" href="https://healthfund.gumroad.com/l/moamazj" target="_blank" rel="noopener" style="background:var(--accent);box-shadow:0 4px 20px rgba(200,241,53,0.3)">Start Free — No Card Needed →</a>
+      <a class="tier-btn free-btn" href="https://healthfund.gumroad.com/l/moamazj" target="_blank" rel="noopener">Start Free — No Card Needed →</a>
     </div>
 
     <!-- CORE -->
